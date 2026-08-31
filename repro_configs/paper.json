@@ -1,0 +1,131 @@
+{
+  "data_dir": "Data",
+  "output_root": "outputs/full_reproduction",
+  "device": "cuda",
+  "seed": 0,
+  "split_seed": 0,
+  "models": {
+    "mscadm": {
+      "model": {
+        "condition_dim": 20,
+        "sequence_length": 24,
+        "model_dim": 128,
+        "condition_bottleneck": 64,
+        "depth": 4,
+        "heads": 4,
+        "ff_multiplier": 4,
+        "dropout": 0.0,
+        "learn_variance": true,
+        "use_multiscale_embedding": true,
+        "use_adaln": true
+      },
+      "diffusion": {
+        "timesteps": 250,
+        "schedule": "cosine",
+        "learn_variance": true,
+        "vlb_weight": 0.001
+      },
+      "training": {
+        "steps": 26000,
+        "batch_size": 256,
+        "learning_rate": 0.0001,
+        "weight_decay": 0.0,
+        "condition_mask_probability": 0.1,
+        "gradient_clip": 1.0,
+        "checkpoint_every": 1000,
+        "log_every": 100,
+        "resume": true,
+        "workers": 0
+      },
+      "sampling": {"steps": 50, "sampler": "ddim", "eta": 1.0}
+    },
+    "ddpm": {
+      "model": {
+        "condition_dim": 20,
+        "channels": 64,
+        "time_dim": 128,
+        "layers": 8,
+        "dilation_cycle": 4
+      },
+      "diffusion": {
+        "timesteps": 250,
+        "schedule": "linear",
+        "learn_variance": false,
+        "vlb_weight": 0.0
+      },
+      "training": {
+        "steps": 26000,
+        "batch_size": 256,
+        "learning_rate": 0.0001,
+        "weight_decay": 0.0,
+        "condition_mask_probability": 0.0,
+        "gradient_clip": 1.0,
+        "checkpoint_every": 1000,
+        "log_every": 100,
+        "resume": true,
+        "workers": 0
+      },
+      "sampling": {"steps": 250, "sampler": "ddim", "eta": 1.0}
+    },
+    "vae": {
+      "model": {"condition_dim": 250, "target_dim": 24, "latent_dim": 20, "hidden_dim": 200},
+      "training": {
+        "steps": 26000,
+        "batch_size": 256,
+        "learning_rate": 0.000398107,
+        "weight_decay": 0.000398107,
+        "checkpoint_every": 1000,
+        "log_every": 100,
+        "resume": true,
+        "workers": 0
+      }
+    },
+    "wgan": {
+      "model": {
+        "generator": {"condition_dim": 250, "target_dim": 24, "latent_dim": 64, "hidden_dim": 256, "layers": 2},
+        "critic": {"condition_dim": 250, "target_dim": 24, "hidden_dim": 256, "layers": 2}
+      },
+      "training": {
+        "steps": 26000,
+        "batch_size": 256,
+        "learning_rate": 0.0002,
+        "weight_decay": 0.0001,
+        "betas": [0.0, 0.9],
+        "critic_steps": 5,
+        "gradient_penalty": 10.0,
+        "checkpoint_every": 1000,
+        "log_every": 100,
+        "resume": true,
+        "workers": 0
+      }
+    },
+    "nf": {
+      "model": {"dimension": 24, "condition_dim": 250, "steps": 8, "hidden_dim": 300},
+      "training": {
+        "steps": 26000,
+        "batch_size": 256,
+        "learning_rate": 0.0001,
+        "weight_decay": 0.001,
+        "gradient_clip": 5.0,
+        "checkpoint_every": 1000,
+        "log_every": 100,
+        "resume": true,
+        "workers": 0
+      }
+    },
+    "qrgbm": {
+      "model": {
+        "quantiles": 99,
+        "estimators": 300,
+        "max_depth": 5,
+        "learning_rate": 0.04,
+        "subsample": 0.9,
+        "colsample_bytree": 0.9,
+        "min_child_weight": 3.0,
+        "tree_method": "hist",
+        "seed": 0
+      },
+      "sampling": {"coupling": "ecc"}
+    }
+  }
+}

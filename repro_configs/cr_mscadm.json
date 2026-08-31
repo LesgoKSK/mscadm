@@ -1,0 +1,68 @@
+{
+  "data_dir": "Data",
+  "output_root": "outputs/cr_mscadm",
+  "device": "cuda",
+  "split_seed": 0,
+  "model": {
+    "head": {
+      "condition_dim": 20,
+      "model_dim": 96,
+      "bottleneck": 48,
+      "depth": 2,
+      "heads": 4,
+      "dropout": 0.0,
+      "minimum_scale": 0.05,
+      "maximum_scale": 2.5
+    },
+    "denoiser": {
+      "condition_dim": 20,
+      "sequence_length": 24,
+      "model_dim": 128,
+      "condition_bottleneck": 64,
+      "depth": 4,
+      "heads": 4,
+      "ff_multiplier": 4,
+      "dropout": 0.0,
+      "learn_variance": true,
+      "use_multiscale_embedding": true,
+      "use_adaln": true
+    }
+  },
+  "diffusion": {
+    "timesteps": 250,
+    "schedule": "cosine",
+    "learn_variance": true,
+    "vlb_weight": 0.001
+  },
+  "training": {
+    "head_steps": 4000,
+    "diffusion_steps": 18000,
+    "batch_size": 256,
+    "head_learning_rate": 0.0003,
+    "head_weight_decay": 0.0001,
+    "diffusion_learning_rate": 0.0001,
+    "diffusion_weight_decay": 0.0,
+    "crps_weight": 0.5,
+    "mean_weight": 0.1,
+    "condition_mask_probability": 0.1,
+    "gradient_clip": 1.0,
+    "head_validate_every": 250,
+    "checkpoint_every": 1000,
+    "log_every": 100,
+    "workers": 0,
+    "resume": true
+  },
+  "sampling": {
+    "scenarios": 100,
+    "steps": 50,
+    "eta": 1.0,
+    "day_batch": 8
+  },
+  "experiment": {
+    "full_seeds": [0, 1, 2],
+    "ablations": ["fixed", "hetero_no_crps"],
+    "bootstrap_replicates": 5000,
+    "primary_baseline": "outputs/full_reproduction/scenarios/mscadm_test_50steps_eta1.npz",
+    "secondary_baseline": "outputs/full_reproduction/scenarios/mscadm_test_250steps.npz"
+  }
+}

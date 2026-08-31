@@ -1,0 +1,33 @@
+{
+  "schema": "architecture_v1_formal_amendment_v1",
+  "effective_revision": "architecture_v1_formal_v2_1_20260815",
+  "base_config": "repro_configs/architecture_v1_formal_v2.json",
+  "base_config_file_sha256": "b92f8647d7e1874c81a5927ff552e9ce03c9906b147ec389c71d55d06b317c9c",
+  "reason": "The first retained-weight attempt completed seed-0 E/A and G0, then failed before the zero-velocity flow baseline because the newly constructed flow model remained on CPU while the fixed validation bank moved batches to CUDA.",
+  "scientific_settings_changed": false,
+  "allowed_code_change": "Move the newly constructed flow model to the registered CUDA device before fixed-bank baseline evaluation; add amendment identity plumbing only.",
+  "output_root": "outputs/architecture_v1_formal_v2_1",
+  "restart_policy": "rerun discarded-weight CUDA preflight and restart all retained stages from seed 0; do not reuse the successful v2 seed-0 E/A weights",
+  "previous_attempt": {
+    "status": "aborted_engineering_failure_before_any_flow_update",
+    "output_root": "outputs/architecture_v1_formal_v2",
+    "preflight_file_sha256": "b29bce2bb5f5e0caac3915aa162d354f1646e897e7932cd412c2d426b9f65c06",
+    "seed0_atom_completion_file_sha256": "1d33ea29fc047a8e5f5a14c200f05b5f411b2c7edc99f8be9cd8a7d55acb5edb",
+    "seed0_G0_file_sha256": "d1a12f92243f2a48766e29057e8c7b2e875f106e307c60522487714e2526639d",
+    "seed0_G0_passed": true,
+    "flow_updates": 0,
+    "calibration_target_accessed": false,
+    "selection_target_accessed": false,
+    "r_seen_target_accessed": false
+  },
+  "invariants": {
+    "data_protocol_unchanged": true,
+    "shared_EA_policy_unchanged": true,
+    "training_budget_unchanged": true,
+    "go_no_go_thresholds_unchanged": true,
+    "sampling_plan_unchanged": true,
+    "model_seeds_unchanged": [0, 1, 2],
+    "selection_state": "sealed",
+    "calibration_state": "sealed"
+  }
+}

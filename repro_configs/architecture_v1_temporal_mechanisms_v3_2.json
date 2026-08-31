@@ -1,0 +1,196 @@
+{
+  "schema": "architecture_v1_temporal_mechanisms_v3_2",
+  "status": "frozen_before_any_v3_2_training_update",
+  "created_date": "2026-08-25",
+  "objective": "three-seed chronological-versus-shuffled adjudication of feature memory and variance-preserving AR source memory",
+  "evidence_scope": "validation-informed architecture development; not independent confirmation; selection and calibration remain sealed",
+  "output_root": "outputs/architecture_v1_temporal_mechanisms_v3_2",
+  "lineage": {
+    "v3_1_config": "repro_configs/architecture_v1_temporal_mechanisms_v3_1.json",
+    "v3_1_config_sha256": "3f51da69130a313b346bf4b42de476bb857dc947cb4adb8368950b3e682837c0",
+    "v3_1_pilot_result": "outputs/architecture_v1_temporal_mechanisms_v3_1_pilot/PILOT_RESULT.json",
+    "v3_1_pilot_result_sha256": "b6622f48dfaf51e5cd7dc03020338ffdb30c2951dbbc89994d47ede943359d7b",
+    "v3_1_pilot_freeze": "outputs/architecture_v1_temporal_mechanisms_v3_1_pilot/training.freeze.json",
+    "v3_1_pilot_freeze_sha256": "15781b0b1867f2090322c702f9c0f7235f8486ad6d5a9ba610c9ae2da145e810",
+    "v3_1_required_status": "PILOT_GO_EXPAND_SHUFFLES_AND_THREE_SEEDS",
+    "shared_EA_checkpoint": "outputs/architecture_v1_formal_v2_2_1/runs/R0_seed0/atom/best.pt",
+    "shared_EA_checkpoint_sha256": "0cdde72fc8d3b89f19b9f0805ca85c5afca9c24346738e93f346d9538705eb46",
+    "shared_EA_state_sha256": "270d3ec01ed70954b33c4a44e4ff249121f64cd5081743ceea3b32c681c69ef6"
+  },
+  "role_access": {
+    "allowed_target_roles": ["train", "validation"],
+    "forbidden_target_roles": ["calibration", "selection", "r_seen", "final"],
+    "selection_state": "sealed",
+    "calibration_state": "sealed",
+    "selection_access_authorized": false
+  },
+  "common_model": {
+    "condition_dim": 20,
+    "zones": 10,
+    "hours": 24,
+    "encoder_dim": 64,
+    "encoder_depth": 2,
+    "flow_dim": 96,
+    "flow_depth": 4,
+    "heads": 4,
+    "ff_multiplier": 4,
+    "dropout": 0.0,
+    "atom_hidden_dim": 64,
+    "atom_initial_probabilities": [0.08155814915523832, 0.9184183986871631, 0.000023452157598499062],
+    "atom_fixed_one_probability": 0.000023452157598499062,
+    "atom_shared_priority_weight": 0.5,
+    "atom_location_auxiliary_weight": 0.25,
+    "atom_location_mean": -0.7657249678096855,
+    "atom_location_std": 2.1248890260251247,
+    "atom_location_smooth_l1_beta": 1.0,
+    "stable_source_rho_max": 0.95,
+    "logit_epsilon": 0.0001,
+    "continuous_latent_scope": "sampled_interior_active_coordinates_only",
+    "common_parameter_topology_required": true,
+    "common_initial_tensor_bank_within_seed_required": true
+  },
+  "candidates": {
+    "T0": {"class": "T0StableSourceRectifiedFlow", "mechanism": "memoryless_feature_plus_iid_source"},
+    "T1_feature": {"class": "T1FeatureStableSourceRectifiedFlow", "mechanism": "chronological_feature_recurrence_plus_iid_source"},
+    "T1_source": {"class": "T1SourceStableRectifiedFlow", "mechanism": "memoryless_feature_plus_variance_preserving_chronological_AR_source"},
+    "T1_feature_shuffle": {"class": "T1StableShuffleRectifiedFlow", "shuffle_target": "feature", "mechanism": "frozen_nonchronological_feature_negative_control"},
+    "T1_source_shuffle": {"class": "T1StableShuffleRectifiedFlow", "shuffle_target": "source", "mechanism": "frozen_nonchronological_AR_source_negative_control"}
+  },
+  "shuffle_control": {
+    "seed_used_once_to_freeze_permutation": 23001,
+    "hour_order_zero_based": [17, 2, 12, 0, 15, 18, 1, 11, 16, 20, 13, 7, 5, 4, 9, 23, 22, 10, 3, 8, 6, 21, 19, 14],
+    "semantics": "visit hours in frozen shuffled order and restore outputs to physical hour slots",
+    "no_validation_or_test_adaptation": true
+  },
+  "seed0_imports": {
+    "classification": "previously_observed_development_evidence_reused_by_exact_hash_not_new_independent_evidence",
+    "initial_tensor_bank_sha256": "993b5477efd8cadc730b7ee429bb790a1c58908051077c4b609d92fbe4878725",
+    "T0": {
+      "checkpoint": "outputs/architecture_v1_temporal_mechanisms_v3_1_pilot/runs/T0/seed0/flow/best.pt",
+      "checkpoint_sha256": "32a34b11fcbffe6844a2d21718b1bd1d572c23dd8816adee0bef1f0f25f1f4ab",
+      "completion": "outputs/architecture_v1_temporal_mechanisms_v3_1_pilot/runs/T0/seed0/flow/completion.json"
+    },
+    "T1_feature": {
+      "checkpoint": "outputs/architecture_v1_temporal_mechanisms_v3_1_pilot/runs/T1_feature/seed0/flow/best.pt",
+      "checkpoint_sha256": "76658e2c02b992f1a423d735a4588d6aca7564b5f404352805620d2f327c9cd0",
+      "completion": "outputs/architecture_v1_temporal_mechanisms_v3_1_pilot/runs/T1_feature/seed0/flow/completion.json"
+    },
+    "T1_source": {
+      "checkpoint": "outputs/architecture_v1_temporal_mechanisms_v3_1_pilot/runs/T1_source/seed0/flow/best.pt",
+      "checkpoint_sha256": "6a649b0e1c2b9019aaea89b25d214347d7675d62afddda2cf84bf2ecc58ea1c9",
+      "completion": "outputs/architecture_v1_temporal_mechanisms_v3_1_pilot/runs/T1_source/seed0/flow/completion.json"
+    }
+  },
+  "training": {
+    "model_seeds": [0, 1, 2],
+    "flow_initialization_seed_formula": "12000 + model_seed",
+    "common_epoch_shuffle_seed": 13000,
+    "common_flow_path_seed": 14000,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "betas": [0.9, 0.999],
+    "eps": 0.00000001,
+    "weight_decay": 0.0,
+    "gradient_clip": 5.0,
+    "batch_days": 16,
+    "maximum_epochs": 720,
+    "minimum_epochs_before_early_stop": 120,
+    "validate_every_epochs": 10,
+    "early_stopping_patience_validations": 12,
+    "early_stopping_minimum_delta": 0.00001,
+    "early_stopping_relative_delta": 0.001,
+    "validation_bank_noise_seeds": [15000, 15001, 15002, 15003],
+    "validation_bank_time_seeds": [16000, 16001, 16002, 16003],
+    "validation_bank_common_across_candidates_and_seeds": true,
+    "gradient_audit_epoch_start_one_based": 31,
+    "gradient_clip_fraction_max": 0.5,
+    "preclip_gradient_norm_p99_to_median_max": 5.0,
+    "preclip_gradient_norm_max": 50.0
+  },
+  "execution_order_remaining_12": [
+    ["T1_feature_shuffle", 0],
+    ["T1_source_shuffle", 0],
+    ["T0", 1],
+    ["T1_feature", 1],
+    ["T1_source", 1],
+    ["T1_feature_shuffle", 1],
+    ["T1_source_shuffle", 1],
+    ["T0", 2],
+    ["T1_feature", 2],
+    ["T1_source", 2],
+    ["T1_feature_shuffle", 2],
+    ["T1_source_shuffle", 2]
+  ],
+  "evaluation": {
+    "members": 100,
+    "sampling_seeds": [21000, 21001, 21002],
+    "method": "heun",
+    "integration_steps": 16,
+    "per_path_flow_nfe": 31,
+    "member_chunk": 20,
+    "common_atom_allocation_and_iid_noise": true,
+    "source_diagnostic_seed": 21500,
+    "paired_calendar_day_bootstrap_repetitions": 5000,
+    "primary_endpoints": ["ramp_CRPS", "lagged_increment_variogram_score"],
+    "noninferiority_endpoints": ["level_CRPS", "normalized_joint_ES", "coverage90", "width90"],
+    "rho_saturation_diagnostics": ["rho_abs_max", "fraction_abs_rho_ge_0.94"],
+    "inference_unit": "calendar_day"
+  },
+  "per_seed_hard_gates": {
+    "finite_training_sampling_and_metrics": true,
+    "gradient_clip_fraction_max": 0.5,
+    "coverage90_min": 0.75,
+    "coverage90_max": 0.98,
+    "width90_min": 0.25,
+    "width90_max": 0.80,
+    "level_CRPS_max": 0.13,
+    "ramp_CRPS_max": 0.07,
+    "normalized_joint_ES_max": 0.18,
+    "source_inactive_max_abs": 0.0,
+    "source_rho_abs_max": 0.95,
+    "source_empirical_mean_abs_max": 0.03,
+    "source_empirical_variance_min": 0.92,
+    "source_empirical_variance_max": 1.08
+  },
+  "go_no_go": {
+    "T1_vs_T0_primary": {
+      "ramp_CRPS_practical_improvement_min": 0.001,
+      "ramp_CRPS_bootstrap_CI_lower_must_exceed": 0.0,
+      "lagged_increment_variogram_relative_improvement_min": 0.05,
+      "lagged_increment_variogram_bootstrap_CI_lower_must_exceed": 0.0,
+      "both_primary_conditions_required": true
+    },
+    "noninferiority": {
+      "level_CRPS_T1_minus_T0_upper_margin": 0.0015,
+      "normalized_joint_ES_relative_T1_minus_T0_upper_margin": 0.02,
+      "coverage90_absolute_difference_max": 0.02,
+      "width90_relative_increase_max": 0.10,
+      "bootstrap_CI_upper_must_be_within_margin": true
+    },
+    "negative_control": {
+      "chronological_T1_must_beat_its_matched_shuffle_on_both_primary_endpoints": true,
+      "ramp_CRPS_practical_improvement_min": 0.0005,
+      "bootstrap_CI_lower_must_exceed": 0.0
+    },
+    "seed_stability": {
+      "level_CRPS_max_minus_min_max": 0.0025,
+      "ramp_CRPS_max_minus_min_max": 0.0012,
+      "normalized_joint_ES_relative_max_minus_min_max": 0.03,
+      "coverage90_max_minus_min_max": 0.04
+    },
+    "decision": {
+      "if_neither_T1_passes": "retain_T0_and_proceed_to_matched_joint_DDPM",
+      "if_only_T1_feature_passes": "retain_feature_recurrence_and_reject_recurrent_source_claim",
+      "if_only_T1_source_passes": "retain_AR_source_only_after_efficiency_and_rho_saturation_review",
+      "if_both_pass": "prefer_feature_unless_source_has_predeclared_material_dependence_gain_that_justifies_cost",
+      "selection_access_authorized": false
+    }
+  },
+  "freeze_policy": {
+    "resume": "epoch_boundary_only_with_exact_identity_hashes",
+    "existing_nonempty_output_without_resume": "reject",
+    "training_freeze_written_only_after_all_15_candidate_seed_results": true,
+    "threshold_movement_after_start": "forbidden_new_revision_required",
+    "selection_and_calibration": "remain_sealed_after_v3_2"
+  }
+}

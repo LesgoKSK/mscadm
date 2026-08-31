@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <marker id="arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0 0L11 5.5 0 11Z" fill="#718da3"/></marker>
+    <style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#17365d}.title{font-size:40px;font-weight:800}.sub{font-size:22px;fill:#66737f}.head{font-size:25px;font-weight:800}.body{font-size:19px;fill:#435b6d}.small{font-size:17px;fill:#65798a}</style>
+  </defs>
+  <rect width="1200" height="675" rx="30" fill="#f6f9fc"/>
+  <text class="title" x="600" y="60" text-anchor="middle">下一步不急着造大模型：先做一次“小体检”</text>
+  <text class="sub" x="600" y="96" text-anchor="middle">用 48 个轻量小实验，找出时间信息到底在什么时候真的有用</text>
+
+  <rect x="45" y="143" width="270" height="370" rx="24" fill="#fff" stroke="#b9cfdf" stroke-width="3"/>
+  <text class="head" x="180" y="187" text-anchor="middle">把去噪过程切成 8 段</text>
+  <g transform="translate(75 218)">
+    <rect width="210" height="30" rx="10" fill="#e4e7ea"/><text x="105" y="22" text-anchor="middle" font-size="17">1　非常模糊</text>
+    <rect y="36" width="210" height="30" rx="10" fill="#e3e5ea"/><text x="105" y="58" text-anchor="middle" font-size="17">2</text>
+    <rect y="72" width="210" height="30" rx="10" fill="#e6e3eb"/><text x="105" y="94" text-anchor="middle" font-size="17">3</text>
+    <rect y="108" width="210" height="30" rx="10" fill="#e8e0ee"/><text x="105" y="130" text-anchor="middle" font-size="17">4　中间阶段</text>
+    <rect y="144" width="210" height="30" rx="10" fill="#e4e8f0"/><text x="105" y="166" text-anchor="middle" font-size="17">5</text>
+    <rect y="180" width="210" height="30" rx="10" fill="#dceaf4"/><text x="105" y="202" text-anchor="middle" font-size="17">6</text>
+    <rect y="216" width="210" height="30" rx="10" fill="#d4e8f6"/><text x="105" y="238" text-anchor="middle" font-size="17">7</text>
+    <rect y="252" width="210" height="30" rx="10" fill="#c9e2f3"/><text x="105" y="274" text-anchor="middle" font-size="17">8　接近清晰</text>
+  </g>
+
+  <path d="M330 330 H380" stroke="#718da3" stroke-width="5" marker-end="url(#arrow)"/>
+  <rect x="395" y="143" width="320" height="370" rx="24" fill="#fff" stroke="#d0c2df" stroke-width="3"/>
+  <text class="head" x="555" y="187" text-anchor="middle">每一段做公平对照</text>
+  <rect x="430" y="226" width="250" height="90" rx="18" fill="#e8f5ee"/>
+  <text x="555" y="260" text-anchor="middle" font-size="21" font-weight="800" fill="#237447">正常时间顺序</text>
+  <text class="body" x="555" y="294" text-anchor="middle">1 → 2 → 3 → 4 小时</text>
+  <text x="555" y="345" text-anchor="middle" font-size="27" font-weight="800" fill="#718da3">VS</text>
+  <rect x="430" y="374" width="250" height="90" rx="18" fill="#fdecef"/>
+  <text x="555" y="408" text-anchor="middle" font-size="21" font-weight="800" fill="#a13c43">打乱时间顺序</text>
+  <text class="body" x="555" y="442" text-anchor="middle">3 → 1 → 4 → 2 小时</text>
+  <circle cx="446" cy="488" r="16" fill="#2e74b5"/><circle cx="492" cy="488" r="16" fill="#4f86ad"/><circle cx="538" cy="488" r="16" fill="#7d68a7"/>
+  <text class="small" x="594" y="495">每项重复 3 个种子</text>
+
+  <path d="M730 330 H780" stroke="#718da3" stroke-width="5" marker-end="url(#arrow)"/>
+  <rect x="795" y="143" width="360" height="370" rx="24" fill="#fff" stroke="#c9d6df" stroke-width="3"/>
+  <text class="head" x="975" y="187" text-anchor="middle">实验会给出三种答案</text>
+  <rect x="825" y="218" width="300" height="74" rx="16" fill="#e8f5ee"/>
+  <circle cx="859" cy="255" r="20" fill="#237447"/><text x="859" y="263" text-anchor="middle" font-size="22" font-weight="800" style="fill:#fff">1</text>
+  <text x="890" y="248" font-size="19" font-weight="800" fill="#237447">天气 + 阶段都重要</text><text class="small" x="890" y="274">继续做双开关模型</text>
+  <rect x="825" y="315" width="300" height="74" rx="16" fill="#edf5fb"/>
+  <circle cx="859" cy="352" r="20" fill="#2e74b5"/><text x="859" y="360" text-anchor="middle" font-size="22" font-weight="800" style="fill:#fff">2</text>
+  <text x="890" y="345" font-size="19" font-weight="800" fill="#2e74b5">只有一个重要</text><text class="small" x="890" y="371">只留一个开关，保持简单</text>
+  <rect x="825" y="412" width="300" height="74" rx="16" fill="#fdecef"/>
+  <circle cx="859" cy="449" r="20" fill="#b23a48"/><text x="859" y="457" text-anchor="middle" font-size="22" font-weight="800" style="fill:#fff">3</text>
+  <text x="890" y="442" font-size="19" font-weight="800" fill="#a13c43">没有稳定规律</text><text class="small" x="890" y="468">马上停，不强行讲故事</text>
+
+  <rect x="90" y="557" width="1020" height="82" rx="22" fill="#17365d"/>
+  <text x="600" y="591" text-anchor="middle" font-size="23" font-weight="800" style="fill:#fff">为什么这一步重要？</text>
+  <text x="600" y="622" text-anchor="middle" font-size="20" style="fill:#d8e6ef">先找到“药在什么时候有效”，再决定做什么药；比直接堆一个大模型更可信</text>
+</svg>

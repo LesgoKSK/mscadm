@@ -1,0 +1,65 @@
+{
+  "schema": "ps_dfsc_config_v2",
+  "base_generator": "MM-JDWind mass-preserving",
+  "members": 100,
+  "suc_clusters": 20,
+  "ablation_clusters": 10,
+  "zone_capacity_mw": 120.0,
+  "beta_grid": [0.0, 0.25, 0.5, 1.0],
+  "selection_risk_weight": 0.25,
+  "training": {
+    "canonical_entrypoint": "repro_scripts.run_ps_dfsc_canonical_v17",
+    "epochs": 50,
+    "proper_warmup_epochs": 20,
+    "batch_size": 4,
+    "learning_rate": 0.001,
+    "dual_learning_rate": 0.1,
+    "augmented_penalty": 10.0,
+    "strong_convexity": 0.0001,
+    "commitment_refresh": "midpoint",
+    "resume_load_device": "cpu",
+    "proper_score_surrogate": "ps_dfsc_finite_gradient_scores_v1",
+    "proper_score_smoothing_epsilon": 0.000001,
+    "exact_validation_scores_unsmoothed": true,
+    "nonfinite_checkpoint_policy": "fail_closed"
+  },
+  "structural_budgets": {
+    "ess_floor": 50.0,
+    "normalized_entropy_floor": 0.85,
+    "mean_absolute_transport": 0.02,
+    "transport_scale": [0.9, 1.1],
+    "transport_shift": [-0.15, 0.15]
+  },
+  "proper_score_thresholds": {
+    "CRPS_ratio": 1.005,
+    "ES_ratio": 1.01,
+    "VS_ratio": 1.01,
+    "ramp_CRPS_ratio": 1.01,
+    "zero_Brier_ratio": 1.01,
+    "coverage_90": [0.88, 0.92],
+    "conditional_ACE_difference": 0.0,
+    "bootstrap_samples": 10000,
+    "one_sided_confidence": 0.95
+  },
+  "proxy_validation": {
+    "solver": "Clarabel",
+    "power_scaling": "per_unit_1200MW",
+    "strong_convexity": 0.0001,
+    "risk_weight": 0.25
+  },
+  "exact_suc": {
+    "mip_relative_gap": 0.001,
+    "time_limit_seconds": 600.0,
+    "reserve_up_fraction": 0.1,
+    "reserve_down_fraction": 0.05,
+    "reserve_up_cost_fraction": 0.1,
+    "reserve_down_cost_fraction": 0.05,
+    "reserve_shortage_penalty_fraction_of_shedding": 0.5,
+    "no_incumbent_policy": "record_and_retry_without_substitution"
+  },
+  "confirmation": {
+    "outer_blocks": 3,
+    "days_per_outer": 50,
+    "test_truth_selection_forbidden": true
+  }
+}

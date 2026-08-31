@@ -1,0 +1,59 @@
+{
+  "schema": "architecture_v1_family_v1_1",
+  "status": "frozen_before_family_v1_1_implementation_P0_or_retained_training",
+  "created_date": "2026-08-26",
+  "objective": "repair the D0 sampler contract with a single prospective v-prediction revision",
+  "output_root": "outputs/architecture_v1_family_v1_1",
+  "base_family_v1_config": "repro_configs/architecture_v1_family_v1.json",
+  "base_family_v1_config_sha256": "d084852e74839b6aba0703cd6bc27388f73dad7ca52bf731a49ec89ac91c59e4",
+  "family_v1_no_go_freeze": "outputs/architecture_v1_family_v1/FAMILY_V1_NO_GO.freeze.json",
+  "family_v1_no_go_freeze_sha256": "5297d3c817281d7563128a7c62cd8d16757fac76e6424c48278a77f691055aa5",
+  "required_family_v1_status": "D0_SAMPLER_CONTRACT_NO_GO",
+  "revision_scope": {
+    "candidate_label": "D0-v",
+    "only_algorithmic_change": "epsilon_prediction_to_v_prediction_and_exact_inverse_sampler_algebra",
+    "training_target": "v=sqrt(alpha_bar)*epsilon-sqrt(1-alpha_bar)*x0",
+    "sampling_inverse_x0": "sqrt(alpha_bar)*x_t-sqrt(1-alpha_bar)*v",
+    "sampling_inverse_epsilon": "sqrt(1-alpha_bar)*x_t+sqrt(alpha_bar)*v",
+    "train_only_latent_normalization": false,
+    "SNR_weighting": false,
+    "predicted_x0_clipping": false,
+    "raw_logit_latent_unchanged": true,
+    "cosine_250_schedule_unchanged": true,
+    "DDIM_31_eta0_unchanged": true,
+    "network_topology_optimizer_EMA_data_and_atom_contract_unchanged": true,
+    "reason_for_single_change": "preserve causal attribution and matched comparison with retained F0"
+  },
+  "reused_F0_reference": {
+    "retraining": false,
+    "reason": "F0 passed its formal sampler and metric hard gates under the unchanged contract",
+    "seed3": {"path": "outputs/architecture_v1_family_v1/formal_training/runs/F0/seed3/best.pt", "sha256": "34e1f7172e62df1e9aa9f1d57d287da6364c7bec9ae9f17329be970f2268ca25"},
+    "seed4": {"path": "outputs/architecture_v1_family_v1/formal_training/runs/F0/seed4/best.pt", "sha256": "40debcc4d90f5982baf04fe72f99db71dafb995ed161c1fca7de72d26f769cb4"},
+    "seed5": {"path": "outputs/architecture_v1_family_v1/formal_training/runs/F0/seed5/best.pt", "sha256": "c096e9f4fdb554410fcdc46cc6d9153ecf88bbb9adeecd80ae1e548e33f2eea5"}
+  },
+  "P0_revision": {
+    "candidates": ["F0_reference", "D0-v"],
+    "discarded_train_updates_each": 50,
+    "train_targets_only": true,
+    "strict_interior_decoded_boundary_count_max": 0,
+    "finite_latent_required": true,
+    "checkpoint_resume_exact": true,
+    "fixed_train_proxy_random_bank": true,
+    "member_chunk_equivalence": true,
+    "maximum_peak_GPU_memory_GiB": 4.5
+  },
+  "retained_training_revision": {
+    "candidate": "D0-v",
+    "seeds": [3, 4, 5],
+    "retrain_F0": false,
+    "reuse_all_unchanged_training_hyperparameters_from_base": true,
+    "selection_loss": "fixed_validation_bank_EMA_v_MSE",
+    "formal_training_authorized_only_after_P0_GO": true
+  },
+  "future_evaluation_contract": {
+    "comparison": "reused_F0_best_EMA_vs_new_D0-v_best_EMA",
+    "same_validation_scenario_seeds_members_atom_allocations_and_initial_noise": true,
+    "interior_decoded_boundary_count_max": 0,
+    "selection_and_calibration_remain_sealed": true
+  }
+}

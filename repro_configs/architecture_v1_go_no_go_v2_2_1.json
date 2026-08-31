@@ -1,0 +1,350 @@
+{
+  "schema": "architecture_v1_go_no_go_v2_2_1",
+  "status": "frozen_before_formal_v2_2_1_training_and_any_selection_or_calibration_access",
+  "base_gate": {
+    "path": "repro_configs/architecture_v1_go_no_go_v1.json",
+    "file_sha256": "0c1cb8b87fd6d673dbb1a0fa352a3aa7de47c351cfc9d9ca9f436b220629fc4a",
+    "inheritance": "All scientific quality, dispersion, noninferiority, superiority, negative-control, efficiency, masking, multiplicity, and inference thresholds are copied unchanged. Only prospective training-gradient and cross-member-chunk numerical-integrity rules change."
+  },
+  "revision_scope": {
+    "superseded_result_status": "formal-v2.1 remains G1_NO_GO permanently",
+    "evidence_classification": "validation_informed_engineering_amendment_not_independent_validation_confirmation",
+    "prospective_only": true,
+    "retrospective_reclassification_forbidden": true,
+    "within_revision_threshold_movement_forbidden": true,
+    "formal_v2_2_restart": "all three seeds restart E/A and flow from fresh initialization; no formal-v2.1 weights or optimizer state may be reused",
+    "calibration_state": "sealed",
+    "selection_state": "sealed",
+    "formal_v2_2_1_restart": "all three seeds restart E/A and flow from fresh initialization after the v2.2 runner KeyError; no v2.2 partial weights or optimizer state may be reused",
+    "formal_v2_2_failure": "aborted before retained flow update because the runner requested a nonexistent gate key; thresholds and scientific protocol remain unchanged",
+    "only_v2_2_1_change": "runner key mapping corrected from preclip_gradient_norm_max to preclip_gradient_norm_max_over_all_flow_updates"
+  },
+  "evidence_guard": {
+    "formal_v2_role_counts": {
+      "train": 267,
+      "validation": 50,
+      "calibration": 50,
+      "selection": 50,
+      "r_seen": 314,
+      "final": 0
+    },
+    "r_seen_includes_smoke_touched_14_days": true,
+    "r0_gate_role": "validation_only",
+    "architecture_gate_role": "selection_only",
+    "calibration_may_set_thresholds": false,
+    "selection_open_policy": "open_once_after_candidate_roster_code_config_metrics_calibration_rules_and_gate_sha256_are_frozen",
+    "selection_reuse_for_later_t2_or_t3_adaptation": false
+  },
+  "common_estimand": {
+    "training_seeds": [
+      0,
+      1,
+      2
+    ],
+    "sampling_seeds": [
+      21000,
+      21001,
+      21002
+    ],
+    "members_per_scenario_set": 100,
+    "sampling_replicates_are_averaged_within_seed_day": true,
+    "members_are_never_bootstrap_units": true,
+    "score_semantics": "empirical_v_stat_finite_dependent_set",
+    "paired_common_random_numbers": true,
+    "difference_orientation": "candidate_minus_comparator_lower_is_better"
+  },
+  "inference": {
+    "point_estimate": "equal_calendar_day_mean_after_sampling_replica_mean_and_training_seed_mean",
+    "primary_bootstrap_unit": "calendar_month_cluster",
+    "primary_bootstrap_strata": "meteorological_season",
+    "bootstrap_repetitions": 20000,
+    "bootstrap_seed": 2026081501,
+    "one_sided_alpha": 0.05,
+    "minimum_unique_month_clusters": 12,
+    "primary_ci_scope": "calendar_uncertainty_conditional_on_three_trained_seeds",
+    "training_randomness_reporting": {
+      "report_each_seed_separately": true,
+      "report_seed_mean_sd_min_max": true,
+      "require_direction_consistency": true,
+      "claim_that_day_bootstrap_covers_training_randomness": false
+    },
+    "sensitivity": [
+      "paired_calendar_day_bootstrap",
+      "leave_one_calendar_month_out",
+      "leave_one_training_seed_out"
+    ]
+  },
+  "P0_train_only_gradient_scale_preflight": {
+    "role": "train_only",
+    "scientific_status": "engineering_gate_discard_all_preflight_weights",
+    "all_conditions_required_each_seed": true,
+    "completed_seeds": 3,
+    "registered_batch_days": 16,
+    "optimizer_updates_per_epoch": 17,
+    "flow_audit_epoch_window_1_based_inclusive": [
+      31,
+      40
+    ],
+    "flow_audit_optimizer_update_window_1_based_inclusive": [
+      511,
+      680
+    ],
+    "gradient_observation_unit": "optimizer_update",
+    "quantile_method": "linear",
+    "expected_update_fraction": 1,
+    "nonfinite_batches_max": 0,
+    "skipped_updates_max": 0,
+    "silent_rollbacks_max": 0,
+    "post_warmup_gradient_clip_fraction_max": 0.25,
+    "preclip_gradient_norm_p99_to_median_max": 5,
+    "preclip_gradient_norm_max_over_all_680_flow_updates": 50,
+    "require_exact_per_update_preclip_total_l2_norm_archive": true,
+    "validation_target_access_max": 0,
+    "calibration_target_access_max": 0,
+    "selection_target_access_max": 0,
+    "r_seen_target_access_max": 0,
+    "failure_action": "stop_before any retained-weight formal-v2.2 training; retain failure evidence; do not move any threshold within v2.2; any changed threshold requires a new prospective protocol revision"
+  },
+  "G0_shared_EA_learnability": {
+    "role": "validation_only",
+    "all_conditions_required_each_seed": true,
+    "encoder_gradient_norm_from_atom_nll_min_exclusive": 1e-12,
+    "encoder_gradient_norm_from_location_auxiliary_min_exclusive": 1e-12,
+    "validation_atom_nll_improvement_vs_train_prior_min_relative": 0.01,
+    "validation_location_loss_improvement_vs_zero_predictor_min_relative": 0.05,
+    "upper_atom_support": {
+      "train_exact_one_min_to_learn": 20,
+      "validation_exact_one_min_to_learn": 5,
+      "insufficient_support_action": "fix_to_train_jeffreys_prior_and_forbid_upper_atom_success_claim"
+    }
+  },
+  "G1_R0_validation_stability": {
+    "role": "validation_only",
+    "all_conditions_required": true,
+    "numerical_integrity": {
+      "completed_training_seeds": 3,
+      "expected_update_fraction": 1,
+      "nonfinite_batches_max": 0,
+      "skipped_updates_max": 0,
+      "silent_rollbacks_max": 0,
+      "failure_bundles_max": 0,
+      "invalid_archive_cells_max": 0,
+      "exact_atom_boundary_violations_max": 0,
+      "flow_gradient_clip_norm": 5,
+      "gradient_warmup_epochs": 30,
+      "gradient_warmup_optimizer_updates": 510,
+      "registered_batch_days": 16,
+      "optimizer_updates_per_epoch": 17,
+      "gradient_audit_epoch_start_1_based_inclusive": 31,
+      "gradient_audit_optimizer_update_start_1_based_inclusive": 511,
+      "gradient_observation_unit": "optimizer_update",
+      "quantile_method": "linear",
+      "post_warmup_gradient_clip_fraction_max": 0.25,
+      "preclip_gradient_norm_p99_to_median_max": 5,
+      "preclip_gradient_norm_max_over_all_flow_updates": 50,
+      "best_validation_loss_relative_to_zero_velocity_max": 0.95
+    },
+    "catastrophic_quality_bounds_each_seed": {
+      "level_CRPS_max": 0.1,
+      "ramp_CRPS_max": 0.065,
+      "normalized_joint_ES_max": 2,
+      "coverage90_min": 0.7,
+      "coverage90_max": 0.98,
+      "width90_min": 0.1,
+      "width90_max": 0.7
+    },
+    "three_seed_dispersion": {
+      "level_CRPS_max_minus_min_max": 0.0025,
+      "ramp_CRPS_max_minus_min_max": 0.0012,
+      "normalized_joint_ES_relative_max_minus_min_max": 0.03,
+      "coverage90_max_minus_min_max": 0.035,
+      "zero_Brier_max_minus_min_max": 0.006,
+      "atom_state_Brier_max_minus_min_max": 0.012
+    },
+    "flow_learnability_each_seed": {
+      "fixed_bank_validation_velocity_mse_improvement_vs_zero_velocity_min_relative": 0.05
+    },
+    "shared_EA_sha256_unchanged_through_flow": true,
+    "validation_replay_same_seed_bitwise_equal": true,
+    "member_chunk_numerical_invariance": {
+      "audit_role": "all_50_validation_days_in_ascending_calendar_order",
+      "audit_training_seeds": [
+        0,
+        1,
+        2
+      ],
+      "audit_sampling_seeds": [
+        21000,
+        21001,
+        21002
+      ],
+      "required_training_seed_sampling_seed_day_combinations": 450,
+      "registered_member_chunk": 10,
+      "alternate_member_chunk": 20,
+      "members": 100,
+      "integration_method": "heun",
+      "integration_steps": 16,
+      "explicit_common_atom_allocation": true,
+      "explicit_common_initial_noise": true,
+      "state_array_bitwise_equal": true,
+      "active_mask_bitwise_equal": true,
+      "zero_probability_bitwise_equal": true,
+      "one_probability_bitwise_equal": true,
+      "atom_boundary_values_bitwise_equal": true,
+      "final_scenario_values_allclose_atol": 5e-7,
+      "final_scenario_values_allclose_rtol": 0.000001,
+      "final_scenario_values_global_max_abs_difference_max": 0.000001,
+      "report_final_scenario_values_mean_and_p99_abs_difference": true,
+      "proper_score_compute_dtype": "float64_cpu",
+      "proper_score_scope": "every proper-score aggregate emitted by the frozen validation evaluator for each training seed and sampling seed, plus the final aggregate",
+      "proper_score_each_aggregate_abs_difference_max": 1e-7,
+      "coverage90_abs_difference_max": 0,
+      "atom_metric_max_abs_difference_max": 0,
+      "archive_both_outputs_and_difference_summary": true,
+      "cross_chunk_value_bitwise_equality_required": false
+    },
+    "atom_latent_and_velocity_strictly_zero": true,
+    "no_go_action": "repair training or protocol prospectively without accessing calibration or selection; do not move v2.2 thresholds after observing a v2.2 failure"
+  },
+  "G2_T0_validation_control": {
+    "role": "validation_only",
+    "comparator": "R0",
+    "all_conditions_required": true,
+    "reuse_G1_stability_limits": true,
+    "noninferiority": {
+      "level_CRPS_absolute_margin": 0.001,
+      "ramp_CRPS_absolute_margin": 0.001,
+      "normalized_joint_ES_relative_margin": 0.015
+    },
+    "shared_EA_sha256_must_match": true,
+    "one_sided_cluster_CI_upper_must_be_below_margin": true
+  },
+  "G3_T1_vs_T0_selection_superiority": {
+    "role": "selection_only",
+    "comparators": {
+      "T1_feature": "T0",
+      "T1_source": "T0"
+    },
+    "primary_endpoint": {
+      "metric": "overall_observed_only_local_ramp_CRPS",
+      "minimum_practically_important_improvement_absolute": 0.001,
+      "required_point_difference_max": -0.001,
+      "holm_adjusted_one_sided_CI_upper_max": 0,
+      "required_negative_seed_directions": 3
+    },
+    "supporting_dynamic_endpoint": {
+      "metric": "increment_path_lagged_variogram_p1_composite",
+      "definition": "equal_weight_mean_of_cross_zone_and_same_zone_temporal_scores_at_lags_1_to_6",
+      "minimum_practically_important_improvement_absolute": 0.0002,
+      "required_point_difference_max": -0.0002,
+      "one_sided_CI_upper_max": 0,
+      "required_negative_seed_directions": 3
+    },
+    "pearson_cross_lag_is_selection_endpoint": false
+  },
+  "G4_T1_vs_T0_selection_noninferiority": {
+    "role": "selection_only",
+    "testing_form": "intersection_union_all_endpoints_must_pass",
+    "one_sided_CI_upper_must_be_below_margin": true,
+    "margins": {
+      "level_CRPS_absolute": 0.001,
+      "normalized_joint_ES_relative": 0.015,
+      "coverage90_absolute_error_worsening": 0.01,
+      "Winkler90_relative": 0.02,
+      "ramp_max_up_CRPS_relative": 0.02,
+      "ramp_max_down_CRPS_relative": 0.02,
+      "atom_state_Brier_absolute": 0.002,
+      "atom_H_CRPS_relative": 0.02,
+      "atom_K_CRPS_relative": 0.02,
+      "atom_L_CRPS_relative": 0.02,
+      "atom_entry_Brier_absolute": 0.001,
+      "atom_exit_Brier_absolute": 0.001
+    },
+    "calibration_explanation": {
+      "width90_point_inflation_relative_max": 0.05,
+      "width90_one_sided_CI_inflation_relative_max": 0.1
+    },
+    "frozen_EA_override": {
+      "shared_EA_sha256_must_match": true,
+      "sampled_state_array_must_match_under_CRN": true,
+      "analytic_atom_probability_max_abs_difference": 1e-12,
+      "if_all_equal_atom_noninferiority_is_structurally_satisfied": true
+    }
+  },
+  "G5_negative_controls": {
+    "role": "selection_only",
+    "alignment_shuffle": {
+      "metric": "ramp_CRPS",
+      "T1_minus_T1_shuffle_point_max": -0.0005,
+      "one_sided_CI_upper_max": 0,
+      "minimum_gain_attenuation_fraction": 0.5,
+      "required_negative_seed_directions": 3
+    },
+    "posthoc_member_trajectory_shuffle": {
+      "metric": "cross_zone_ramp_variogram_lag0",
+      "minimum_relative_shuffle_worsening": 0.02,
+      "one_sided_CI_lower_min": 0
+    }
+  },
+  "G6_efficiency": {
+    "role": "validation_conditions_only_no_target_access_required",
+    "benchmark_protocol": {
+      "same_hardware_precision_compile_status_and_member_chunk": true,
+      "warmup_repetitions": 5,
+      "measured_paired_repetitions": 30,
+      "randomize_candidate_order": true,
+      "cuda_synchronize": true,
+      "include_atom_allocation_and_transport": true,
+      "exclude_disk_io": true
+    },
+    "T1_vs_T0": {
+      "nominal_parameter_manifest_must_match": true,
+      "flow_NFE_must_match": true,
+      "effective_parameter_ratio_max": 1.15,
+      "median_sampling_latency_ratio_max": 1.2,
+      "paired_bootstrap_latency_ratio_upper95_max": 1.25,
+      "peak_VRAM_ratio_max": 1.25
+    },
+    "flow_vs_joint_DDPM": {
+      "quality_noninferiority_required": true,
+      "paired_bootstrap_flow_latency_ratio_upper95_max": 0.8
+    },
+    "T3_vs_T1": {
+      "ramp_CRPS_TOST_equivalence_margin_absolute": 0.0005,
+      "TOST_alpha": 0.05,
+      "other_noninferiority_required": true,
+      "parameter_ratio_max_for_simplicity_win": 0.75,
+      "or_latency_ratio_upper95_max_for_simplicity_win": 0.75
+    }
+  },
+  "mask_and_atom_rules": {
+    "level_atom_and_coverage": "raw_observed_cells_only",
+    "ramp": "both_adjacent_endpoints_observed",
+    "lagged_variogram": "all_endpoints_required_by_each_pair_observed",
+    "normalized_joint_ES": "masked_euclidean_norm_divided_by_sqrt_valid_dimension",
+    "H_K_L_and_any_atom_event": "complete_240_cell_calendar_days_only",
+    "entry_exit_Brier": "observed_adjacent_pairs_only",
+    "empty_valid_day_policy": "hard_fail_not_silent_drop",
+    "atom_Brier_probability_source": "analytic_categorical_head",
+    "H_K_L_probability_source": "finite_M100_scenario_set",
+    "fair_or_U_statistic_for_mass_preserving_members": false
+  },
+  "multiplicity": {
+    "T1_feature_and_T1_source_primary_family": "Holm_one_sided_FWER_0.05",
+    "supporting_dynamic_test": "fixed_sequence_after_own_primary_pass",
+    "noninferiority_family": "intersection_union_no_extra_alpha_split",
+    "NWP_regime_metrics": "diagnostic_only_unless_maxT_simultaneous_intervals_are_preregistered",
+    "later_T2_T3_on_already_opened_selection": "not_confirmatory"
+  },
+  "train_only_derived_quantities": {
+    "may_be_derived_before_selection_access": [
+      "NWP_regime_cutpoints",
+      "extreme_ramp_P90_P95_thresholds",
+      "near_zero_sensitivity_epsilon",
+      "synthetic_perturbation_power"
+    ],
+    "selection_or_calibration_may_change_margins": false,
+    "power_requirement_at_ramp_effect_minus_0p001": 0.8,
+    "if_power_requirement_fails": "do_not_relax_margin_or_alpha_obtain_more_external_days_or_label_result_underpowered"
+  }
+}

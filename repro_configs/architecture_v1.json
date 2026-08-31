@@ -1,0 +1,217 @@
+{
+  "schema": "architecture_v1_protocol_v1",
+  "experiment_name": "Architecture-v1 leakage-safe common-basis study",
+  "protocol_revision": "architecture_v1_20260815",
+  "data_dir": "Data",
+  "output_root": "outputs/architecture_v1",
+  "evidence_label": "architecture development; local final test intentionally unavailable",
+  "layout": {
+    "sample": "calendar_day",
+    "zones": 10,
+    "hours": 24,
+    "condition_dim": 20
+  },
+  "data_protocol": {
+    "allocation_seed": 20260815,
+    "allocation_algorithm": "numpy.default_rng(PCG64).permutation",
+    "allocation_order": [
+      "selection",
+      "calibration",
+      "validation",
+      "train"
+    ],
+    "expected_available_count": 731,
+    "expected_available_sha256": "fafe12c288e32d1f3e0cc5a81b46151059133f38dc5eb18ea32b7d1a47a56b77",
+    "expected_remaining_count": 431,
+    "expected_remaining_sha256": "2746fdbf2cbc98039fee7419ab659c9da57820d8d0ad5531a31559e7e2ee4d68",
+    "role_counts": {
+      "train": 281,
+      "validation": 50,
+      "calibration": 50,
+      "selection": 50
+    },
+    "expected_role_sha256": {
+      "train": "df59fb8da9f0ad4b426de2da59a592b8aa1033343abbb799a14a4344c803eb27",
+      "validation": "a0f784ad013fb978197b356ba594f9baee1a15953b593155f549f704420bb3eb",
+      "calibration": "83b5c058c7d7f6a4daacef226e058c156ee289be4d20e45c01a4d546a6048b40",
+      "selection": "c52b836aecc8e09eb5842712e530cb5b92a67a39bc4edecf9d6714eda3dcd660",
+      "r_seen": "bcb8fc9429642f9a4a0a7cde97ecec60a88ad35579991e820293e7cecba1c5f0"
+    },
+    "r_seen_policy": "diagnosis_only_quarantine",
+    "r_seen": {
+      "label": "R-SEEN / architecture diagnosis",
+      "expected_count": 300,
+      "expected_union_sha256": "bcb8fc9429642f9a4a0a7cde97ecec60a88ad35579991e820293e7cecba1c5f0",
+      "sources": [
+        {
+          "label": "MM-JDWind versus DDPM primary diagnostic panel",
+          "path": "repro_configs/mm_jdwind_confirmation_splits.json",
+          "schema": "mm_jdwind_confirmation_splits_v1",
+          "date_blocks_field": "outer_test_dates",
+          "expected_count": 150,
+          "expected_union_sha256": "645f24c2aed6ad7c4d3110ea3fb5047e8f9efbbc28b6ba59b134967e1f160788"
+        },
+        {
+          "label": "STGF/Time-domain/DDPM secondary diagnostic panel",
+          "path": "repro_configs/stgf_confirmation_splits.json",
+          "schema": "stgf_confirmation_splits_v1",
+          "date_blocks_field": "outer_test_dates",
+          "expected_count": 150,
+          "expected_union_sha256": "28bce20c3ec13287d50c3f4bddb827041d054c54a3b9de91a856f47acf62e314"
+        }
+      ]
+    },
+    "external_final": {
+      "status": "reserved_unregistered",
+      "local_date_count": 0,
+      "policy": "A separately frozen external wind dataset registry is required before target access. No local GEFCom2014 date may be relabeled final."
+    }
+  },
+  "preprocessing": {
+    "nwp_loader": "predictor_columns_only",
+    "nwp_features": [
+      "U10",
+      "V10",
+      "U100",
+      "V100",
+      "WS10",
+      "WS100",
+      "WE10",
+      "WE100",
+      "WD10",
+      "WD100"
+    ],
+    "target_missing": {
+      "order": "assign_role_before_any_target_imputation",
+      "raw_missing_mask": "preserved",
+      "fill_scope": [
+        "role",
+        "zone",
+        "calendar_day"
+      ],
+      "fill_method": "forward_then_backward_within_same_zone_day",
+      "cross_role_fill": "forbidden",
+      "supervision": "raw_observed_cells_only",
+      "ramp_supervision": "both_adjacent_raw_cells_observed"
+    },
+    "standardizers": "fit_on_raw_observed_train_cells_only"
+  },
+  "model_common_basis": {
+    "condition_dim": 20,
+    "zones": 10,
+    "hours": 24,
+    "encoder_dim": 64,
+    "encoder_depth": 2,
+    "flow_dim": 96,
+    "flow_depth": 4,
+    "heads": 4,
+    "ff_multiplier": 4,
+    "dropout": 0.0,
+    "atom_hidden_dim": 64,
+    "atom_initial_probabilities": [
+      0.08,
+      0.919,
+      0.001
+    ],
+    "atom_shared_priority_weight": 0.5,
+    "logit_epsilon": 0.0001,
+    "state_codes": {
+      "zero": 0,
+      "interior": 1,
+      "one": 2
+    },
+    "variants": [
+      "R0",
+      "T0",
+      "S0",
+      "T1_feature",
+      "T1_source",
+      "T1_shuffle",
+      "T2_joint_ddpm",
+      "T3_probabilistic_ssm"
+    ]
+  },
+  "experiment_contract": {
+    "status": "implementation_skeleton_only; no formal training has started",
+    "active_skeleton_candidates": [
+      "R0",
+      "T0"
+    ],
+    "candidate_definitions": {
+      "R0": "clean common-shell joint time-domain rectified-flow baseline; not a numerical reproduction of the legacy STGF checkpoint",
+      "T0": "R0 shell plus the parameter-matched temporal cell with its recurrent transition disconnected; the joint RF still has full-trajectory attention"
+    },
+    "formal_training_seeds": [
+      0,
+      1,
+      2
+    ],
+    "fit_roles": {
+      "parameter_fitting": "train",
+      "checkpoint_selection": "validation",
+      "posthoc_calibration": "calibration",
+      "architecture_gate": "selection",
+      "diagnosis_only": "r_seen",
+      "final": "external_only_unregistered"
+    },
+    "shared_ea": {
+      "smoke_policy": "fit R0 E/A on observed atom labels, then copy and freeze the identical state into the R0-flow and T0-flow stages",
+      "formal_policy_status": "must be preregistered before GPU training",
+      "formal_policy_open_choice": "add an observed-interior location auxiliary during E/A fitting or jointly pretrain E with R0 flow before freezing"
+    },
+    "formal_sampling_template": {
+      "members": 100,
+      "method": "heun",
+      "integration_steps": 16,
+      "per_path_flow_nfe": 31,
+      "member_chunk": 10,
+      "estimand": "finite_dependent_scenario_set",
+      "score_semantics": "empirical_v_stat"
+    },
+    "formal_run_status": "blocked until the shared-E/A policy and selection gates are preregistered; final claims also require a frozen external dataset"
+  },
+  "smoke": {
+    "enabled": false,
+    "execute_policy": "dry-run by default; execution requires an explicit --execute-smoke flag",
+    "scientific_status": "wiring_and_safety_check_only; scores are not research evidence",
+    "max_days_per_role": {
+      "train": 8,
+      "validation": 2,
+      "calibration": 2,
+      "selection": 2,
+      "r_seen": 2
+    },
+    "model_seeds": [
+      0
+    ],
+    "model_overrides": {
+      "encoder_dim": 32,
+      "encoder_depth": 1,
+      "flow_dim": 32,
+      "flow_depth": 1,
+      "heads": 4,
+      "ff_multiplier": 2,
+      "atom_hidden_dim": 32
+    },
+    "training": {
+      "batch_size": 2,
+      "updates_per_stage": 2,
+      "atom_learning_rate": 0.001,
+      "flow_learning_rate": 0.001,
+      "gradient_clip": 1.0
+    },
+    "sampling": {
+      "members": 4,
+      "method": "heun",
+      "integration_steps": 2,
+      "per_path_flow_nfe": 3,
+      "member_chunk": 2,
+      "shared_sampling_seed": 20000,
+      "common_random_numbers_group": "R0_T0_selection_smoke_seed20000",
+      "sampling_plan_id": "selection_M4_heun2_crn_v1",
+      "allocation_semantics": "balanced_shared_priority_control",
+      "estimand": "finite_dependent_scenario_set",
+      "score_semantics": "empirical_v_stat"
+    }
+  }
+}

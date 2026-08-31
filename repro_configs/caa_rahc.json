@@ -1,0 +1,102 @@
+{
+  "experiment_name": "CAA-RAHC internal outer-split confirmation",
+  "data_dir": "Data",
+  "output_root": "outputs/caa_rahc",
+  "device": "cuda",
+  "outer_splits": [1, 2, 3],
+  "model_seeds": [0, 1, 2],
+  "baseline": {
+    "name": "A0_C0_linear_empirical",
+    "calibration_strength": 1.0,
+    "folds": 5,
+    "fold_seed": 20260719
+  },
+  "model": {
+    "head": {
+      "condition_dim": 20,
+      "model_dim": 96,
+      "bottleneck": 48,
+      "depth": 2,
+      "heads": 4,
+      "dropout": 0.0,
+      "minimum_scale": 0.05,
+      "maximum_scale": 2.5
+    },
+    "denoiser": {
+      "condition_dim": 20,
+      "sequence_length": 24,
+      "model_dim": 128,
+      "condition_bottleneck": 64,
+      "depth": 4,
+      "heads": 4,
+      "ff_multiplier": 4,
+      "dropout": 0.0,
+      "learn_variance": true,
+      "use_multiscale_embedding": true,
+      "use_adaln": true
+    }
+  },
+  "diffusion": {
+    "timesteps": 250,
+    "schedule": "cosine",
+    "learn_variance": true,
+    "vlb_weight": 0.001
+  },
+  "training": {
+    "head_steps": 4000,
+    "diffusion_steps": 18000,
+    "batch_size": 256,
+    "head_learning_rate": 0.0003,
+    "head_weight_decay": 0.0001,
+    "diffusion_learning_rate": 0.0001,
+    "diffusion_weight_decay": 0.0,
+    "crps_weight": 0.5,
+    "mean_weight": 0.1,
+    "condition_mask_probability": 0.1,
+    "gradient_clip": 1.0,
+    "head_validate_every": 250,
+    "checkpoint_every": 1000,
+    "log_every": 100,
+    "workers": 0,
+    "resume": false
+  },
+  "sampling": {
+    "scenarios": 100,
+    "steps": 50,
+    "eta": 1.0,
+    "day_batch": 8
+  },
+  "caa": {
+    "atom_regularization_c": 0.1,
+    "atom_strengths": [0.5, 1.0],
+    "anchor": 0.1,
+    "gate_regularization": 0.03,
+    "gate_no_shrink_regularization": 0.0,
+    "gate_steps": 600,
+    "gate_batch_cells": 4096,
+    "gate_learning_rate": 0.03,
+    "maximum_lambda": 1.0,
+    "tail_strengths": [0.25, 0.5, 0.75, 1.0],
+    "maximum_logit_shifts": [0.25, 0.5],
+    "maximum_width_increases": [0.02, 0.05]
+  },
+  "constraints": {
+    "bootstrap_replicates": 5000,
+    "bootstrap_seed": 20260720,
+    "crps_relative_degradation_u95": 0.005,
+    "per_seed_crps_point_degradation": 0.005,
+    "secondary_relative_degradation_u95": 0.01,
+    "width_absolute_increase_point": 0.05,
+    "width_absolute_increase_u95": 0.05
+  },
+  "success_gates": {
+    "coverage_90_low": 0.88,
+    "coverage_90_high": 0.92,
+    "conditional_ace_relative_improvement": 0.30,
+    "crps_relative_degradation": 0.005,
+    "secondary_relative_degradation": 0.01,
+    "width_absolute_increase": 0.05,
+    "strict_rank_reversals": 0
+  },
+  "scope_statement": "Post-freeze internal nested outer-split confirmation. All 731 dates existed in the earlier study; this is not an external confirmation dataset."
+}

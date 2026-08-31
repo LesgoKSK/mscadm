@@ -1,0 +1,1 @@
+"""Headless figure generation package."""

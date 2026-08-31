@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="800" viewBox="0 0 1320 800" role="img" aria-labelledby="title desc">
+  <title id="title">复审后的研究决策树</title>
+  <desc id="desc">先做评分语义与数值稳定审计，然后进入连续内部评分后训练；条件协方差必须先通过嵌套交叉拟合；其他路线按条件降级。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#6c7d8d"/></marker>
+    <filter id="shadow" x="-10%" y="-15%" width="120%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#17365d" flood-opacity="0.13"/></filter>
+  </defs>
+  <rect width="1320" height="800" rx="24" fill="#f5f8fb"/>
+  <g font-family="Microsoft YaHei, Noto Sans CJK SC, Arial, sans-serif">
+    <text x="64" y="64" font-size="31" font-weight="700" fill="#17365d">复审后的研究决策树</text>
+    <text x="64" y="99" font-size="17" fill="#647484">先证伪，再训练；每条路线只有通过上游诊断才获得算力预算</text>
+
+    <g filter="url(#shadow)">
+      <rect x="410" y="132" width="500" height="94" rx="16" fill="#17365d"/>
+    </g>
+    <text x="660" y="168" text-anchor="middle" font-size="20" font-weight="700" fill="#ffffff">P0：score 语义 + sampler + 梯度审计</text>
+    <text x="660" y="199" text-anchor="middle" font-size="15" fill="#dceaf5">区分 IID 分布与 mass-preserving 有限集合；复现 sqrt-VS 零点风险</text>
+
+    <line x1="660" y1="226" x2="660" y2="279" stroke="#6c7d8d" stroke-width="3" marker-end="url(#arrow)"/>
+    <g filter="url(#shadow)"><rect x="358" y="286" width="604" height="110" rx="17" fill="#eaf6ef" stroke="#217a48" stroke-width="2"/></g>
+    <text x="660" y="323" text-anchor="middle" font-size="20" font-weight="700" fill="#217a48">仓库机制证据：I→I 贡献 95.99% ramp gap</text>
+    <text x="660" y="354" text-anchor="middle" font-size="15" fill="#3f6250">首轮合理分支：冻结 mixed-measure head/jump，匹配部署采样器</text>
+    <text x="660" y="379" text-anchor="middle" font-size="14" fill="#647484">若外部数据分解相反，再转 marked state-duration–amplitude flow</text>
+
+    <line x1="520" y1="396" x2="270" y2="478" stroke="#6c7d8d" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="800" y1="396" x2="1050" y2="478" stroke="#6c7d8d" stroke-width="3" marker-end="url(#arrow)"/>
+
+    <g filter="url(#shadow)"><rect x="70" y="492" width="500" height="140" rx="17" fill="#ffffff" stroke="#286aa3" stroke-width="2"/></g>
+    <text x="320" y="530" text-anchor="middle" font-size="20" font-weight="700" fill="#286aa3">主实验 A：atom-safe score adaptation</text>
+    <text x="320" y="562" text-anchor="middle" font-size="15" fill="#24313d">level + increment；joint anchor 后置；VS 最后</text>
+    <text x="320" y="589" text-anchor="middle" font-size="15" fill="#24313d">16 Heun steps = 31 flow NFEs；低 LR adapter</text>
+    <text x="320" y="615" text-anchor="middle" font-size="14" fill="#647484">创新需收窄：有限集合依赖 + 多场站 ramp，而非首次 CRPS 后训练</text>
+
+    <g filter="url(#shadow)"><rect x="750" y="492" width="500" height="140" rx="17" fill="#ffffff" stroke="#bd8424" stroke-width="2"/></g>
+    <text x="1000" y="530" text-anchor="middle" font-size="20" font-weight="700" fill="#a96600">条件实验 B：full-trajectory source</text>
+    <text x="1000" y="562" text-anchor="middle" font-size="15" fill="#24313d">nested OOF；显式 PSD；shared-basis low rank</text>
+    <text x="1000" y="589" text-anchor="middle" font-size="15" fill="#24313d">先胜过 static full 与 CW per-lead，再训练 flow</text>
+    <text x="1000" y="615" text-anchor="middle" font-size="14" fill="#647484">动态图仅作参数化/基线，不能再作为标题创新</text>
+
+    <line x1="320" y1="632" x2="320" y2="686" stroke="#6c7d8d" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="1000" y1="632" x2="1000" y2="686" stroke="#6c7d8d" stroke-width="3" marker-end="url(#arrow)"/>
+
+    <g filter="url(#shadow)"><rect x="92" y="697" width="456" height="70" rx="15" fill="#eaf3fa"/></g>
+    <text x="320" y="728" text-anchor="middle" font-size="17" font-weight="700" fill="#17365d">通过：locked test / 外部数据</text>
+    <text x="320" y="752" text-anchor="middle" font-size="13" fill="#647484">失败：保留负结果，转 conformal/工程校准</text>
+
+    <g filter="url(#shadow)"><rect x="772" y="697" width="456" height="70" rx="15" fill="#fff5e5"/></g>
+    <text x="1000" y="728" text-anchor="middle" font-size="17" font-weight="700" fill="#7e5200">诊断通过才给生成训练预算</text>
+    <text x="1000" y="752" text-anchor="middle" font-size="13" fill="#647484">失败：停止 whitening / graph 大模型</text>
+  </g>
+</svg>

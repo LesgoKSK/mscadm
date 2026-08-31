@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">跨模型诊断到新架构的证据链</title>
+  <desc id="desc">四类诊断证据支持优先验证联合时域 rectified flow、轻量状态空间时间模块和 exact-zero-capable 分布组件，并由匹配基线裁决。</desc>
+  <defs>
+    <linearGradient id="hero" x1="0" x2="1"><stop stop-color="#17365d"/><stop offset="1" stop-color="#286aa3"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="5" stdDeviation="6" flood-opacity=".16"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#60758a"/></marker>
+    <style>
+      .font{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif}.h{font-size:30px;font-weight:700;fill:#fff}.t{font-size:22px;font-weight:700;fill:#17365d}.b{font-size:18px;fill:#33485a}.s{font-size:15px;fill:#607080}.box{rx:16;filter:url(#shadow);stroke-width:2}.arrow{stroke:#60758a;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1400" height="760" fill="#eef3f7"/>
+  <rect x="40" y="30" width="1320" height="82" rx="18" fill="url(#hero)"/>
+  <text class="font h" x="700" y="82" text-anchor="middle">诊断不是选“赢家”，而是定位下一代模型必须补齐的结构</text>
+
+  <rect class="box" x="55" y="160" width="280" height="180" fill="#fff" stroke="#cf4450"/>
+  <text class="font t" x="195" y="202" text-anchor="middle">Ramp / 时间动态</text>
+  <text class="font b" x="82" y="240"><tspan x="82" dy="0">MM ramp-CRPS +5.19%</tspan><tspan x="82" dy="30">总变差 CRPS +80.33%</tspan><tspan x="82" dy="30">动态天气下差距更大</tspan></text>
+  <text class="font s" x="195" y="320" text-anchor="middle">优先检验时序记忆，并保留 score 对照</text>
+
+  <rect class="box" x="390" y="160" width="280" height="180" fill="#fff" stroke="#2b7bbb"/>
+  <text class="font t" x="530" y="202" text-anchor="middle">联合空间耦合</text>
+  <text class="font b" x="417" y="240"><tspan x="417" dy="0">MM 同时空间相关更接近真值</tspan><tspan x="417" dy="30">成员打乱后 lag-0 VS 恶化</tspan><tspan x="417" dy="30">DDPM 打乱前后几乎不变</tspan></text>
+  <text class="font s" x="530" y="320" text-anchor="middle">保留并验证 10 区联合成员语义</text>
+
+  <rect class="box" x="725" y="160" width="280" height="180" fill="#fff" stroke="#2d8a58"/>
+  <text class="font t" x="865" y="202" text-anchor="middle">Atom / 持续期</text>
+  <text class="font b" x="752" y="240"><tspan x="752" dy="0">显式零状态明显优于无状态</tspan><tspan x="752" dy="30">但阈值变化后 H/K/L 结论混合</tspan><tspan x="752" dy="30">上边界事件极少</tspan></text>
+  <text class="font s" x="865" y="320" text-anchor="middle">保留 exact-zero 组件，暂不做重型半马尔可夫</text>
+
+  <rect class="box" x="1060" y="160" width="280" height="180" fill="#fff" stroke="#b47a22"/>
+  <text class="font t" x="1200" y="202" text-anchor="middle">NWP regime</text>
+  <text class="font b" x="1087" y="240"><tspan x="1087" dy="0">快速变速：gap 0.00372</tspan><tspan x="1087" dy="30">明显转向：gap 0.00360</tspan><tspan x="1087" dy="30">空间异质：gap 0.00355</tspan></text>
+  <text class="font s" x="1200" y="320" text-anchor="middle">优先检验 NWP 条件化动态假设</text>
+
+  <path class="arrow" d="M195 350 C195 410,450 400,555 455"/>
+  <path class="arrow" d="M530 350 C530 400,590 415,630 455"/>
+  <path class="arrow" d="M865 350 C865 405,805 420,770 455"/>
+  <path class="arrow" d="M1200 350 C1200 415,950 405,845 455"/>
+
+  <rect class="box" x="315" y="455" width="770" height="200" fill="#e7f1fa" stroke="#286aa3" stroke-width="3"/>
+  <text class="font t" x="700" y="498" text-anchor="middle">首个可证伪候选：联合时域 RF + 轻量状态空间时间模块</text>
+  <text class="font b" x="355" y="540"><tspan x="355" dy="0">① 保留 10 区 × 24 小时联合成员语义，并验证其有效使用</tspan><tspan x="355" dy="31">② 用 source / feature / memoryless 消融定位状态空间模块作用</tspan><tspan x="355" dy="31">③ 保留 exact-zero-capable 组件；只在 active interior 坐标上传输</tspan><tspan x="355" dy="31">④ matched joint DDPM、概率 SSM 与 score-control 共同裁决</tspan></text>
+
+  <rect x="315" y="682" width="770" height="55" rx="13" fill="#fff7e6" stroke="#bd8424" stroke-width="2"/>
+  <text class="font s" x="700" y="716" text-anchor="middle">阶段路线：优先测试 joint RF + lightweight SSM；最终架构由预注册 matched 实验决定</text>
+</svg>

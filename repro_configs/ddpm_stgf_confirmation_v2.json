@@ -1,0 +1,51 @@
+{
+  "experiment_name": "DDPM comparator on STGF-Flow v2 frozen confirmation splits",
+  "protocol_revision": "ddpm_stgf_confirmation_v2_20260726",
+  "data_dir": "Data",
+  "split_registry": "repro_configs/stgf_confirmation_splits.json",
+  "stgf_confirmation_config": "repro_configs/stgf_confirmation_v2.json",
+  "output_root": "outputs/ddpm_stgf_confirmation_v2",
+  "device": "cuda",
+  "outer_splits": [
+    1,
+    2,
+    3
+  ],
+  "model_seeds": [
+    0
+  ],
+  "model": {
+    "condition_dim": 20,
+    "channels": 64,
+    "time_dim": 128,
+    "layers": 8,
+    "dilation_cycle": 4
+  },
+  "diffusion": {
+    "timesteps": 250,
+    "schedule": "linear",
+    "learn_variance": false,
+    "vlb_weight": 0.0
+  },
+  "training": {
+    "steps": 26000,
+    "batch_size": 256,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0,
+    "condition_mask_probability": 0.0,
+    "gradient_clip": 1.0,
+    "checkpoint_every": 1000,
+    "log_every": 100,
+    "resume": true,
+    "workers": 0
+  },
+  "sampling": {
+    "members": 100,
+    "steps": 250,
+    "sampler": "ddim",
+    "eta": 1.0,
+    "day_batch": 8
+  },
+  "comparison_scope": "Strong reproduced marginal comparator. Joint scores are descriptive because DDPM generates zone-day records independently.",
+  "evidence_label": "post-lock internal confirmation on STGF frozen outer splits; not external"
+}

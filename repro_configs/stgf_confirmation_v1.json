@@ -1,0 +1,86 @@
+{
+  "experiment_name": "STGF-Flow post-lock frozen confirmation",
+  "protocol_revision": "stgf_confirmation_v1_20260726",
+  "data_dir": "Data",
+  "split_registry": "repro_configs/stgf_confirmation_splits.json",
+  "development_selection_lock": "outputs/stgf_development_v2/selection.lock.json",
+  "development_selection_lock_sha256": "cc64ca17939db0db43b1f5494a4eeae68bb1e5aac7f88124c664075a33837249",
+  "output_root": "outputs/stgf_confirmation_v1",
+  "device": "cuda",
+  "outer_splits": [
+    1,
+    2,
+    3
+  ],
+  "primary_model_seeds": [
+    0,
+    1,
+    2
+  ],
+  "ablation_model_seeds": [
+    0
+  ],
+  "transform_modes": [
+    "time_domain",
+    "graph_only",
+    "time_frequency",
+    "stgf"
+  ],
+  "locked_selection": {
+    "transform_mode": "stgf",
+    "physical_mean_anchor": 0.5,
+    "residual_temperature": 0.9
+  },
+  "graph": {
+    "neighbors": 3,
+    "correlation_power": 2.0,
+    "logit_epsilon": 0.0001
+  },
+  "model": {
+    "condition_dim": 20,
+    "center_dim": 64,
+    "center_depth": 2,
+    "flow_dim": 96,
+    "flow_depth": 4,
+    "heads": 4,
+    "ff_multiplier": 4,
+    "dropout": 0.0,
+    "low_frequency_weight": 0.5
+  },
+  "training": {
+    "batch_size": 16,
+    "workers": 0,
+    "center_steps": 3000,
+    "flow_steps": 10000,
+    "center_learning_rate": 0.0003,
+    "flow_learning_rate": 0.0001,
+    "center_weight_decay": 0.0001,
+    "flow_weight_decay": 0.0,
+    "center_physical_weight": 1.0,
+    "center_logit_weight": 0.05,
+    "gradient_clip": 1.0,
+    "validate_every": 250,
+    "log_every": 100,
+    "early_stopping_patience_validations": 8,
+    "early_stopping_minimum_delta": 0.00001
+  },
+  "sampling": {
+    "members": 100,
+    "flow_steps": 16,
+    "day_batch": 2,
+    "member_chunk": 20
+  },
+  "predeclared_success_gates": {
+    "primary_vs_time_domain_CRPS_relative_improvement_minimum": 0.01,
+    "primary_vs_time_domain_joint_ES_240_relative_improvement_minimum": 0.01,
+    "primary_vs_time_domain_adjacency_VS_relative_improvement_minimum": 0.01,
+    "primary_coverage_90_interval": [
+      0.88,
+      0.92
+    ],
+    "primary_better_outer_count_minimum": 2,
+    "maximum_secondary_metric_relative_degradation": 0.01
+  },
+  "test_access_policy": "selection lock required before any frozen test archive is generated",
+  "evidence_label": "post-lock internal confirmation on new frozen outer splits; not external"
+}

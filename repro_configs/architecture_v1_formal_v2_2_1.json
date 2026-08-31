@@ -1,0 +1,495 @@
+{
+  "schema": "architecture_v1_protocol_v1",
+  "experiment_name": "Architecture-v1 formal-v2.2.1 runner-key repair R0 study",
+  "protocol_revision": "architecture_v1_formal_v2_2_1_20260818",
+  "lineage": {
+    "base_config": "repro_configs/architecture_v1_formal_v2.json",
+    "base_config_file_sha256": "b92f8647d7e1874c81a5927ff552e9ce03c9906b147ec389c71d55d06b317c9c",
+    "formal_v2_1_amendment": "repro_configs/architecture_v1_formal_v2_1_amendment.json",
+    "formal_v2_1_amendment_file_sha256": "e34624f5aa98340025740fc449cc8b0372b110e240b505a14a4a34b7053867d4",
+    "formal_v2_1_result": "outputs/architecture_v1_formal_v2_1/R0_FORMAL_RESULT.json",
+    "formal_v2_1_result_file_sha256": "e26e361f87da7d76fbd0fc514eef3235bed54d301c2b981e7873ea1e7b4e1b06",
+    "formal_v2_1_status": "G1_NO_GO_permanent_not_reclassified",
+    "evidence_classification": "validation_informed_engineering_amendment_not_independent_validation_confirmation",
+    "within_v2_2_failure_threshold_movement": "forbidden; a changed candidate or threshold requires a newly frozen revision",
+    "revision_scope": [
+      "prospective_flow_gradient_clip_candidate_5p0",
+      "train_only_three_seed_discarded_gradient_scale_preflight",
+      "cross_member_chunk_state_exact_and_continuous_numeric_equivalence_gate"
+    ],
+    "all_other_scientific_protocols": "copied unchanged from formal-v2",
+    "formal_v2_2_aborted_run": "outputs/architecture_v1_formal_v2_2",
+    "formal_v2_2_status": "ABORTED_BEFORE_FIRST_RETAINED_FLOW_UPDATE_due_runner_gate_key_KeyError",
+    "formal_v2_2_config": "repro_configs/architecture_v1_formal_v2_2.json",
+    "formal_v2_2_config_file_sha256": "78b88963e16a680b403afddba6f53dc069c8e2fa43b4f9e09a8e93e87784cf8c",
+    "formal_v2_2_gate": "repro_configs/architecture_v1_go_no_go_v2_2.json",
+    "formal_v2_2_gate_file_sha256": "72ba39982a97e3e5914e15c31223118c5f61288029a35f605b7eff2ba98d3bcb",
+    "v2_2_1_only_change": "correct runner lookup to the already frozen gate key preclip_gradient_norm_max_over_all_flow_updates; no threshold, data, model, optimizer, seed, metric, or selection rule changed",
+    "within_v2_2_1_failure_threshold_movement": "forbidden; any further code or threshold change requires a newly frozen revision"
+  },
+  "data_dir": "Data",
+  "output_root": "outputs/architecture_v1_formal_v2_2_1",
+  "evidence_label": "validation-informed prospective engineering amendment after v2.1 No-Go; not independent validation confirmation; calibration and selection sealed; local final unavailable",
+  "layout": {
+    "sample": "calendar_day",
+    "zones": 10,
+    "hours": 24,
+    "condition_dim": 20
+  },
+  "data_protocol": {
+    "allocation_seed": 20260816,
+    "allocation_algorithm": "numpy.default_rng(PCG64).permutation",
+    "allocation_order": [
+      "selection",
+      "calibration",
+      "validation",
+      "train"
+    ],
+    "expected_available_count": 731,
+    "expected_available_sha256": "fafe12c288e32d1f3e0cc5a81b46151059133f38dc5eb18ea32b7d1a47a56b77",
+    "expected_remaining_count": 417,
+    "expected_remaining_sha256": "1176f40bb44991aadc840cd1d143e9f73c7880161de1b2f9d1d88c6f0dbe158c",
+    "role_counts": {
+      "train": 267,
+      "validation": 50,
+      "calibration": 50,
+      "selection": 50
+    },
+    "expected_role_sha256": {
+      "train": "f67eb5fd4382b2d69d2d22d23488ec618cd3b3b9547a9bbcc71bdd39587c8cf5",
+      "validation": "d7161152e72233859ad94964c46b44be3dbd0785f5627942e1b4d7d07c4145d3",
+      "calibration": "4d3886279162ad58aae6c713c6957b290a37e72af1f6c7306e955173a61bfd3b",
+      "selection": "4ad592da0726bb813dfb5aa237889a5ceda2e6d93bfc06386e4ffa009ab60d56",
+      "r_seen": "0b80d23249f671b90e48673efdc9bf52a9b751c5711448169813f70ed7b48e93"
+    },
+    "r_seen_policy": "diagnosis_only_quarantine",
+    "r_seen": {
+      "label": "R-SEEN / diagnosis plus engineering exposure quarantine",
+      "expected_count": 314,
+      "expected_union_sha256": "0b80d23249f671b90e48673efdc9bf52a9b751c5711448169813f70ed7b48e93",
+      "sources": [
+        {
+          "label": "MM-JDWind versus DDPM primary diagnostic panel",
+          "path": "repro_configs/mm_jdwind_confirmation_splits.json",
+          "schema": "mm_jdwind_confirmation_splits_v1",
+          "date_blocks_field": "outer_test_dates",
+          "expected_count": 150,
+          "expected_union_sha256": "645f24c2aed6ad7c4d3110ea3fb5047e8f9efbbc28b6ba59b134967e1f160788"
+        },
+        {
+          "label": "STGF/Time-domain/DDPM secondary diagnostic panel",
+          "path": "repro_configs/stgf_confirmation_splits.json",
+          "schema": "stgf_confirmation_splits_v1",
+          "date_blocks_field": "outer_test_dates",
+          "expected_count": 150,
+          "expected_union_sha256": "28bce20c3ec13287d50c3f4bddb827041d054c54a3b9de91a856f47acf62e314"
+        },
+        {
+          "label": "architecture-v1 smoke engineering exposure",
+          "path": "repro_configs/architecture_v1_smoke_quarantine.json",
+          "schema": "architecture_v1_smoke_quarantine_v1",
+          "date_blocks_field": "dates_by_role",
+          "declared_union_sha_field": "all_dates_sha256",
+          "expected_count": 14,
+          "expected_union_sha256": "ce4bf40a06584a0f86a38341e93dd23fba9775cd2918cc23e15c079b8feaa4e4"
+        }
+      ]
+    },
+    "formal_fit_target_access": {
+      "materialized_roles": [
+        "train",
+        "validation"
+      ],
+      "hard_forbidden_roles": [
+        "calibration",
+        "selection",
+        "r_seen",
+        "final"
+      ],
+      "required_loader": "architecture_v1.data.build_architecture_v1_fit_data"
+    },
+    "external_final": {
+      "status": "reserved_unregistered",
+      "local_date_count": 0,
+      "policy": "A separately frozen external wind dataset registry is required before target access. No local GEFCom2014 date may be relabeled final."
+    }
+  },
+  "preprocessing": {
+    "nwp_loader": "predictor_columns_only",
+    "nwp_features": [
+      "U10",
+      "V10",
+      "U100",
+      "V100",
+      "WS10",
+      "WS100",
+      "WE10",
+      "WE100",
+      "WD10",
+      "WD100"
+    ],
+    "target_missing": {
+      "order": "assign_role_before_any_target_imputation",
+      "raw_missing_mask": "preserved",
+      "fill_scope": [
+        "role",
+        "zone",
+        "calendar_day"
+      ],
+      "fill_method": "forward_then_backward_within_same_zone_day",
+      "cross_role_fill": "forbidden",
+      "supervision": "raw_observed_cells_only",
+      "ramp_supervision": "both_adjacent_raw_cells_observed"
+    },
+    "standardizers": "fit_on_raw_observed_train_cells_only"
+  },
+  "model_common_basis": {
+    "condition_dim": 20,
+    "zones": 10,
+    "hours": 24,
+    "encoder_dim": 64,
+    "encoder_depth": 2,
+    "flow_dim": 96,
+    "flow_depth": 4,
+    "heads": 4,
+    "ff_multiplier": 4,
+    "dropout": 0,
+    "atom_hidden_dim": 64,
+    "atom_shared_priority_weight": 0.5,
+    "logit_epsilon": 0.0001,
+    "state_codes": {
+      "zero": 0,
+      "interior": 1,
+      "one": 2
+    },
+    "active_candidate": "R0",
+    "future_candidate_roster": [
+      "T0",
+      "T1_feature",
+      "T1_source",
+      "T1_shuffle",
+      "T2_joint_ddpm",
+      "T3_probabilistic_ssm"
+    ]
+  },
+  "shared_ea": {
+    "primary_policy": "architecture_neutral_atom_plus_interior_location",
+    "joint_r0_pretraining": false,
+    "atom_loss": {
+      "type": "observed_only_categorical_nll",
+      "weight": 1,
+      "class_weighting": "none",
+      "focal_loss": false
+    },
+    "interior_auxiliary": {
+      "head": "LayerNorm(encoder_dim)+Linear(encoder_dim,1)",
+      "target": "standardized_train_interior_logit_power",
+      "logit_clip_epsilon": 0.0001,
+      "normalizer_fit_role": "train_observed_interior_only",
+      "mask": "observed_mask AND state==interior",
+      "loss": "SmoothL1",
+      "smooth_l1_beta": 1,
+      "weight": 0.25,
+      "head_use_after_ea": "discard"
+    },
+    "upper_atom": {
+      "parameterization": "p1=q1; p0=(1-q1)*q0_cond; p_interior=(1-q1)*(1-q0_cond)",
+      "train_prior": "q1=(n_train_one+0.5)/(n_train_observed+1.0)",
+      "train_positive_minimum_for_learning": 20,
+      "validation_positive_minimum_for_learning": 5,
+      "insufficient_support_action": "fix_q1_to_train_jeffreys_prior",
+      "sufficient_support_action": "bounded_contextual_logit_deviation",
+      "maximum_absolute_logit_deviation": 2,
+      "claim_gate": "if either support minimum fails upper-atom calibration and duration cannot be success endpoints"
+    },
+    "after_best_checkpoint": [
+      "reload_best",
+      "discard_auxiliary_head",
+      "hash_encoder_and_atom",
+      "freeze_encoder_and_atom"
+    ]
+  },
+  "formal_training": {
+    "model_seeds": [
+      0,
+      1,
+      2
+    ],
+    "seed_offsets": {
+      "ea_init": 10000,
+      "ea_shuffle": 11000,
+      "flow_init": 12000,
+      "flow_shuffle": 13000,
+      "flow_training_path": 14000
+    },
+    "dtype": "float32",
+    "amp": false,
+    "tf32": false,
+    "deterministic_algorithms": true,
+    "cudnn_benchmark": false,
+    "workers": 0,
+    "batch_size_preflight_branch": {
+      "primary": 16,
+      "fallback": 8,
+      "fallback_enabled": false,
+      "criterion": "formal-v2.2 accepts only batch 16; synchronized CUDA peak above 4.5 GiB or a primary OOM is a hard failure",
+      "decision_must_be_frozen_before_any_retained_weight_training": true,
+      "formal_v2_2_registered_batch_days": 16,
+      "formal_v2_2_policy": "hard fail rather than use fallback because the 30-epoch gradient warmup is preregistered as exactly 510 optimizer updates"
+    },
+    "epoch_shuffle": "numpy.default_rng(SHA256(stage,model_seed,epoch,shuffle_offset)).permutation",
+    "drop_last": false,
+    "ea_stage": {
+      "optimizer": "AdamW",
+      "learning_rate": 0.0003,
+      "betas": [
+        0.9,
+        0.999
+      ],
+      "eps": 1e-8,
+      "weight_decay": 0.0001,
+      "gradient_clip": 1,
+      "maximum_updates": 4080,
+      "minimum_updates_before_early_stop": 1360,
+      "validate_every_updates": 170,
+      "early_stopping_patience_validations": 12,
+      "early_stopping_improvement": "new < best - max(1e-5,1e-3*best)"
+    },
+    "flow_stage": {
+      "optimizer": "AdamW",
+      "learning_rate": 0.0001,
+      "betas": [
+        0.9,
+        0.999
+      ],
+      "eps": 1e-8,
+      "weight_decay": 0,
+      "gradient_clip": 5,
+      "maximum_updates": 12240,
+      "minimum_updates_before_early_stop": 2040,
+      "validate_every_updates": 170,
+      "early_stopping_patience_validations": 12,
+      "early_stopping_improvement": "new < best - max(1e-5,1e-3*best)",
+      "gradient_audit": {
+        "norm_definition": "preclip_global_total_L2_over_all_trainable_flow_parameters",
+        "persist_every_update": true,
+        "persist_fields": [
+          "epoch_1_based",
+          "update_in_epoch_1_based",
+          "global_update_1_based",
+          "preclip_total_l2_norm",
+          "clip_triggered"
+        ],
+        "fixed_warmup_epochs": 30,
+        "fixed_warmup_optimizer_updates": 510,
+        "registered_batch_days": 16,
+        "optimizer_updates_per_epoch": 17,
+        "formal_audit_epoch_start_1_based_inclusive": 31,
+        "formal_audit_optimizer_update_start_1_based_inclusive": 511,
+        "gradient_observation_unit": "optimizer_update",
+        "quantile_method": "linear",
+        "summary_quantiles": [
+          0.5,
+          0.9,
+          0.95,
+          0.99,
+          1
+        ]
+      }
+    },
+    "validation_flow_bank": {
+      "replications": 4,
+      "day_order": "ascending_calendar_day",
+      "noise_seeds": [
+        15000,
+        15001,
+        15002,
+        15003
+      ],
+      "time_seeds": [
+        16000,
+        16001,
+        16002,
+        16003
+      ],
+      "reuse": "same tensors for every checkpoint seed and candidate",
+      "aggregation": "mean_over_replications_weighted_by_observed_interior_cells",
+      "persist_and_hash": true
+    },
+    "resume": {
+      "boundary": "completed_epoch_only",
+      "save": [
+        "model",
+        "optimizer",
+        "next_epoch",
+        "best_state",
+        "early_stop_state",
+        "history",
+        "python_rng",
+        "numpy_rng",
+        "torch_cpu_rng",
+        "torch_cuda_rng",
+        "identity_hashes"
+      ],
+      "partial_epoch_action": "discard_and_deterministically_replay",
+      "identity_drift": "hard_fail",
+      "nonfinite_action": "fail_seed_no_retry_no_seed_replacement"
+    }
+  },
+  "preflight": {
+    "scientific_status": "discard_all_weights",
+    "device": "cuda",
+    "updates": 50,
+    "require_cuda": true,
+    "cuda_synchronize_timing": true,
+    "record_peak_allocated_memory": true,
+    "record_environment_and_code_hashes": true
+  },
+  "gradient_scale_preflight": {
+    "schema": "architecture_v1_gradient_scale_preflight_v1",
+    "scientific_status": "engineering_only_discard_all_preflight_weights",
+    "must_pass_before_any_retained_weight_training": true,
+    "model_seeds": [
+      0,
+      1,
+      2
+    ],
+    "fresh_initialization_each_seed": true,
+    "seed_offsets": {
+      "ea_init": 31000,
+      "ea_shuffle": 32000,
+      "flow_init": 33000,
+      "flow_shuffle": 34000,
+      "flow_training_path": 35000
+    },
+    "target_access": {
+      "allowed_roles": [
+        "train"
+      ],
+      "hard_forbidden_roles": [
+        "validation",
+        "calibration",
+        "selection",
+        "r_seen",
+        "final"
+      ],
+      "checkpoint_selection": "none",
+      "validation_bank_construction": "forbidden"
+    },
+    "batch_days": 16,
+    "optimizer_updates_per_epoch": 17,
+    "ea_warmup": {
+      "epochs": 40,
+      "endpoint_policy": "use_epoch_40_endpoint_without_validation_or_checkpoint_selection",
+      "optimizer_and_loss": "identical_to_formal_training.ea_stage",
+      "freeze_endpoint_before_flow": true
+    },
+    "flow": {
+      "epochs": 40,
+      "optimizer_and_loss": "identical_to_formal_training.flow_stage",
+      "gradient_clip_candidate": 5,
+      "audit_epoch_window_1_based_inclusive": [
+        31,
+        40
+      ],
+      "audit_optimizer_update_window_1_based_inclusive": [
+        511,
+        680
+      ],
+      "gradient_observation_unit": "optimizer_update",
+      "quantile_method": "linear",
+      "persist_every_update_preclip_total_l2_norm": true
+    },
+    "pass_gate": {
+      "registry_path": "repro_configs/architecture_v1_go_no_go_v2_2_1.json",
+      "registry_section": "P0_train_only_gradient_scale_preflight",
+      "all_three_seeds_must_pass": true
+    },
+    "retention": {
+      "weights": false,
+      "optimizer_state": false,
+      "rng_state_for_formal_training": false,
+      "allowed_artifacts": [
+        "identity_manifest",
+        "per_update_gradient_norms",
+        "per_seed_summary",
+        "pass_fail_result",
+        "sha256_sidecars"
+      ]
+    },
+    "failure_action": "stop before formal retained training; do not move a threshold after observing v2.2; any changed candidate or gate requires a newly frozen protocol revision"
+  },
+  "formal_sampling": {
+    "members": 100,
+    "sampling_seeds": [
+      21000,
+      21001,
+      21002
+    ],
+    "method": "heun",
+    "integration_steps": 16,
+    "per_path_flow_nfe": 31,
+    "member_chunk": 10,
+    "estimand": "finite_dependent_scenario_set",
+    "score_semantics": "empirical_v_stat",
+    "member_chunk_audit": {
+      "alternate_member_chunk": 20,
+      "audit_role": "all_50_validation_days_in_ascending_calendar_order",
+      "audit_training_seeds": [
+        0,
+        1,
+        2
+      ],
+      "audit_sampling_seeds": [
+        21000,
+        21001,
+        21002
+      ],
+      "required_training_seed_sampling_seed_day_combinations": 450,
+      "explicit_common_atom_allocation": true,
+      "explicit_common_initial_noise": true,
+      "proper_score_compute_dtype": "float64_cpu",
+      "gate_registry_section": "G1_R0_validation_stability.member_chunk_numerical_invariance"
+    }
+  },
+  "gate_registry": {
+    "path": "repro_configs/architecture_v1_go_no_go_v2_2_1.json",
+    "schema": "architecture_v1_go_no_go_v2_2_1",
+    "file_sha256": "8dcc44c6390a6a809a6a1e56c57f2e5c5bafcb905f4738c714dfbd89702ff269"
+  },
+  "selection_lock": {
+    "state": "sealed",
+    "authorized_transition": "only_after formal-v2.2.1 G0/G1 pass and all candidate code config metrics calibration rules and gate hashes are frozen",
+    "state_machine": [
+      "sealed",
+      "authorized",
+      "in_progress",
+      "consumed"
+    ],
+    "current_fit_process_may_import_selection_loader": false
+  },
+  "experiment_contract": {
+    "status": "formal_v2_2_1_preregistered_R0_not_started",
+    "R0_definition": "clean common-shell joint time-domain rectified-flow baseline; not a numerical reproduction of legacy STGF",
+    "R0_gate": "train_only_P0_then_validation_only_G0_and_G1",
+    "formal_v2_1_status": "G1_NO_GO_permanent",
+    "restart_policy": "restart all three seeds from fresh E/A and flow initialization; do not reuse formal-v2.2 partial E/A weights, optimizer state, or RNG state",
+    "failed_v2_2_policy": "formal-v2.2 is permanently recorded as an engineering abort, not reclassified",
+    "calibration_status": "sealed",
+    "selection_status": "sealed",
+    "final_status": "external_only_unregistered",
+    "next_step_if_R0_passes": "implement and validate T0 then T1_feature T1_source T1_shuffle before any selection access",
+    "failed_v2_2_1_policy": "retain evidence and freeze; do not move thresholds inside this revision"
+  },
+  "smoke": {
+    "enabled": false,
+    "formal_config_policy": "smoke_forbidden",
+    "max_days_per_role": {
+      "train": 1,
+      "validation": 1,
+      "calibration": 1,
+      "selection": 1,
+      "r_seen": 1
+    }
+  }
+}

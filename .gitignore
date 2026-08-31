@@ -1,0 +1,42 @@
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Local IDE / agent state
+.vscode/
+.idea/
+.agents/
+.codex/
+.DS_Store
+*.log
+.env
+.env.*
+
+# Datasets, papers, generated runs, and temporary work
+Data/
+literature/
+outputs/
+checkpoints/
+tmp/
+*.pdf
+
+# Model and array artifacts that should not enter normal Git history
+*.pt
+*.pth
+*.ckpt
+*.ubj
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.joblib
+
+# Generated report QA previews
+reports/qa/

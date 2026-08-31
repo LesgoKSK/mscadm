@@ -1,0 +1,18 @@
+{
+  "experiment_name": "MM-JDWind calibration-only candidate selection",
+  "protocol_revision": "mm_jdwind_development_selection_v1_20260726",
+  "data_dir": "Data",
+  "output_root": "outputs/mm_jdwind_development",
+  "outer_splits": [1, 2, 3],
+  "model_seeds": [0, 1, 2],
+  "sampling": {
+    "members": 50,
+    "jump_steps": 8,
+    "flow_steps": 8,
+    "day_batch": 2,
+    "member_chunk": 25,
+    "state_modes": ["none", "independent", "correlated", "mass_preserving"]
+  },
+  "selection_scope": "calibration only; lower-cost M=50/NFE=8 screening before frozen M=100 confirmation",
+  "evidence_label": "fully exploratory because the CAA outer tests motivated the atom hypothesis"
+}

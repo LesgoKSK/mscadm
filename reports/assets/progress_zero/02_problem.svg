@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fffaf5"/><stop offset="1" stop-color="#f8fbfd"/></linearGradient>
+    <style>
+      text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#17365d}.title{font-size:40px;font-weight:800}
+      .sub{font-size:22px;fill:#66737f}.head{font-size:26px;font-weight:800}.body{font-size:20px;fill:#40576a}.tag{font-size:18px;font-weight:700}
+    </style>
+  </defs>
+  <rect width="1200" height="675" rx="30" fill="url(#bg)"/>
+  <text class="title" x="600" y="62" text-anchor="middle">旧模型哪里不靠谱？</text>
+  <text class="sub" x="600" y="98" text-anchor="middle">“平均值差不多”并不等于“100 个未来剧本可信”</text>
+
+  <g transform="translate(50 145)">
+    <rect width="340" height="405" rx="24" fill="#fff" stroke="#c8d9e8" stroke-width="3"/>
+    <circle cx="45" cy="45" r="25" fill="#5e93ba"/><text x="45" y="54" text-anchor="middle" font-size="27" font-weight="800" fill="#fff">A</text>
+    <text class="head" x="190" y="54" text-anchor="middle">平均位置还行</text>
+    <rect x="30" y="100" width="280" height="180" rx="14" fill="#f7fbff"/>
+    <path d="M48 241 C90 217 114 153 158 173 S228 239 292 126" fill="none" stroke="#263238" stroke-width="6"/>
+    <path d="M48 232 C90 212 115 162 158 180 S230 229 292 135" fill="none" stroke="#2e74b5" stroke-width="6" stroke-dasharray="10 8"/>
+    <circle cx="159" cy="176" r="6" fill="#263238"/><circle cx="159" cy="180" r="5" fill="#2e74b5"/>
+    <text class="tag" x="52" y="318" fill="#263238">黑线：真实</text><text class="tag" x="182" y="318" fill="#2e74b5">蓝线：平均预测</text>
+    <text class="body" x="170" y="354" text-anchor="middle">只看总分时，似乎问题不大</text>
+    <text class="body" x="170" y="384" text-anchor="middle">但它只回答了“中心在哪”</text>
+  </g>
+
+  <g transform="translate(430 145)">
+    <rect width="340" height="405" rx="24" fill="#fff" stroke="#e3b9bd" stroke-width="3"/>
+    <circle cx="45" cy="45" r="25" fill="#b23a48"/><text x="45" y="54" text-anchor="middle" font-size="27" font-weight="800" fill="#fff">B</text>
+    <text class="head" x="190" y="54" text-anchor="middle">剧本挤得太紧</text>
+    <rect x="30" y="100" width="280" height="180" rx="14" fill="#fff8f8"/>
+    <path d="M45 240 C95 205 116 159 158 176 S230 229 295 126" fill="none" stroke="#b23a48" stroke-width="4" opacity=".6"/>
+    <path d="M45 232 C95 208 116 168 158 181 S230 219 295 137" fill="none" stroke="#b23a48" stroke-width="4" opacity=".6"/>
+    <path d="M45 247 C95 214 116 172 158 187 S230 235 295 143" fill="none" stroke="#b23a48" stroke-width="4" opacity=".6"/>
+    <path d="M45 196 C95 249 121 116 158 232 S231 147 295 201" fill="none" stroke="#263238" stroke-width="6"/>
+    <text class="tag" x="64" y="318" fill="#b23a48">红线：100 个模型剧本</text>
+    <text class="body" x="170" y="354" text-anchor="middle">真实结果常常跑到剧本之外</text>
+    <text class="body" x="170" y="384" text-anchor="middle" font-weight="700" fill="#b23a48">模型对自己“太有信心”</text>
+  </g>
+
+  <g transform="translate(810 145)">
+    <rect width="340" height="405" rx="24" fill="#fff" stroke="#e7c98d" stroke-width="3"/>
+    <circle cx="45" cy="45" r="25" fill="#c27c0e"/><text x="45" y="54" text-anchor="middle" font-size="27" font-weight="800" fill="#fff">C</text>
+    <text class="head" x="190" y="54" text-anchor="middle">走路方式不自然</text>
+    <rect x="30" y="100" width="280" height="180" rx="14" fill="#fffaf0"/>
+    <path d="M45 233 C80 221 110 198 145 176 S220 154 295 126" fill="none" stroke="#263238" stroke-width="6"/>
+    <path d="M45 233 L72 177 L101 238 L132 151 L165 216 L197 139 L229 201 L260 121 L295 171" fill="none" stroke="#c27c0e" stroke-width="6"/>
+    <text class="tag" x="55" y="318" fill="#263238">真实：有持续性</text><text class="tag" x="195" y="318" fill="#c27c0e">模型：乱抖</text>
+    <text class="body" x="170" y="354" text-anchor="middle">相邻小时的升降不够真实</text>
+    <text class="body" x="170" y="384" text-anchor="middle">动态天气时尤其明显</text>
+  </g>
+
+  <rect x="115" y="585" width="970" height="58" rx="18" fill="#17365d"/>
+  <text x="600" y="622" text-anchor="middle" font-size="25" font-weight="800" style="fill:#fff">所以我们不再只问“平均准不准”，还要问“范围够不够、轨迹像不像”</text>
+</svg>

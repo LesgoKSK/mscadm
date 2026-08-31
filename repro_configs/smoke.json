@@ -1,0 +1,36 @@
+{
+  "data_dir": "Data",
+  "output_root": "outputs/repro_smoke",
+  "device": "cpu",
+  "seed": 7,
+  "split_seed": 0,
+  "models": {
+    "mscadm": {
+      "model": {"condition_dim": 20, "sequence_length": 24, "model_dim": 32, "condition_bottleneck": 16, "depth": 1, "heads": 4, "ff_multiplier": 2, "learn_variance": true},
+      "diffusion": {"timesteps": 8, "schedule": "cosine", "learn_variance": true, "vlb_weight": 0.001},
+      "training": {"steps": 2, "batch_size": 8, "learning_rate": 0.0001, "condition_mask_probability": 0.1, "checkpoint_every": 1, "log_every": 1, "resume": false, "workers": 0},
+      "sampling": {"steps": 2, "sampler": "ddim", "eta": 1.0}
+    },
+    "ddpm": {
+      "model": {"condition_dim": 20, "channels": 16, "time_dim": 32, "layers": 2, "dilation_cycle": 2},
+      "diffusion": {"timesteps": 8, "schedule": "linear", "learn_variance": false, "vlb_weight": 0.0},
+      "training": {"steps": 2, "batch_size": 8, "learning_rate": 0.0001, "checkpoint_every": 1, "log_every": 1, "resume": false, "workers": 0}
+    },
+    "vae": {
+      "model": {"condition_dim": 250, "target_dim": 24, "latent_dim": 4, "hidden_dim": 16},
+      "training": {"steps": 2, "batch_size": 8, "learning_rate": 0.001, "checkpoint_every": 1, "log_every": 1, "resume": false, "workers": 0}
+    },
+    "wgan": {
+      "model": {"generator": {"condition_dim": 250, "target_dim": 24, "latent_dim": 4, "hidden_dim": 16, "layers": 1}, "critic": {"condition_dim": 250, "target_dim": 24, "hidden_dim": 16, "layers": 1}},
+      "training": {"steps": 2, "batch_size": 8, "learning_rate": 0.001, "critic_steps": 1, "gradient_penalty": 1.0, "checkpoint_every": 1, "log_every": 1, "resume": false, "workers": 0}
+    },
+    "nf": {
+      "model": {"dimension": 24, "condition_dim": 250, "steps": 2, "hidden_dim": 16},
+      "training": {"steps": 2, "batch_size": 8, "learning_rate": 0.001, "checkpoint_every": 1, "log_every": 1, "resume": false, "workers": 0}
+    },
+    "qrgbm": {
+      "model": {"quantiles": 3, "estimators": 2, "max_depth": 2, "learning_rate": 0.1, "tree_method": "hist", "seed": 7},
+      "sampling": {"coupling": "ecc"}
+    }
+  }
+}

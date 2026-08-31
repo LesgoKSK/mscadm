@@ -1,0 +1,24 @@
+"""Canonical publication-grade PS-DFSC pipeline."""
+
+import repro_scripts.run_ps_dfsc as pipeline
+import ps_dfsc.evaluation_publication as evaluation
+import ps_dfsc.pipeline_runtime as runtime
+from ps_dfsc.exact_suc_publication import (
+    evaluate_realized,
+    solve_two_stage_suc,
+)
+from ps_dfsc.fast_differentiable_suc import activate_fast_training_layer
+
+
+activate_fast_training_layer()
+evaluation.solve_two_stage_suc = solve_two_stage_suc
+evaluation.evaluate_realized = evaluate_realized
+runtime.solve_two_stage_suc = solve_two_stage_suc
+pipeline.solve_two_stage_suc = solve_two_stage_suc
+pipeline.train = runtime.train_command
+pipeline.run_exact_cases = evaluation.run_exact_cases
+pipeline.summarize_exact_cases = evaluation.summarize_exact_cases
+
+
+if __name__ == "__main__":
+    pipeline.main()

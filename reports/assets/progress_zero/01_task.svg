@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7fbff"/><stop offset="1" stop-color="#eef5fb"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#2e74b5"/>
+    </marker>
+    <style>
+      text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#17365d}
+      .title{font-size:40px;font-weight:800}.sub{font-size:22px;fill:#55708a}.head{font-size:26px;font-weight:800}
+      .body{font-size:21px;fill:#334c61}.small{font-size:18px;fill:#5d7184}.num{font-size:28px;font-weight:800;fill:#fff}
+    </style>
+  </defs>
+  <rect width="1200" height="675" rx="30" fill="url(#bg)"/>
+  <text class="title" x="600" y="62" text-anchor="middle">我们到底在做什么？</text>
+  <text class="sub" x="600" y="98" text-anchor="middle">不是只猜一个数字，而是准备 100 个“明天可能怎么走”的完整剧本</text>
+
+  <rect x="45" y="145" width="290" height="380" rx="24" fill="#fff" stroke="#c8d9e8" stroke-width="3"/>
+  <circle cx="85" cy="185" r="25" fill="#2e74b5"/><text class="num" x="85" y="195" text-anchor="middle">1</text>
+  <text class="head" x="190" y="195" text-anchor="middle">看明天天气</text>
+  <circle cx="120" cy="270" r="38" fill="#f9c74f"/>
+  <path d="M102 318 C99 287 128 275 149 290 C165 255 221 267 220 305 C252 309 255 354 220 359 H105 C74 356 74 319 102 318Z" fill="#dceaf5" stroke="#6fa2c8" stroke-width="3"/>
+  <path d="M96 394 C145 369 197 420 248 388" fill="none" stroke="#2e74b5" stroke-width="7" stroke-linecap="round"/>
+  <path d="M126 431 C168 411 202 445 235 428" fill="none" stroke="#54a0d3" stroke-width="6" stroke-linecap="round"/>
+  <text class="body" x="190" y="478" text-anchor="middle">风速、风向、不同区域</text>
+  <text class="small" x="190" y="507" text-anchor="middle">这些就是模型的“天气线索”</text>
+
+  <path d="M350 335 H410" stroke="#2e74b5" stroke-width="6" marker-end="url(#arrow)"/>
+  <rect x="425" y="145" width="350" height="380" rx="24" fill="#17365d"/>
+  <circle cx="465" cy="185" r="25" fill="#f2a900"/><text class="num" x="465" y="195" text-anchor="middle">2</text>
+  <text class="head" x="600" y="195" text-anchor="middle" style="fill:#fff">模型写剧本</text>
+  <rect x="493" y="237" width="214" height="152" rx="22" fill="#254f77" stroke="#81b7dc" stroke-width="3"/>
+  <circle cx="535" cy="279" r="14" fill="#66c2a5"/><circle cx="600" cy="279" r="14" fill="#f9c74f"/><circle cx="665" cy="279" r="14" fill="#f28482"/>
+  <path d="M535 293 V333 H600 V293 M600 333 H665 V293" stroke="#dceaf5" stroke-width="4" fill="none"/>
+  <rect x="525" y="350" width="150" height="17" rx="8" fill="#dceaf5"/>
+  <text class="body" x="600" y="439" text-anchor="middle" style="fill:#fff">把随机噪声变成</text>
+  <text class="body" x="600" y="471" text-anchor="middle" style="fill:#fff">100 条合理的 24 小时轨迹</text>
+  <text class="small" x="600" y="503" text-anchor="middle" style="fill:#bed6e8">每条轨迹同时包含 10 个区域</text>
+
+  <path d="M790 335 H840" stroke="#2e74b5" stroke-width="6" marker-end="url(#arrow)"/>
+  <rect x="855" y="145" width="300" height="380" rx="24" fill="#fff" stroke="#c8d9e8" stroke-width="3"/>
+  <circle cx="895" cy="185" r="25" fill="#2e74b5"/><text class="num" x="895" y="195" text-anchor="middle">3</text>
+  <text class="head" x="1010" y="195" text-anchor="middle">提前做准备</text>
+  <rect x="895" y="240" width="220" height="175" rx="12" fill="#f7fbff" stroke="#aac8de" stroke-width="2"/>
+  <path d="M915 380 L950 330 L985 354 L1020 275 L1055 320 L1092 252" fill="none" stroke="#2e74b5" stroke-width="5"/>
+  <path d="M915 368 L950 350 L985 305 L1020 340 L1055 285 L1092 310" fill="none" stroke="#f2a900" stroke-width="4" opacity=".85"/>
+  <path d="M915 390 L950 372 L985 382 L1020 322 L1055 346 L1092 292" fill="none" stroke="#66a98d" stroke-width="4" opacity=".85"/>
+  <rect x="910" y="443" width="42" height="38" fill="#5b87aa"/><rect x="961" y="426" width="42" height="55" fill="#4a789c"/><rect x="1012" y="397" width="42" height="84" fill="#376887"/><rect x="1063" y="452" width="42" height="29" fill="#6f9bb8"/>
+  <text class="small" x="1010" y="509" text-anchor="middle">备用容量 · 调度 · 风险判断</text>
+
+  <rect x="80" y="568" width="1040" height="72" rx="20" fill="#e8f5ee" stroke="#65a77d" stroke-width="2"/>
+  <text x="600" y="613" text-anchor="middle" font-size="27" font-weight="800" style="fill:#237447">一句话：给电网准备 100 个靠谱的“明日风电剧本”</text>
+</svg>

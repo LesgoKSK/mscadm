@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>从 MS-CADM 复现到选择性时间干预：阶段进展汇报</title>
+<style>
+:root {
+  --navy: #102a43;
+  --blue: #1f6feb;
+  --blue-2: #2f80ed;
+  --cyan: #19a7ae;
+  --green: #18864b;
+  --green-soft: #eaf7ef;
+  --amber: #b26b00;
+  --amber-soft: #fff5df;
+  --red: #bf3b3b;
+  --red-soft: #fff0f0;
+  --ink: #243746;
+  --muted: #617383;
+  --line: #d6e0e8;
+  --panel: #f6f9fc;
+  --paper: #ffffff;
+  --shadow: 0 12px 35px rgba(27, 55, 78, .11);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: #eaf0f5; }
+body {
+  margin: 0;
+  overflow-x: hidden;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.72;
+}
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+strong { color: var(--navy); }
+code {
+  padding: .08em .35em;
+  border-radius: .35em;
+  color: #17456f;
+  background: #eaf2f8;
+  font-family: Consolas, "SFMono-Regular", monospace;
+  font-size: .92em;
+}
+.topbar {
+  position: sticky;
+  z-index: 50;
+  top: 0;
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  gap: 18px;
+  padding: 8px max(18px, calc((100vw - 1180px) / 2));
+  color: #fff;
+  background: rgba(16, 42, 67, .96);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .14);
+  backdrop-filter: blur(10px);
+}
+.topbar .brand { color: #fff; font-weight: 800; white-space: nowrap; }
+.navlinks { display: flex; flex: 1; gap: 5px; justify-content: center; }
+.navlinks a {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(255, 255, 255, .09);
+  font-size: 12px;
+  font-weight: 700;
+}
+.navlinks a:hover { background: var(--blue-2); text-decoration: none; }
+.toolbar { display: flex; gap: 7px; }
+.toolbar button {
+  padding: 5px 11px;
+  border: 1px solid rgba(255, 255, 255, .45);
+  border-radius: 999px;
+  color: #fff;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+}
+.toolbar button:hover { background: rgba(255, 255, 255, .12); }
+.shell { max-width: 1180px; margin: 0 auto; padding: 0 32px 80px; }
+.cover {
+  position: relative;
+  display: grid;
+  min-height: calc(100vh - 54px);
+  align-content: center;
+  overflow: hidden;
+  padding: 78px 62px;
+  isolation: isolate;
+}
+.cover::before, .cover::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+}
+.cover::before {
+  width: 520px;
+  height: 520px;
+  top: -235px;
+  right: -175px;
+  border: 80px solid #e5f0ff;
+}
+.cover::after {
+  width: 360px;
+  height: 360px;
+  left: -225px;
+  bottom: -210px;
+  border: 26px solid #ffefd0;
+}
+.kicker {
+  margin-bottom: 18px;
+  color: var(--amber);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+.cover h1 {
+  max-width: 940px;
+  margin: 0;
+  color: var(--navy);
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 1.12;
+  letter-spacing: -.04em;
+}
+.cover .subtitle {
+  max-width: 1040px;
+  margin: 24px 0 0;
+  color: #315c7d;
+  font-size: clamp(19px, 2.1vw, 26px);
+  line-height: 1.45;
+}
+.cover .meta { margin-top: 32px; color: var(--muted); font-size: 14px; }
+.status-row { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 27px; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+.pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.pill.done { color: var(--green); border-color: #b9dec8; background: var(--green-soft); }
+.pill.unresolved { color: var(--amber); border-color: #ead19e; background: var(--amber-soft); }
+.pill.sealed { color: var(--blue); border-color: #bed6f5; background: #eef6ff; }
+.lede {
+  max-width: 1030px;
+  margin: 6px auto 44px;
+  padding: 22px 25px;
+  border-left: 6px solid var(--blue);
+  border-radius: 0 12px 12px 0;
+  color: #143b5d;
+  background: #eef6ff;
+  font-size: 18px;
+  font-weight: 750;
+}
+.report-page {
+  padding: 64px 0 54px;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 58px;
+}
+.section-no {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+h2 {
+  margin: 0 0 16px;
+  color: var(--navy);
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.22;
+  letter-spacing: -.025em;
+}
+h3 { margin: 30px 0 12px; color: #174a71; font-size: 21px; line-height: 1.35; }
+p { margin: 0 0 14px; }
+.subhead { max-width: 900px; margin-bottom: 30px; color: var(--muted); font-size: 18px; }
+.grid { display: grid; gap: 18px; }
+.grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(31, 67, 93, .05);
+}
+.card h3, .card h4 { margin: 0 0 9px; }
+.card h4 { color: var(--navy); font-size: 16px; }
+.card p:last-child { margin-bottom: 0; }
+.card.blue { border-top: 5px solid var(--blue); }
+.card.green { border-top: 5px solid var(--green); }
+.card.amber { border-top: 5px solid var(--amber); }
+.card.red { border-top: 5px solid var(--red); }
+.metric {
+  display: flex;
+  min-height: 145px;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.metric .value { color: var(--navy); font-size: 34px; font-weight: 900; line-height: 1.05; }
+.metric .label { margin-top: 7px; color: var(--muted); font-size: 13px; }
+.metric .delta { margin-top: 12px; font-size: 13px; font-weight: 800; }
+.good { color: var(--green); }
+.warn { color: var(--amber); }
+.bad { color: var(--red); }
+.neutral { color: var(--blue); }
+.tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  vertical-align: .08em;
+}
+.tag.formal { color: #fff; background: var(--green); }
+.tag.explore { color: #fff; background: var(--blue); }
+.tag.nogo { color: #fff; background: var(--red); }
+.tag.pending { color: #fff; background: var(--amber); }
+.callout {
+  margin: 23px 0;
+  padding: 17px 20px;
+  border-radius: 12px;
+  background: var(--panel);
+}
+.callout.blue { border-left: 5px solid var(--blue); background: #eef6ff; }
+.callout.green { border-left: 5px solid var(--green); background: var(--green-soft); }
+.callout.amber { border-left: 5px solid var(--amber); background: var(--amber-soft); }
+.callout.red { border-left: 5px solid var(--red); background: var(--red-soft); }
+.callout > :last-child { margin-bottom: 0; }
+.timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin: 34px 0;
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 24px;
+  right: 7%;
+  left: 7%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--blue), var(--cyan), var(--green), var(--amber));
+}
+.time-item { position: relative; z-index: 1; text-align: center; }
+.time-dot {
+  display: grid;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 10px;
+  place-items: center;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--blue);
+  box-shadow: 0 0 0 1px var(--line), 0 4px 12px rgba(31, 111, 235, .22);
+  font-size: 14px;
+  font-weight: 900;
+}
+.time-item:nth-child(3) .time-dot, .time-item:nth-child(4) .time-dot { background: var(--green); }
+.time-item:nth-child(5) .time-dot { background: var(--amber); }
+.time-item:nth-child(6) .time-dot { background: var(--navy); }
+.time-title { color: var(--navy); font-size: 13px; font-weight: 900; line-height: 1.35; }
+.time-desc { margin-top: 5px; color: var(--muted); font-size: 11px; line-height: 1.4; }
+.bar-chart { display: grid; gap: 14px; margin: 20px 0; }
+.bar-row { display: grid; grid-template-columns: 180px 1fr 105px; align-items: center; gap: 12px; }
+.bar-label { color: var(--navy); font-size: 13px; font-weight: 800; }
+.track { height: 22px; overflow: hidden; border-radius: 6px; background: #e9eff4; }
+.bar { height: 100%; min-width: 2px; border-radius: 6px; background: var(--blue); }
+.bar.green { background: var(--green); }
+.bar.amber { background: var(--amber); }
+.bar.red { background: var(--red); }
+.bar-value { color: var(--muted); font-family: Consolas, monospace; font-size: 12px; text-align: right; }
+.split-chart { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.chart-box { padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.chart-box h4 { margin: 0 0 14px; color: var(--navy); font-size: 15px; }
+.table-wrap { margin: 22px 0; overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th { padding: 12px 11px; color: #fff; background: var(--navy); text-align: center; white-space: nowrap; }
+tbody td { padding: 11px; border-top: 1px solid var(--line); text-align: center; }
+tbody td:first-child, thead th:first-child { text-align: left; }
+tbody tr:nth-child(even) { background: #f8fafc; }
+.winner { color: var(--green); font-weight: 900; }
+.loser { color: var(--red); font-weight: 800; }
+.mini-note { color: var(--muted); font-size: 12px; }
+.equation {
+  margin: 25px auto;
+  padding: 21px;
+  overflow-x: auto;
+  border: 1px solid #b9d4ed;
+  border-radius: 13px;
+  color: #0e4777;
+  background: linear-gradient(135deg, #f6fbff, #eef6ff);
+  font-family: "Cambria Math", "STIX Two Math", Georgia, serif;
+  font-size: clamp(18px, 3vw, 28px);
+  text-align: center;
+  white-space: nowrap;
+}
+.architecture {
+  margin: 28px 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(180deg, #fbfdff, #f4f8fb);
+}
+.architecture svg { display: block; width: 100%; height: auto; }
+.funnel { display: grid; gap: 10px; max-width: 920px; margin: 26px auto; }
+.funnel-row {
+  display: grid;
+  grid-template-columns: 86px 1fr 170px;
+  gap: 13px;
+  align-items: center;
+  padding: 12px 15px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #fff;
+}
+.funnel-step { color: var(--blue); font-size: 12px; font-weight: 900; }
+.funnel-name { color: var(--navy); font-weight: 850; }
+.funnel-rule { color: var(--muted); font-size: 12px; }
+.decision {
+  display: grid;
+  grid-template-columns: 1fr 44px 1.2fr 44px 1fr;
+  align-items: stretch;
+  gap: 8px;
+  margin: 25px 0;
+}
+.decision .node {
+  display: grid;
+  min-height: 130px;
+  place-content: center;
+  padding: 16px;
+  border: 2px solid #bad2e7;
+  border-radius: 13px;
+  background: #f5faff;
+  text-align: center;
+}
+.decision .node strong { display: block; margin-bottom: 5px; }
+.decision .arrow { display: grid; place-items: center; color: var(--blue); font-size: 32px; font-weight: 900; }
+.decision .outcomes { display: grid; gap: 7px; }
+.decision .outcome { padding: 9px; border-radius: 8px; font-size: 12px; font-weight: 750; }
+.decision .outcome.go { color: #12643a; background: var(--green-soft); }
+.decision .outcome.partial { color: #8a5500; background: var(--amber-soft); }
+.decision .outcome.stop { color: #9a3030; background: var(--red-soft); }
+.claims { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.claim-list { margin: 0; padding-left: 22px; }
+.claim-list li { margin: 8px 0; }
+.note {
+  margin-top: 24px;
+  border: 1px dashed #b6c6d2;
+  border-radius: 10px;
+  background: #fbfcfd;
+}
+.note summary { padding: 11px 14px; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 800; }
+.note > div { padding: 0 15px 14px; color: #405668; font-size: 13px; }
+.evidence-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 20px; margin: 20px 0; padding: 0; list-style: none; }
+.evidence-list li { padding: 10px 12px; border-left: 3px solid var(--blue); background: var(--panel); font-size: 13px; }
+.footer {
+  padding: 36px 0 50px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+.dark { background: #111a23; }
+.dark body { color: #dce7ef; background: #16222d; }
+.dark .topbar { background: rgba(8, 23, 35, .97); }
+.dark .cover h1, .dark h2, .dark h3, .dark strong, .dark .bar-label, .dark .time-title,
+.dark .metric .value, .dark .card h4, .dark .chart-box h4, .dark .funnel-name { color: #9ecdf5; }
+.dark .card, .dark .funnel-row, .dark .pill, .dark .decision .node { background: #1c2b37; border-color: #354a5b; }
+.dark .report-page, .dark .table-wrap, .dark .architecture, .dark .chart-box { border-color: #354a5b; }
+.dark .chart-box, .dark .architecture, .dark .callout, .dark .note, .dark .evidence-list li { background: #1b2a36; }
+.dark tbody tr:nth-child(even) { background: #1b2a36; }
+.dark tbody td { border-color: #354a5b; }
+.dark .track { background: #2b3c49; }
+.dark code { color: #a8d4f8; background: #263b4b; }
+.dark .equation { color: #c3e2fb; background: #183247; border-color: #365f80; }
+@media (max-width: 900px) {
+  .navlinks { display: none; }
+  .toolbar { margin-left: auto; }
+  .shell { padding-right: 20px; padding-left: 20px; }
+  .cover { padding: 62px 16px; }
+  .grid.three, .grid.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .timeline { grid-template-columns: repeat(3, 1fr); gap: 25px 10px; }
+  .timeline::before { display: none; }
+  .decision { grid-template-columns: 1fr; }
+  .decision .arrow { transform: rotate(90deg); min-height: 30px; }
+}
+@media (max-width: 640px) {
+  .topbar { gap: 8px; }
+  .toolbar button { padding: 4px 8px; font-size: 11px; }
+  .toolbar button:last-child { display: none; }
+  .kicker, .cover .subtitle, .cover .meta { overflow-wrap: anywhere; }
+  .grid.two, .grid.three, .grid.four, .split-chart, .claims, .evidence-list { grid-template-columns: 1fr; }
+  .bar-row { grid-template-columns: 120px 1fr 82px; }
+  .timeline { grid-template-columns: repeat(2, 1fr); }
+  .funnel-row { grid-template-columns: 70px 1fr; }
+  .funnel-rule { grid-column: 2; }
+}
+@page { size: A4 portrait; margin: 14mm 14mm 16mm; }
+@media print {
+  html, body { background: #fff !important; }
+  body { font-size: 9.5pt; line-height: 1.48; }
+  .dark body { color: var(--ink) !important; }
+  .dark .cover h1, .dark h2, .dark h3, .dark strong, .dark .bar-label, .dark .time-title,
+  .dark .metric .value, .dark .card h4, .dark .chart-box h4, .dark .funnel-name { color: var(--navy) !important; }
+  .dark .card, .dark .funnel-row, .dark .decision .node, .dark .chart-box, .dark .architecture,
+  .dark .callout, .dark .note, .dark .evidence-list li { color: var(--ink) !important; background: #fff !important; }
+  .topbar { display: none !important; }
+  .shell { max-width: none; padding: 0; }
+  .cover { min-height: 265mm; padding: 20mm 9mm; page-break-after: always; }
+  .cover h1 { font-size: 31pt; }
+  .report-page { padding: 8mm 0 4mm; break-before: page; page-break-before: always; }
+  .card, .callout, .chart-box, .architecture, .table-wrap, .timeline, .decision, .funnel-row { break-inside: avoid; page-break-inside: avoid; box-shadow: none; }
+  .grid { gap: 3mm; }
+  .card { padding: 4mm; }
+  h2 { font-size: 22pt; }
+  h3 { font-size: 13pt; }
+  .subhead { font-size: 11pt; }
+  .metric { min-height: 30mm; }
+  .metric .value { font-size: 23pt; }
+  .note { display: none; }
+  .footer { display: none; }
+  a { color: inherit; }
+}
+</style>
+</head>
+<body id="top">
+<nav class="topbar" aria-label="汇报导航">
+  <a class="brand" href="#top">阶段进展汇报</a>
+  <div class="navlinks">
+    <a href="#s1" title="结论">1</a><a href="#s2" title="复现">2</a><a href="#s3" title="诊断">3</a>
+    <a href="#s4" title="实验地基">4</a><a href="#s5" title="时间机制">5</a><a href="#s6" title="家族比较">6</a>
+    <a href="#s7" title="创新假设">7</a><a href="#s8" title="下一步">8</a><a href="#s9" title="边界">9</a>
+    <a href="#s10" title="总结">10</a>
+  </div>
+  <div class="toolbar">
+    <button id="theme" type="button">深色</button>
+    <button type="button" onclick="window.print()">打印</button>
+  </div>
+</nav>
+
+<main class="shell">
+  <header class="cover">
+    <div class="kicker">Wind Scenario Generation · Research Progress · 2026</div>
+    <h1>从 MS-CADM 复现<br>到选择性时间干预</h1>
+    <div class="subtitle">风电联合场景生成的阶段进展、负结果、模型家族比较与下一步创新路线</div>
+    <div class="meta">GEFCom2014 Wind · 10 区域 × 24 小时 · 100 场景成员<br>证据截止：2026-08-28 · 建议汇报时长：20–25 分钟</div>
+    <div class="status-row">
+      <span class="pill done">论文工程复现完成</span>
+      <span class="pill done">跨模型诊断完成</span>
+      <span class="pill done">三种子与 Shuffle 完成</span>
+      <span class="pill unresolved">Flow vs DDPM 无胜者</span>
+      <span class="pill sealed">Selection / Calibration 封存</span>
+    </div>
+  </header>
+
+  <div class="lede">
+    一句话结论：我们已经从“复现一个模型”推进到“定位一个可检验的科学问题”。现有证据确认时间顺序对 ramp 和滞后依赖确实有价值，但把时间机制均匀、无约束地注入全模型会损害稳定性；下一阶段应先测量时间信息在不同天气状态和 diffusion 去噪阶段的效用曲线，再决定是否构造双门控模型。
+  </div>
+
+  <section class="report-page" id="s1">
+    <span class="section-no">01 · Executive Summary</span>
+    <h2>目前走到了哪里</h2>
+    <p class="subhead">研究已经完成五次关键收敛：从原论文数值复现失败，到时序缺口诊断，再到无泄漏、公平、多种子的架构实验。</p>
+
+    <div class="timeline" aria-label="研究进展时间线">
+      <div class="time-item"><div class="time-dot">P0</div><div class="time-title">MS-CADM 复现</div><div class="time-desc">方法链完整重建<br>核心数值未复现</div></div>
+      <div class="time-item"><div class="time-dot">P1</div><div class="time-title">跨模型诊断</div><div class="time-desc">定位 ramp、lag-1<br>与动态天气缺口</div></div>
+      <div class="time-item"><div class="time-dot">P2</div><div class="time-title">Architecture-v1</div><div class="time-desc">无泄漏数据协议<br>三种子稳定地基</div></div>
+      <div class="time-item"><div class="time-dot">P3</div><div class="time-title">时间机制 v3.2</div><div class="time-desc">时间信号成立<br>候选正式 No-Go</div></div>
+      <div class="time-item"><div class="time-dot">P4</div><div class="time-title">Flow vs DDPM</div><div class="time-desc">六个 EMA checkpoint<br>正式无支配关系</div></div>
+      <div class="time-item"><div class="time-dot">NEXT</div><div class="time-title">Temporal Utility</div><div class="time-desc">天气状态 × SNR<br>选择性时间干预</div></div>
+    </div>
+
+    <div class="grid three">
+      <article class="card green">
+        <h4>已经确认</h4>
+        <p>正常时间顺序携带真实信息；显式边界状态有价值；联合空间成员耦合不是伪信号；v-prediction 能稳定满足 diffusion sampler contract。</p>
+      </article>
+      <article class="card amber">
+        <h4>仍未裁决</h4>
+        <p>Flow 与 DDPM 谁更好；时间信息是否只在中间 SNR 有用；天气动态程度是否应该控制时间模块开关。</p>
+      </article>
+      <article class="card red">
+        <h4>已经否定</h4>
+        <p>自由改变随机源均值/尺度；仅凭训练 loss 宣布更好；看到结果后放宽稳定性门；把单一 seed 或 validation 结果当最终泛化结论。</p>
+      </article>
+    </div>
+
+    <details class="note"><summary>汇报提示：这一页怎么讲</summary><div>先不要介绍模型细节。用 60 秒说明：我们不是一路“调参变好”，而是通过负结果逐步排除错误路线，并把问题收敛到“时间信息何时有用”。后面每一部分都在为这句话提供证据。</div></details>
+  </section>
+
+  <section class="report-page" id="s2">
+    <span class="section-no">02 · Reproduction</span>
+    <h2>起点：MS-CADM 方法链重建成功，核心数值没有复现</h2>
+    <p class="subhead"><span class="tag formal">正式复现</span> 数据、条件扩散、网络、训练、采样、六项指标和调度实验均已工程重构；但公开信息不足以唯一还原作者实现。</p>
+
+    <div class="grid four">
+      <article class="card metric"><div><div class="value">731</div><div class="label">每个区域完整日历日</div></div><div class="delta neutral">10 个区域</div></article>
+      <article class="card metric"><div><div class="value">24 h</div><div class="label">日前联合轨迹长度</div></div><div class="delta neutral">每小时 20 维 NWP/区域条件</div></article>
+      <article class="card metric"><div><div class="value">100</div><div class="label">每个预测样本的场景成员</div></div><div class="delta neutral">概率而非单点预测</div></article>
+      <article class="card metric"><div><div class="value">26k</div><div class="label">正式 MS-CADM 更新次数</div></div><div class="delta neutral">单卡约 38 分钟</div></article>
+    </div>
+
+    <div class="split-chart" style="margin-top:24px">
+      <div class="chart-box">
+        <h4>Headline CRPS：论文与本地实现</h4>
+        <div class="bar-chart">
+          <div class="bar-row"><div class="bar-label">论文 MS-CADM</div><div class="track"><div class="bar green" style="width:72.75%"></div></div><div class="bar-value">0.0873</div></div>
+          <div class="bar-row"><div class="bar-label">本地 ancestral-250</div><div class="track"><div class="bar red" style="width:89.50%"></div></div><div class="bar-value">0.1074</div></div>
+        </div>
+        <p class="mini-note">本地高 0.0201，即约 +23.02%；越低越好。</p>
+      </div>
+      <div class="chart-box">
+        <h4>名义 90% 区间：本地可靠性</h4>
+        <div class="bar-chart">
+          <div class="bar-row"><div class="bar-label">名义目标</div><div class="track"><div class="bar green" style="width:90%"></div></div><div class="bar-value">0.9000</div></div>
+          <div class="bar-row"><div class="bar-label">本地 coverage</div><div class="track"><div class="bar red" style="width:35.95%"></div></div><div class="bar-value">0.3595</div></div>
+        </div>
+        <p class="mini-note">场景集合严重过窄；训练 loss 收敛不等于概率分布校准。</p>
+      </div>
+    </div>
+
+    <div class="callout amber">
+      <strong>为什么不能称为作者代码的逐行复现？</strong> 论文没有完整披露网络宽度、深度、噪声日程、VLB 权重、mask 粒度、缩步采样和 checkpoint 选择。本地结果应表述为“依据论文原理和标准 DDPM/DiT 解释构造的忠实实现”。
+    </div>
+
+    <h3>这一步真正产生的研究价值</h3>
+    <div class="grid two">
+      <div class="card"><h4>不是“没复现所以结束”</h4><p>欠覆盖和动态分数退化提供了明确诊断入口：模型可能学会了平均水平，却没有学会合理的场景宽度、边界质量和时间演化。</p></div>
+      <div class="card"><h4>把问题从分数转向结构</h4><p>随后不再只比较 CRPS 总分，而是拆成 ramp、cross-lag、atom duration 和 NWP regime，定位具体失效机制。</p></div>
+    </div>
+
+    <details class="note"><summary>汇报提示：避免过度解释</summary><div>不要说“论文错了”。准确说法是：公开信息不足以唯一重现数值，本地忠实重实现没有复现 headline 和可靠性，因此后续研究以可审计实现为起点，不以作者未公开实现为真值。</div></details>
+  </section>
+
+  <section class="report-page" id="s3">
+    <span class="section-no">03 · Cross-model Diagnosis</span>
+    <h2>关键诊断：水平分布接近，轨迹动态明显有缺口</h2>
+    <p class="subhead"><span class="tag explore">探索性证据</span> 旧 mixed-measure joint flow 与逐区 DDPM 的冻结档案表明：问题不是整体都差，而是“相邻小时怎么走”生成错了。</p>
+
+    <div class="grid four">
+      <article class="card metric"><div><div class="value">+0.35%</div><div class="label">MM 相对 DDPM 的 level CRPS 差</div></div><div class="delta neutral">95% CI 跨 0，近似打平</div></article>
+      <article class="card metric"><div><div class="value">+5.19%</div><div class="label">local ramp CRPS 差</div></div><div class="delta bad">CI：[+0.002122,+0.002959]</div></article>
+      <article class="card metric"><div><div class="value">+80.33%</div><div class="label">total variation CRPS 差</div></div><div class="delta bad">场景明显过抖</div></article>
+      <article class="card metric"><div><div class="value">+57.13%</div><div class="label">最大绝对 ramp CRPS 差</div></div><div class="delta bad">极端跳变失真</div></article>
+    </div>
+
+    <h3>空间同步与时间连贯出现相反结论</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>结构诊断（RMSE/MAE，越低越好）</th><th>MM joint flow</th><th>DDPM product</th><th>信息</th></tr></thead>
+        <tbody>
+          <tr><td>level，跨区域 lag 0 correlation RMSE</td><td class="winner">0.0222</td><td>0.1266</td><td>MM 的同时空间耦合更准</td></tr>
+          <tr><td>increment，跨区域 lag 0 correlation RMSE</td><td class="winner">0.0396</td><td>0.1893</td><td>MM 成员对齐携带有效信息</td></tr>
+          <tr><td>increment，跨区域 lag 1 correlation RMSE</td><td>0.0837</td><td class="winner">0.0438</td><td>DDPM 的时间演化更接近真值</td></tr>
+          <tr><td>increment，同一区域 lag 1 correlation MAE</td><td>0.3002</td><td class="winner">0.0149</td><td>最突出的缺口是局部时间记忆</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="architecture" aria-label="诊断结论示意图">
+      <svg viewBox="0 0 1000 320" role="img" aria-labelledby="diag-title diag-desc">
+        <title id="diag-title">联合空间信息与时间动态缺口</title>
+        <desc id="diag-desc">MM joint flow 的空间同步较好，但相邻小时演化和动态天气条件下较差。</desc>
+        <defs><marker id="arrowA" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2f80ed"/></marker></defs>
+        <rect x="32" y="78" width="180" height="150" rx="18" fill="#eaf7ef" stroke="#18864b" stroke-width="2"/>
+        <text x="122" y="112" text-anchor="middle" font-size="18" font-weight="800" fill="#155f38">MM joint flow</text>
+        <text x="122" y="150" text-anchor="middle" font-size="14" fill="#315c48">✓ 同时空间关系</text>
+        <text x="122" y="180" text-anchor="middle" font-size="14" fill="#9a3030">✕ lag-1 时间关系</text>
+        <text x="122" y="207" text-anchor="middle" font-size="14" fill="#9a3030">✕ 轨迹过抖</text>
+        <line x1="225" y1="151" x2="406" y2="151" stroke="#2f80ed" stroke-width="4" marker-end="url(#arrowA)"/>
+        <text x="315" y="132" text-anchor="middle" font-size="13" font-weight="700" fill="#1f6feb">机制拆分</text>
+        <rect x="420" y="38" width="210" height="92" rx="16" fill="#eef6ff" stroke="#2f80ed" stroke-width="2"/>
+        <text x="525" y="73" text-anchor="middle" font-size="16" font-weight="800" fill="#174a71">保留联合成员语义</text>
+        <text x="525" y="102" text-anchor="middle" font-size="13" fill="#526f84">不要退回逐区独立生成</text>
+        <rect x="420" y="172" width="210" height="92" rx="16" fill="#fff5df" stroke="#b26b00" stroke-width="2"/>
+        <text x="525" y="207" text-anchor="middle" font-size="16" font-weight="800" fill="#81500a">直接干预时间动态</text>
+        <text x="525" y="236" text-anchor="middle" font-size="13" fill="#735b36">而非继续只优化 level</text>
+        <line x1="646" y1="84" x2="792" y2="135" stroke="#2f80ed" stroke-width="3" marker-end="url(#arrowA)"/>
+        <line x1="646" y1="218" x2="792" y2="166" stroke="#2f80ed" stroke-width="3" marker-end="url(#arrowA)"/>
+        <rect x="805" y="91" width="165" height="128" rx="18" fill="#102a43"/>
+        <text x="887" y="130" text-anchor="middle" font-size="17" font-weight="800" fill="#ffffff">下一代模型</text>
+        <text x="887" y="162" text-anchor="middle" font-size="13" fill="#d6e9f8">联合输出</text>
+        <text x="887" y="188" text-anchor="middle" font-size="13" fill="#d6e9f8">+ 选择性时间机制</text>
+      </svg>
+    </div>
+
+    <h3>天气越动态，ramp 缺口越明显</h3>
+    <div class="bar-chart">
+      <div class="bar-row"><div class="bar-label">calm</div><div class="track"><div class="bar green" style="width:50%"></div></div><div class="bar-value">+0.00186</div></div>
+      <div class="bar-row"><div class="bar-label">strong</div><div class="track"><div class="bar amber" style="width:61.6%"></div></div><div class="bar-value">+0.00229</div></div>
+      <div class="bar-row"><div class="bar-label">speed volatile</div><div class="track"><div class="bar red" style="width:100%"></div></div><div class="bar-value">+0.00372</div></div>
+      <div class="bar-row"><div class="bar-label">turning</div><div class="track"><div class="bar red" style="width:96.8%"></div></div><div class="bar-value">+0.00360</div></div>
+      <div class="bar-row"><div class="bar-label">spatial heterogeneous</div><div class="track"><div class="bar red" style="width:95.4%"></div></div><div class="bar-value">+0.00355</div></div>
+    </div>
+    <p class="mini-note">横轴为 MM−DDPM ramp CRPS gap；标签只由训练期冻结的 NWP 阈值定义。该结果提出天气交互假设，但仍属于探索性诊断。</p>
+
+    <div class="callout blue"><strong>同时保留 atom 结论：</strong>MM 对精确零小时总数、最长零 run 明显优于连续 DDPM，但进入/退出转移略差。显式边界质量值得保留，atom head 却不能替代连续时间动态。</div>
+
+    <details class="note"><summary>证据边界</summary><div>这批旧档案包含已见数据和跨 split forward-fill 风险，因此只用于提出架构假设，不能用于宣布最终模型。Architecture-v1 随后专门重置数据角色、隔离 R-SEEN，并禁止跨 split 填充。</div></details>
+  </section>
+
+  <section class="report-page" id="s4">
+    <span class="section-no">04 · Experimental Foundation</span>
+    <h2>先搭公平实验地基，再比较模型</h2>
+    <p class="subhead"><span class="tag formal">预注册实验</span> Architecture-v1 的目标不是马上拿最高分，而是让每次差异只对应一个可解释变量。</p>
+
+    <div class="grid three">
+      <article class="card blue"><h4>数据角色</h4><p>train / validation / calibration / selection 清单冻结；旧诊断日期进入 R-SEEN 隔离；不允许跨 split forward-fill。</p></article>
+      <article class="card blue"><h4>共同模型语义</h4><p>10 区 × 24 小时联合输出；共同 NWP encoder E、atom 模块 A、active mask 和 exact-boundary reconstruction。</p></article>
+      <article class="card blue"><h4>共同随机契约</h4><p>训练顺序、路径随机数、验证随机库、atom allocation、初始噪声和采样 NFE 均显式锁定。</p></article>
+    </div>
+
+    <h3>R0 种子不稳定问题已经归因并解决</h3>
+    <p>旧“训练 seed”同时改变 E/A、网络初始化、日期顺序和随机路径，无法判断波动来自哪里。正式 R0-D 固定共享 E/A 和训练随机路径，只保留 flow 初始化差异。</p>
+
+    <div class="grid three">
+      <article class="card metric green"><div><div class="value">−63.5%</div><div class="label">level CRPS seed spread</div></div><div class="delta good">0.003645 → 0.001331</div></article>
+      <article class="card metric green"><div><div class="value">−71.1%</div><div class="label">ramp CRPS seed spread</div></div><div class="delta good">0.001464 → 0.000422</div></article>
+      <article class="card metric green"><div><div class="value">−59.6%</div><div class="label">joint ES relative spread</div></div><div class="delta good">3.737% → 1.510%</div></article>
+    </div>
+
+    <div class="callout green">
+      <strong>正式状态：D_G1_GO。</strong> 三个 seed 的质量、梯度、采样语义和稳定性门全部通过；9/9 member-chunk 配对的 proper-score 聚合差远低于 <code>1e-7</code>。
+    </div>
+
+    <h3>为什么强调“封存”</h3>
+    <div class="grid two">
+      <div class="card"><h4>当前结果是什么</h4><p>train/validation 上的架构开发证据，用来筛除不稳定机制并建立公平比较。</p></div>
+      <div class="card"><h4>当前结果不是什么</h4><p>不是最终测试集性能，不授权打开 selection/calibration，也不能替代新的外部泛化验证。</p></div>
+    </div>
+
+    <details class="note"><summary>汇报提示：共同随机数是否“作弊”？</summary><div>不是。共同随机数是受控实验条件，用于消除数据顺序和 Monte Carlo 路径的混杂；三个模型仍使用不同参数初始化。它回答的是“只改变模型初始化时是否稳定”，而不是让三个模型变成同一个模型。</div></details>
+  </section>
+
+  <section class="report-page" id="s5">
+    <span class="section-no">05 · Temporal Mechanisms</span>
+    <h2>时间信息确实有用，但当前注入方式还不够稳</h2>
+    <p class="subhead">这是当前最关键的“正信号 + 负裁决”：机制假设得到支持，候选架构仍按预注册门判为 No-Go。</p>
+
+    <div class="grid three">
+      <article class="card red">
+        <h4>v3.0：自由随机源 <span class="tag nogo">NO-GO</span></h4>
+        <p>adapter 可自由改变随机源均值和尺度，训练 loss 下降，却把场景集合压窄。</p>
+        <p><strong>coverage90 0.507</strong>、width 0.171、梯度裁剪 47.2%。</p>
+      </article>
+      <article class="card green">
+        <h4>v3.1：方差保持修复 <span class="tag explore">PILOT GO</span></h4>
+        <p>使用有界 AR(1) 只学习相关系数，source variance 保持约 1，避免再次通过缩窄场景“投机”。</p>
+      </article>
+      <article class="card amber">
+        <h4>v3.2：三种子 + Shuffle <span class="tag nogo">FORMAL NO-GO</span></h4>
+        <p>完成 12 次新训练，复用 3 个 pilot checkpoint；15/15 candidate×seed 全部评估。</p>
+      </article>
+    </div>
+
+    <h3>v3.2 的机制信号非常清楚</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>候选相对 T0</th><th>ramp CRPS 改善</th><th>lagged VS 相对改善</th><th>Chronological vs Shuffle</th><th>正式裁决</th></tr></thead>
+        <tbody>
+          <tr><td>T1-feature</td><td class="winner">0.002162</td><td class="winner">19.9%</td><td class="winner">两项均显著更好</td><td class="loser">No-Go</td></tr>
+          <tr><td>T1-source</td><td class="winner">0.002697</td><td class="winner">62.2%</td><td class="winner">两项均显著更好</td><td class="loser">No-Go</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="split-chart">
+      <div class="chart-box">
+        <h4>为什么 feature recurrence 没通过</h4>
+        <ul class="claim-list">
+          <li>level CRPS 非劣上界 <strong>0.002667</strong> ＞ 0.0015；</li>
+          <li>joint ES 非劣上界 <strong>3.01%</strong> ＞ 2%；</li>
+          <li>joint ES seed spread <strong>3.014%</strong> 略超 3%。</li>
+        </ul>
+      </div>
+      <div class="chart-box">
+        <h4>为什么 source recurrence 没通过</h4>
+        <ul class="claim-list">
+          <li>level CRPS seed spread <strong>0.005689</strong> ＞ 0.0025；</li>
+          <li>joint ES seed spread <strong>7.02%</strong> ＞ 3%；</li>
+          <li><code>|rho|≥0.94</code> 占约 <strong>99.8%</strong>，几乎全场饱和。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout blue">
+      <strong>正确解释：</strong>正常时间顺序携带有效信息，Chronological 明显优于 Shuffle；但“全时段、全天气统一注入 recurrence”会牺牲边际/联合质量或跨种子稳定性。这个负结果直接启发了后续的<strong>选择性时间干预</strong>。
+    </div>
+
+    <details class="note"><summary>汇报提示：为什么不能说时间机制失败</summary><div>因为主指标和 Shuffle 对照都成功了。No-Go 来自预先锁定的安全门。最准确的话是：“时间信号存在，但当前注入方式不能作为稳定主模型。”这比简单说成功或失败更有研究价值。</div></details>
+  </section>
+
+  <section class="report-page" id="s6">
+    <span class="section-no">06 · Flow vs Joint DDPM</span>
+    <h2>模型家族正式比较：各有优势，没有胜者</h2>
+    <p class="subhead"><span class="tag formal">正式比较</span> 六个 best EMA checkpoint、共同 validation scenarios、相同 31 NFE、三训练 seed × 三采样 seed。</p>
+
+    <div class="callout red">
+      <strong>先解决一个 sampler contract 故障：</strong>旧 epsilon-prediction D0 在采样端把 89.28% 的 active interior 解码到精确 0/1，潜变量范围达到约 ±12,000，因此 family-v1 被永久冻结为 No-Go。family-v1.1 只改为 v-prediction，随后 P0 和三种子训练全部通过。
+    </div>
+
+    <div class="grid four">
+      <article class="card metric"><div><div class="value">6</div><div class="label">best EMA checkpoints</div></div><div class="delta neutral">F0 / D0-v 各 3 seeds</div></article>
+      <article class="card metric"><div><div class="value">18</div><div class="label">共同场景归档</div></div><div class="delta neutral">每 checkpoint 3 个采样重复</div></article>
+      <article class="card metric"><div><div class="value">21.6M</div><div class="label">生成的区域—小时场景值</div></div><div class="delta neutral">50 日 × 100 members × 10 × 24 × 18</div></article>
+      <article class="card metric"><div><div class="value">31 NFE</div><div class="label">双方共同网络调用预算</div></div><div class="delta neutral">Flow Heun / deterministic DDIM</div></article>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>指标</th><th>F0 joint Flow</th><th>D0-v joint DDPM</th><th>阶段性解释</th></tr></thead>
+        <tbody>
+          <tr><td>level CRPS ↓</td><td class="winner">0.079661</td><td>0.080484</td><td>F0 好约 1.03%</td></tr>
+          <tr><td>ramp CRPS ↓</td><td class="winner">0.051627</td><td>0.051648</td><td>几乎完全相同</td></tr>
+          <tr><td>normalized joint ES ↓</td><td class="winner">0.111059</td><td>0.112640</td><td>F0 好约 1.40%</td></tr>
+          <tr><td>lagged increment VS ↓</td><td>0.017720</td><td class="winner">0.017189</td><td>D0-v 好约 3.00%</td></tr>
+          <tr><td>coverage90</td><td class="winner">0.851658</td><td>0.838193</td><td>F0 高 1.35 个百分点；均低于 0.90</td></tr>
+          <tr><td>width90 ↓*</td><td>0.378115</td><td class="winner">0.368512</td><td>D0-v 更窄，但同时 coverage 更低</td></tr>
+          <tr><td>atom-state Brier ↓</td><td>0.119737</td><td>0.119737</td><td>共同冻结 E/A，完全相同</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mini-note">* width 不能脱离 coverage 单独解释：区间更窄不代表更好，可能只是欠覆盖更严重。</p>
+
+    <div class="grid three">
+      <div class="card green"><h4>F0 相对优势</h4><p>边际 CRPS、joint ES、coverage 更好；采样快约 16.64%，但未达到预注册 20% tie-break。</p></div>
+      <div class="card blue"><h4>D0-v 相对优势</h4><p>lagged variogram 更好约 3%，level/joint 的 seed spread 略小；SNR 轴提供新的机制研究接口。</p></div>
+      <div class="card amber"><h4>正式裁决</h4><p><strong>FAMILY_V1_1_UNRESOLVED</strong>。两者均有效且稳定，但不存在满足门槛的支配或等价关系。</p></div>
+    </div>
+
+    <div class="callout amber">
+      <strong>后续采用 diffusion 的含义：</strong>把 D0-v 选作“研究载体”，因为新假设需要显式 log-SNR/去噪阶段；这不是把它宣布为家族胜者。F0 仍应保留为外部参考控制。
+    </div>
+
+    <details class="note"><summary>为什么 atom 指标完全一样</summary><div>不是两个 transport 家族各自学到了同样的 atom law，而是双方共享并冻结同一 E/A 和相同 atom allocation。这保证连续 transport 比较公平，但不能证明当前 atom 联合过程已经充分。</div></details>
+  </section>
+
+  <section class="report-page" id="s7">
+    <span class="section-no">07 · Current Hypothesis</span>
+    <h2>主创新收敛为：天气状态 × SNR 的选择性时间干预</h2>
+    <p class="subhead">不再问“要不要给 diffusion 加 SSM”，而是问两个更科学的问题：什么时候需要时间信息？当前去噪阶段是否能够利用它？</p>
+
+    <div class="equation" aria-label="选择性时间残差公式">
+      v̂ = v<sub>base</sub> + η · g<sub>met</sub>(c) · g<sub>snr</sub>(logSNR<sub>t</sub>) · tanh(Δv<sub>temp</sub>)
+    </div>
+
+    <div class="architecture">
+      <svg viewBox="0 0 1100 500" role="img" aria-labelledby="model-title model-desc">
+        <title id="model-title">天气状态和 SNR 双门控时间残差扩散模型</title>
+        <desc id="model-desc">边界状态由 atom 模块生成；连续内部由稳定 v-diffusion 生成；NWP 动态程度和 log-SNR 共同控制有界时间残差。</desc>
+        <defs>
+          <marker id="arrowB" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2f80ed"/></marker>
+          <marker id="arrowG" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#18864b"/></marker>
+        </defs>
+        <rect x="38" y="42" width="176" height="76" rx="14" fill="#eef6ff" stroke="#2f80ed" stroke-width="2"/>
+        <text x="126" y="75" text-anchor="middle" font-size="17" font-weight="800" fill="#174a71">未来 24h NWP</text>
+        <text x="126" y="99" text-anchor="middle" font-size="12" fill="#526f84">风速 · 风向 · 空间差异</text>
+        <rect x="38" y="194" width="176" height="76" rx="14" fill="#fff5df" stroke="#b26b00" stroke-width="2"/>
+        <text x="126" y="227" text-anchor="middle" font-size="17" font-weight="800" fill="#81500a">带噪 joint trajectory</text>
+        <text x="126" y="251" text-anchor="middle" font-size="12" fill="#735b36">10 区 × 24 小时</text>
+        <rect x="38" y="346" width="176" height="76" rx="14" fill="#f0ecff" stroke="#7357b6" stroke-width="2"/>
+        <text x="126" y="379" text-anchor="middle" font-size="17" font-weight="800" fill="#51368e">diffusion timestep</text>
+        <text x="126" y="403" text-anchor="middle" font-size="12" fill="#675a80">logSNR(t)</text>
+
+        <line x1="214" y1="80" x2="316" y2="80" stroke="#2f80ed" stroke-width="3" marker-end="url(#arrowB)"/>
+        <line x1="214" y1="232" x2="316" y2="232" stroke="#2f80ed" stroke-width="3" marker-end="url(#arrowB)"/>
+        <line x1="214" y1="384" x2="316" y2="384" stroke="#2f80ed" stroke-width="3" marker-end="url(#arrowB)"/>
+
+        <rect x="330" y="35" width="206" height="90" rx="16" fill="#eaf7ef" stroke="#18864b" stroke-width="2"/>
+        <text x="433" y="72" text-anchor="middle" font-size="18" font-weight="850" fill="#155f38">g_met：天气动态门</text>
+        <text x="433" y="99" text-anchor="middle" font-size="12" fill="#315c48">“今天需要时间模块吗？”</text>
+        <rect x="330" y="176" width="206" height="112" rx="16" fill="#eef6ff" stroke="#2f80ed" stroke-width="2"/>
+        <text x="433" y="215" text-anchor="middle" font-size="18" font-weight="850" fill="#174a71">稳定 v-base denoiser</text>
+        <text x="433" y="243" text-anchor="middle" font-size="12" fill="#526f84">边际 / 联合分布基础</text>
+        <text x="433" y="265" text-anchor="middle" font-size="12" fill="#526f84">全程可用、首先冻结</text>
+        <rect x="330" y="339" width="206" height="90" rx="16" fill="#f0ecff" stroke="#7357b6" stroke-width="2"/>
+        <text x="433" y="376" text-anchor="middle" font-size="18" font-weight="850" fill="#51368e">g_snr：阶段门</text>
+        <text x="433" y="403" text-anchor="middle" font-size="12" fill="#675a80">“现在适合恢复时间结构吗？”</text>
+
+        <rect x="625" y="145" width="218" height="130" rx="18" fill="#fff5df" stroke="#b26b00" stroke-width="3"/>
+        <text x="734" y="185" text-anchor="middle" font-size="18" font-weight="850" fill="#81500a">有界 temporal residual</text>
+        <text x="734" y="217" text-anchor="middle" font-size="14" fill="#735b36">η · g_met · g_snr</text>
+        <text x="734" y="247" text-anchor="middle" font-size="14" fill="#735b36">× tanh(Δv_temp)</text>
+        <line x1="536" y1="80" x2="681" y2="145" stroke="#18864b" stroke-width="3" marker-end="url(#arrowG)"/>
+        <line x1="536" y1="384" x2="681" y2="276" stroke="#18864b" stroke-width="3" marker-end="url(#arrowG)"/>
+        <line x1="536" y1="232" x2="625" y2="232" stroke="#2f80ed" stroke-width="4" marker-end="url(#arrowB)"/>
+
+        <rect x="904" y="62" width="158" height="92" rx="16" fill="#fff0f0" stroke="#bf3b3b" stroke-width="2"/>
+        <text x="983" y="99" text-anchor="middle" font-size="17" font-weight="850" fill="#9a3030">Atom state</text>
+        <text x="983" y="126" text-anchor="middle" font-size="12" fill="#755151">exact 0 / 1 / interior</text>
+        <rect x="904" y="198" width="158" height="92" rx="16" fill="#102a43"/>
+        <text x="983" y="235" text-anchor="middle" font-size="17" font-weight="850" fill="#ffffff">masked joint v</text>
+        <text x="983" y="262" text-anchor="middle" font-size="12" fill="#d6e9f8">仅 interior 去噪</text>
+        <rect x="904" y="334" width="158" height="92" rx="16" fill="#eaf7ef" stroke="#18864b" stroke-width="2"/>
+        <text x="983" y="371" text-anchor="middle" font-size="17" font-weight="850" fill="#155f38">100 joint scenarios</text>
+        <text x="983" y="398" text-anchor="middle" font-size="12" fill="#315c48">边界精确 + 内部连续</text>
+        <line x1="843" y1="210" x2="904" y2="244" stroke="#2f80ed" stroke-width="4" marker-end="url(#arrowB)"/>
+        <line x1="983" y1="154" x2="983" y2="198" stroke="#bf3b3b" stroke-width="3" marker-end="url(#arrowB)"/>
+        <line x1="983" y1="290" x2="983" y2="334" stroke="#18864b" stroke-width="3" marker-end="url(#arrowG)"/>
+      </svg>
+    </div>
+
+    <h3>贡献层级需要明确</h3>
+    <div class="grid three">
+      <article class="card amber"><h4>主创新</h4><p><strong>Regime- and SNR-adaptive selective temporal intervention</strong>：由可观测效用曲线驱动，而非凭直觉堆门控。</p></article>
+      <article class="card blue"><h4>稳定基础</h4><p><strong>Stable joint v-diffusion</strong>：v-pred、normalization、Min-SNR 都是基础组件，不作为“首次提出”。</p></article>
+      <article class="card green"><h4>系统支撑</h4><p><strong>Boundary-aware mixed measure</strong>：显式分离 exact atom 与 continuous interior，但对“首个 mixed distribution”保持克制。</p></article>
+    </div>
+
+    <div class="callout amber"><strong>当前 atom 限制：</strong>atom head 仍是逐 cell 三分类概率，shared-priority allocation 只是一种共同成员分配机制，并非学习出的完整联合离散过程；训练使用观测 state，推理使用预测/分配 state。Temporal Utility Probe 中先冻结它，之后单独建立 Atom-v2，避免两个创新相互混杂。</div>
+
+    <details class="note"><summary>新颖性边界</summary><div>不能声称“首次把 diffusion、SSM、MoE、timestep gate 或 mixed discrete-continuous 分布用于时间序列”。可守住的主张是：在联合风电场景 diffusion 中，系统测量并利用 meteorological-state-dependent 与 noise-stage-dependent temporal utility。</div></details>
+  </section>
+
+  <section class="report-page" id="s8">
+    <span class="section-no">08 · Next Protocol</span>
+    <h2>下一步：先画 Temporal Utility Curve，再决定是否做 M3</h2>
+    <p class="subhead">D1/D2 是稳定化候选，不是自动累加的“升级包”；每一阶段必须独立过门，失败就回退到更简单基线。</p>
+
+    <div class="funnel">
+      <div class="funnel-row"><div class="funnel-step">Stage A</div><div class="funnel-name">family-v1.2 stabilization</div><div class="funnel-rule">D0-v → D1 Norm → D2 Min-SNR；一次只改一项</div></div>
+      <div class="funnel-row"><div class="funnel-step">Stage B</div><div class="funnel-name">Temporal Utility Probe</div><div class="funnel-rule">冻结 base，只训练小型、有界 residual adapter</div></div>
+      <div class="funnel-row"><div class="funnel-step">Stage C</div><div class="funnel-name">M1 / M2-SNR / M2-NWP</div><div class="funnel-rule">分别验证无门、单门，禁止直接跳到 M3</div></div>
+      <div class="funnel-row"><div class="funnel-step">Stage D</div><div class="funnel-name">M3 dual gate</div><div class="funnel-rule">只有两个独立效应均成立才实现乘积门</div></div>
+      <div class="funnel-row"><div class="funnel-step">Parallel</div><div class="funnel-name">Atom diagnostics → Atom-v2</div><div class="funnel-rule">不与 Temporal Probe 同时改模型语义</div></div>
+    </div>
+
+    <h3>Temporal Utility Probe 的冻结设计</h3>
+    <div class="grid three">
+      <article class="card blue"><h4>8 个 log-SNR 区间</h4><p>按训练 timestep 等暴露划分并记录实际 log-SNR 范围；每个 adapter 只在自己的区间训练和采样时生效。</p></article>
+      <article class="card blue"><h4>Chronological vs Shuffle</h4><p>每个区间都设置正常时间顺序和固定乱序负对照，排除“只是多参数或平滑”的解释。</p></article>
+      <article class="card blue"><h4>3 seeds + 共同随机数</h4><p>正式矩阵为 8 × 2 × 3 = 48 个轻量 adapter run；base、noise、atom allocation 和验证日完全配对。</p></article>
+    </div>
+
+    <h3>NWP dynamicity 只从 train 冻结</h3>
+    <div class="grid four">
+      <div class="card"><h4>风速变化</h4><p>相邻小时 WS100 变化 RMS</p></div>
+      <div class="card"><h4>风向转动</h4><p>圆周距离，避免 359°/1° 假跳变</p></div>
+      <div class="card"><h4>加速度</h4><p>二阶风速变化，刻画突变</p></div>
+      <div class="card"><h4>空间异质性</h4><p>同小时跨区域风场离散程度</p></div>
+    </div>
+    <p class="mini-note">stable/dynamic 分组用于图示；正式交互检验优先使用全部日期的连续 dynamicity，calendar day 仍是 bootstrap 单位。</p>
+
+    <h3>Go / No-Go 门</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>类别</th><th>冻结要求</th><th>目的</th></tr></thead>
+        <tbody>
+          <tr><td>主效用</td><td>ramp CRPS 改善 ≥ 0.001；lagged VS 相对改善 ≥ 5%；paired CI 下界 ＞ 0</td><td>排除只有统计、没有实际意义的微小变化</td></tr>
+          <tr><td>边际/联合保护</td><td>level 恶化 ≤ 0.0015；joint ES 恶化 ≤ 2%</td><td>防止再次用动态分数换整体质量</td></tr>
+          <tr><td>可靠性保护</td><td>|coverage 差| ≤ 0.02；width 增幅 ≤ 10%</td><td>防止场景塌缩或无差别扩宽</td></tr>
+          <tr><td>结构证据</td><td>至少两个相邻 SNR 区间形成稳定峰；dynamic utility ＞ stable utility</td><td>支撑可解释门控，而非任意曲线拟合</td></tr>
+          <tr><td>负对照</td><td>Chronological 必须优于对应 Shuffle</td><td>证明收益来自真实时间顺序</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="decision">
+      <div class="node"><strong>冻结 diffusion base</strong>D0-v 或通过门的 D1/D2</div>
+      <div class="arrow">→</div>
+      <div class="node"><strong>Temporal Utility Curve</strong>8 SNR bins × NWP dynamicity × Shuffle</div>
+      <div class="arrow">→</div>
+      <div class="outcomes">
+        <div class="outcome go">SNR 峰 + 天气交互：进入 M3 双门控</div>
+        <div class="outcome partial">只成立一项：只保留相应单门</div>
+        <div class="outcome stop">曲线平坦或 Shuffle 同样好：停止门控路线</div>
+      </div>
+    </div>
+
+    <div class="callout green"><strong>最小下一动作：</strong>先落盘并冻结 family-v1.2 与 Temporal Utility v4.0 协议，再实现 frozen-base residual probe；暂不训练完整 M3。</div>
+  </section>
+
+  <section class="report-page" id="s9">
+    <span class="section-no">09 · Claims & Risks</span>
+    <h2>现在能讲什么，不能讲什么</h2>
+    <p class="subhead">阶段性汇报最重要的是证据等级。下面这些表述可直接用于组会或开题讨论。</p>
+
+    <div class="claims">
+      <article class="card green">
+        <h4>现在可以讲</h4>
+        <ul class="claim-list">
+          <li>原论文方法链已完整工程重构，但核心数值和可靠性没有复现。</li>
+          <li>旧联合模型的主要可观测缺口集中在 ramp 与 lag-1 时间依赖，动态 NWP 条件下更明显。</li>
+          <li>Chronological 时间机制显著优于 Shuffle，说明正常时间顺序携带有效信息。</li>
+          <li>F0 与 D0-v 均能稳定生成联合场景，但在边际/联合质量和 lagged dependence 之间存在权衡。</li>
+          <li>Temporal Utility Curve 是下一步最有信息量、最可证伪的实验。</li>
+        </ul>
+      </article>
+      <article class="card red">
+        <h4>现在不能讲</h4>
+        <ul class="claim-list">
+          <li>不能说 diffusion 已经战胜 Flow，正式 winner 仍为空。</li>
+          <li>不能说 T1-feature 或 T1-source 是最终模型，它们正式 No-Go。</li>
+          <li>不能把 validation 改善当外部泛化或最终论文结果。</li>
+          <li>不能说当前 atom 模块已经学习完整联合状态过程。</li>
+          <li>不能声称首次使用 diffusion、SSM、SNR gate 或 mixed distribution。</li>
+        </ul>
+      </article>
+    </div>
+
+    <h3>剩余风险与控制方法</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>风险</th><th>为什么重要</th><th>控制</th></tr></thead>
+        <tbody>
+          <tr><td>validation 已多次用于架构开发</td><td>容易高估泛化</td><td>selection/calibration 继续封存；最终使用新外部或一次性最终数据</td></tr>
+          <tr><td>8 个 SNR bin 的多重比较</td><td>可能偶然出现“漂亮峰值”</td><td>预注册相邻区间结构、calendar-day bootstrap 和 Shuffle 全矩阵</td></tr>
+          <tr><td>数据只有 731 日</td><td>大型 MoE/复杂 gate 容易不可辨识</td><td>先连续小门控、零初始化有界 residual，不直接上大型专家</td></tr>
+          <tr><td>coverage 仍低于 0.90</td><td>窄场景可能看起来 sharp 却不可靠</td><td>把 coverage/width 作为共同安全门，而非事后校准说明</td></tr>
+          <tr><td>atom 配置分布差异</td><td>可能影响连续 denoiser 的邻域条件</td><td>Probe 中共同冻结；另做 atom NLL、可靠性、run-length、转移和共现诊断</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>证据资产</h3>
+    <ul class="evidence-list">
+      <li><a href="MSCADM_PAPER_REPRODUCTION_REPORT.md">MSCADM_PAPER_REPRODUCTION_REPORT.md</a>：原论文方法、数值与复现审计</li>
+      <li><a href="CROSS_MODEL_ARCHITECTURE_DIAGNOSTIC.md">CROSS_MODEL_ARCHITECTURE_DIAGNOSTIC.md</a>：ramp / cross-lag / atom / NWP 诊断</li>
+      <li><a href="ARCHITECTURE_V1_R0_STABILITY_V2_3_FORMAL_RESULT.md">R0_STABILITY_V2_3_FORMAL_RESULT.md</a>：三种子稳定性</li>
+      <li><a href="ARCHITECTURE_V1_TEMPORAL_MECHANISM_V3_2_RESULT.md">TEMPORAL_MECHANISM_V3_2_RESULT.md</a>：时间机制与 Shuffle 正式裁决</li>
+      <li><a href="ARCHITECTURE_V1_FAMILY_V1_1_TRAINING_RESULT.md">FAMILY_V1_1_TRAINING_RESULT.md</a>：v-pred 修订与 retained 训练</li>
+      <li><a href="ARCHITECTURE_V1_FAMILY_V1_1_FORMAL_COMPARISON_RESULT.md">FAMILY_V1_1_FORMAL_COMPARISON_RESULT.md</a>：Flow vs DDPM 正式比较</li>
+    </ul>
+  </section>
+
+  <section class="report-page" id="s10">
+    <span class="section-no">10 · Closing</span>
+    <h2>总结：我们已经有了一个可证伪的论文问题</h2>
+    <p class="subhead">当前最大的进展不是某个分数提高，而是研究主线已经从“给架构加模块”变成“用实验现象决定模块是否存在”。</p>
+
+    <div class="grid three">
+      <article class="card blue"><h4>现象</h4><p>时间顺序对 ramp 与 lagged dependence 有真实价值，但均匀注入会损害稳定性。</p></article>
+      <article class="card amber"><h4>假设</h4><p>时间信息的效用随 meteorological dynamicity 和 diffusion log-SNR 变化。</p></article>
+      <article class="card green"><h4>方法</h4><p>只在“需要且可恢复”时启用有界 temporal residual，保护基础边际和联合校准。</p></article>
+    </div>
+
+    <div class="callout blue" style="margin-top:30px;font-size:19px">
+      <strong>论文故事的一句话版本：</strong><br>
+      我们发现联合风电场景 diffusion 中，时间信息并非在所有天气和所有去噪阶段同样有用；据此提出天气状态与 SNR 自适应的选择性时间干预，在改善 ramp 和滞后依赖的同时保护边际、联合与可靠性指标。
+    </div>
+
+    <h3>组会上希望讨论的三个问题</h3>
+    <ol>
+      <li>Temporal Utility Probe 的 8-bin × Shuffle × 3-seed 证据是否足以支撑方法设计？</li>
+      <li>主贡献是否应明确聚焦 selective temporal intervention，把 mixed-measure 和 v-diffusion 降为基础？</li>
+      <li>Atom-v2 应作为同篇论文的支撑消融，还是独立后续课题？</li>
+    </ol>
+
+    <details class="note" open><summary>60 秒收尾讲稿</summary><div>我们先完整重建了 MS-CADM，但没有复现论文数值，并发现模型严重欠覆盖。跨模型诊断进一步表明，真正的结构缺口不在平均功率，而在 ramp、lag-1 和动态天气条件。随后我们建立了无泄漏、三种子、共同随机数的 architecture-v1。时间机制实验确认正常时间顺序确实有用，但全局 recurrence 因稳定性和非劣门被正式否决。最后，Flow 与 v-DDPM 的公平比较没有胜者，呈现边际/联合质量和 lagged dependence 的权衡。所以下一步不直接堆 SSM，而是先测量天气状态 × SNR 的 Temporal Utility Curve；只有现象成立，才构造双门控选择性时间残差。</div></details>
+  </section>
+
+  <footer class="footer">
+    当前阶段进展汇报 · 生成于 2026-08-28 · 单文件 HTML，无外部字体、图片或公式依赖
+  </footer>
+</main>
+
+<script>
+const themeButton = document.getElementById('theme');
+themeButton.addEventListener('click', () => {
+  document.documentElement.classList.toggle('dark');
+  themeButton.textContent = document.documentElement.classList.contains('dark') ? '浅色' : '深色';
+});
+window.addEventListener('load', () => {
+  const qaTarget = new URLSearchParams(location.search).get('qa');
+  const target = qaTarget ? document.getElementById(qaTarget) : (location.hash ? document.querySelector(location.hash) : null);
+  if (target) {
+    window.setTimeout(() => target.scrollIntoView(), 120);
+  }
+});
+</script>
+</body>
+</html>

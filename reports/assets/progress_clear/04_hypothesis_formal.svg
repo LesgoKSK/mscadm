@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <marker id="arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0 0L11 5.5 0 11Z" fill="#5d7d94"/></marker>
+    <style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#17365d}.title{font-size:38px;font-weight:800}.sub{font-size:21px;fill:#66798a}.head{font-size:23px;font-weight:800}.body{font-size:18px;fill:#435b6d}.small{font-size:16px;fill:#687b8b}.white{fill:#fff}.green{fill:#28714f}.purple{fill:#66508b}</style>
+  </defs>
+  <rect width="1200" height="675" rx="28" fill="#f5f9fc"/>
+  <text class="title" x="600" y="58" text-anchor="middle">候选创新假设：选择性时间干预</text>
+  <text class="sub" x="600" y="92" text-anchor="middle">时间建模不应在所有天气条件和所有去噪阶段以相同强度持续启用</text>
+
+  <rect x="50" y="145" width="245" height="315" rx="22" fill="#17365d"/>
+  <text class="head white" x="173" y="187" text-anchor="middle">稳定 v-DDPM 基座</text>
+  <rect x="88" y="224" width="170" height="105" rx="18" fill="#2a5278"/><path d="M110 304C141 265 172 318 206 253S231 275 239 242" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+  <text class="body white" x="173" y="374" text-anchor="middle">负责主体条件分布</text>
+  <text class="small" x="173" y="404" text-anchor="middle" style="fill:#c9dce8">探针阶段冻结其参数</text>
+  <rect x="89" y="420" width="168" height="28" rx="10" fill="#315d83"/><text x="173" y="440" text-anchor="middle" font-size="15" style="fill:#d8e7f0">Flow 保留为外部参考</text>
+
+  <path d="M310 300H368" stroke="#5d7d94" stroke-width="5" marker-end="url(#arrow)"/>
+  <rect x="385" y="125" width="430" height="355" rx="24" fill="#fff" stroke="#c4d2dc" stroke-width="3"/>
+  <text class="head" x="600" y="168" text-anchor="middle">有界时间残差分支</text>
+  <rect x="420" y="203" width="165" height="110" rx="18" fill="#e7f3eb" stroke="#7eaf90" stroke-width="2"/>
+  <text class="head green" x="503" y="238" text-anchor="middle">天气门 g_met</text>
+  <text class="body" x="503" y="270" text-anchor="middle">是否处于变速、转向</text><text class="body" x="503" y="296" text-anchor="middle">或空间异质状态？</text>
+  <rect x="615" y="203" width="165" height="110" rx="18" fill="#eee7f5" stroke="#b19bca" stroke-width="2"/>
+  <text class="head purple" x="698" y="238" text-anchor="middle">阶段门 g_snr</text>
+  <text class="body" x="698" y="270" text-anchor="middle">当前 log-SNR 区间</text><text class="body" x="698" y="296" text-anchor="middle">是否具备时间效用？</text>
+  <path d="M503 330V357H698V330M600 357V380" stroke="#5d7d94" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <rect x="485" y="388" width="230" height="57" rx="16" fill="#e7f0f7"/>
+  <text x="600" y="413" text-anchor="middle" font-size="18" font-weight="800">零初始化、小参数量</text>
+  <text class="small" x="600" y="436" text-anchor="middle">幅度上限防止破坏基础分布</text>
+
+  <path d="M830 300H888" stroke="#5d7d94" stroke-width="5" marker-end="url(#arrow)"/>
+  <rect x="905" y="145" width="245" height="315" rx="22" fill="#fff" stroke="#9dbdce" stroke-width="3"/>
+  <text class="head" x="1028" y="187" text-anchor="middle">修正后的联合输出</text>
+  <rect x="940" y="228" width="175" height="115" rx="14" fill="#f5f9fc"/>
+  <path d="M958 320C985 292 1004 315 1027 268S1076 312 1098 246" fill="none" stroke="#2e74b5" stroke-width="6"/>
+  <path d="M958 300C985 320 1004 280 1027 306S1076 267 1098 288" fill="none" stroke="#7d68a7" stroke-width="4" opacity=".85"/>
+  <text class="body" x="1028" y="384" text-anchor="middle">目标：改善 ramp 与</text><text class="body" x="1028" y="410" text-anchor="middle">lagged dependence</text>
+
+  <rect x="75" y="525" width="1050" height="108" rx="20" fill="#fff" stroke="#c7d5df" stroke-width="2"/>
+  <text class="head" x="600" y="560" text-anchor="middle">约束条件</text>
+  <text class="body" x="600" y="593" text-anchor="middle">level / joint 不得显著恶化　·　coverage / width 保持校准　·　Chronological 必须优于 Shuffle</text>
+  <text class="small" x="600" y="619" text-anchor="middle">Atom 模块在探针阶段冻结，避免将离散边界改动与时间机制收益混为一谈</text>
+</svg>

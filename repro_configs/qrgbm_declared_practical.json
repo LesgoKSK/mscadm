@@ -1,0 +1,15 @@
+{
+  "baseline": "QRGBM practical declared reconstruction",
+  "quantiles": 19,
+  "estimators": 100,
+  "max_depth": 5,
+  "learning_rate": 0.04,
+  "subsample": 0.9,
+  "colsample_bytree": 0.9,
+  "min_child_weight": 3.0,
+  "tree_method": "hist",
+  "device": "cuda",
+  "coupling": "same-zone residual-rank ECC",
+  "paper_disclosure": "The article names QRGBM but does not disclose its hyperparameters or trajectory coupling.",
+  "claim": "Declared practical approximation, not an exact author implementation."
+}

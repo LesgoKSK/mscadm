@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#17365d}.title{font-size:38px;font-weight:800}.sub{font-size:21px;fill:#66798a}.head{font-size:25px;font-weight:800}.metric{font-size:19px;font-weight:700}.value{font-size:18px}.small{font-size:16px;fill:#66798a}.white{fill:#fff}</style>
+  </defs>
+  <rect width="1200" height="675" rx="28" fill="#f5f9fc"/>
+  <text class="title" x="600" y="58" text-anchor="middle">family-v1.1：Flow 与 Joint DDPM 的正式比较</text>
+  <text class="sub" x="600" y="92" text-anchor="middle">共同数据协议、共同验证随机库、3 个训练种子、31 次网络前向调用</text>
+  <rect x="45" y="130" width="250" height="420" rx="24" fill="#e8f3fa" stroke="#81b2d3" stroke-width="3"/>
+  <text class="head" x="170" y="178" text-anchor="middle">F0 Flow</text>
+  <circle cx="170" cy="250" r="50" fill="#2e74b5"/><path d="M128 250C147 214 170 285 194 239S216 213 218 266" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+  <text x="170" y="334" text-anchor="middle" font-size="20" font-weight="700" fill="#246b9b">相对优势</text>
+  <text x="170" y="370" text-anchor="middle" font-size="18">level CRPS</text><text x="170" y="398" text-anchor="middle" font-size="18">joint ES</text><text x="170" y="426" text-anchor="middle" font-size="18">coverage90</text>
+  <rect x="78" y="470" width="184" height="46" rx="13" fill="#d4e9f6"/><text x="170" y="499" text-anchor="middle" font-size="18" font-weight="800" fill="#246b9b">边际/联合更优</text>
+
+  <rect x="325" y="130" width="550" height="435" rx="24" fill="#fff" stroke="#c4d2dc" stroke-width="3"/>
+  <text class="head" x="600" y="174" text-anchor="middle">六项共同指标</text>
+  <rect x="360" y="200" width="480" height="42" rx="10" fill="#17365d"/><text class="white" x="500" y="227" text-anchor="middle" font-size="18" font-weight="700">指标</text><text class="white" x="660" y="227" text-anchor="middle" font-size="18" font-weight="700">Flow</text><text class="white" x="780" y="227" text-anchor="middle" font-size="18" font-weight="700">DDPM</text>
+  <g transform="translate(360 252)">
+    <rect width="480" height="42" rx="8" fill="#f4f7f9"/><text class="metric" x="25" y="27">level CRPS ↓</text><text class="value" x="300" y="27" text-anchor="middle">0.079661</text><text class="value" x="420" y="27" text-anchor="middle">0.080484</text>
+    <rect y="48" width="480" height="42" rx="8" fill="#fff"/><text class="metric" x="25" y="75">ramp CRPS ↓</text><text class="value" x="300" y="75" text-anchor="middle">0.051627</text><text class="value" x="420" y="75" text-anchor="middle">0.051648</text>
+    <rect y="96" width="480" height="42" rx="8" fill="#f4f7f9"/><text class="metric" x="25" y="123">joint ES ↓</text><text class="value" x="300" y="123" text-anchor="middle">0.111059</text><text class="value" x="420" y="123" text-anchor="middle">0.112640</text>
+    <rect y="144" width="480" height="42" rx="8" fill="#fff"/><text class="metric" x="25" y="171">lagged VS ↓</text><text class="value" x="300" y="171" text-anchor="middle">0.017720</text><text class="value" x="420" y="171" text-anchor="middle">0.017189</text>
+    <rect y="192" width="480" height="42" rx="8" fill="#f4f7f9"/><text class="metric" x="25" y="219">coverage90</text><text class="value" x="300" y="219" text-anchor="middle">0.851658</text><text class="value" x="420" y="219" text-anchor="middle">0.838193</text>
+    <rect y="240" width="480" height="42" rx="8" fill="#fff"/><text class="metric" x="25" y="267">width90 ↓</text><text class="value" x="300" y="267" text-anchor="middle">0.378115</text><text class="value" x="420" y="267" text-anchor="middle">0.368512</text>
+  </g>
+  <text class="small" x="600" y="558" text-anchor="middle">width 必须与 coverage 联合解释：区间更窄但覆盖下降，不构成单独优势</text>
+
+  <rect x="905" y="130" width="250" height="420" rx="24" fill="#f1ebf7" stroke="#b9a3d0" stroke-width="3"/>
+  <text class="head" x="1030" y="178" text-anchor="middle">D0-v DDPM</text>
+  <circle cx="1030" cy="250" r="50" fill="#7d68a7"/><circle cx="1009" cy="236" r="9" fill="#fff" opacity=".4"/><circle cx="1032" cy="252" r="13" fill="#fff" opacity=".65"/><circle cx="1053" cy="231" r="7" fill="#fff" opacity=".85"/>
+  <text x="1030" y="334" text-anchor="middle" font-size="20" font-weight="700" fill="#66508b">相对优势</text>
+  <text x="1030" y="370" text-anchor="middle" font-size="18">lagged VS</text><text x="1030" y="398" text-anchor="middle" font-size="18">width90*</text><text x="1030" y="426" text-anchor="middle" font-size="18">ramp 基本持平</text>
+  <rect x="938" y="470" width="184" height="46" rx="13" fill="#e4d9ef"/><text x="1030" y="499" text-anchor="middle" font-size="18" font-weight="800" fill="#66508b">滞后关系更优</text>
+
+  <rect x="100" y="585" width="1000" height="55" rx="18" fill="#fff4dc" stroke="#d5a449" stroke-width="2"/>
+  <text x="600" y="618" text-anchor="middle" font-size="22" font-weight="800" fill="#945b00">正式结论：不存在满足预注册全面支配条件的模型家族，winner 为空</text>
+</svg>

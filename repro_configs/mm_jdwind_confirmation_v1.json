@@ -1,0 +1,82 @@
+{
+  "experiment_name": "MM-JDWind post-freeze internal confirmation",
+  "protocol_revision": "mm_jdwind_confirmation_v1_20260726",
+  "data_dir": "Data",
+  "split_registry": "repro_configs/mm_jdwind_confirmation_splits.json",
+  "development_lock": "outputs/mm_jdwind_development_v2/selection.lock.json",
+  "output_root": "outputs/mm_jdwind_confirmation_v1",
+  "device": "cuda",
+  "outer_splits": [1, 2, 3],
+  "model_seeds": [0, 1, 2],
+  "model": {
+    "head": {
+      "condition_dim": 20,
+      "model_dim": 96,
+      "depth": 2,
+      "heads": 4,
+      "ff_multiplier": 4,
+      "dropout": 0.0,
+      "minimum_scale": 0.05,
+      "maximum_scale": 3.0,
+      "upper_logit_prior": -10.0,
+      "upper_logit_deviation": 2.0
+    },
+    "jump": {
+      "condition_dim": 20,
+      "model_dim": 96,
+      "depth": 3,
+      "heads": 4,
+      "ff_multiplier": 4,
+      "dropout": 0.0
+    },
+    "flow": {
+      "condition_dim": 20,
+      "model_dim": 112,
+      "depth": 4,
+      "heads": 4,
+      "ff_multiplier": 4,
+      "dropout": 0.0
+    }
+  },
+  "training": {
+    "batch_size": 16,
+    "workers": 0,
+    "head_steps": 4000,
+    "jump_steps": 6000,
+    "flow_steps": 12000,
+    "proper_steps": 0,
+    "head_learning_rate": 0.0003,
+    "jump_learning_rate": 0.0002,
+    "flow_learning_rate": 0.0001,
+    "proper_learning_rate": 0.0,
+    "head_weight_decay": 0.0001,
+    "jump_weight_decay": 0.0001,
+    "flow_weight_decay": 0.0,
+    "proper_weight_decay": 0.0,
+    "head_mean_weight": 0.05,
+    "flow_atom_weight": 0.05,
+    "gradient_clip": 1.0,
+    "validate_every": 250,
+    "log_every": 100,
+    "early_stopping_patience_validations": 8,
+    "early_stopping_minimum_delta": 0.0001,
+    "proper": {
+      "members": 6,
+      "flow_steps": 4,
+      "crps_weight": 1.0,
+      "energy_weight": 0.05,
+      "variogram_weight": 0.05,
+      "ramp_weight": 0.1
+    }
+  },
+  "sampling": {
+    "members": 100,
+    "jump_steps": 12,
+    "flow_steps": 16,
+    "day_batch": 2,
+    "member_chunk": 10,
+    "locked_state_mode": "mass_preserving",
+    "ablation_state_mode": "none"
+  },
+  "evidence_label": "post-freeze internal confirmation; not external"
+}

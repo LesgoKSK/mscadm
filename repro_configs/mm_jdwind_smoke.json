@@ -1,0 +1,77 @@
+{
+  "experiment_name": "MM-JDWind implementation smoke test",
+  "protocol_revision": "mm_jdwind_smoke_v1",
+  "data_dir": "Data",
+  "output_root": "tmp/mm_jdwind_smoke",
+  "device": "cuda",
+  "outer_splits": [1],
+  "model_seeds": [0],
+  "model": {
+    "head": {
+      "condition_dim": 20,
+      "model_dim": 32,
+      "depth": 1,
+      "heads": 4,
+      "ff_multiplier": 2,
+      "dropout": 0.0,
+      "minimum_scale": 0.05,
+      "maximum_scale": 3.0,
+      "upper_logit_prior": -10.0,
+      "upper_logit_deviation": 1.0
+    },
+    "jump": {
+      "condition_dim": 20,
+      "model_dim": 32,
+      "depth": 1,
+      "heads": 4,
+      "ff_multiplier": 2,
+      "dropout": 0.0
+    },
+    "flow": {
+      "condition_dim": 20,
+      "model_dim": 32,
+      "depth": 1,
+      "heads": 4,
+      "ff_multiplier": 2,
+      "dropout": 0.0
+    }
+  },
+  "training": {
+    "batch_size": 2,
+    "workers": 0,
+    "head_steps": 2,
+    "jump_steps": 2,
+    "flow_steps": 2,
+    "proper_steps": 1,
+    "head_learning_rate": 0.0003,
+    "jump_learning_rate": 0.0002,
+    "flow_learning_rate": 0.0002,
+    "proper_learning_rate": 0.00005,
+    "head_weight_decay": 0.0001,
+    "jump_weight_decay": 0.0001,
+    "flow_weight_decay": 0.0,
+    "proper_weight_decay": 0.0,
+    "head_mean_weight": 0.05,
+    "flow_atom_weight": 0.05,
+    "gradient_clip": 1.0,
+    "validate_every": 1,
+    "log_every": 1,
+    "proper": {
+      "members": 2,
+      "flow_steps": 1,
+      "crps_weight": 1.0,
+      "energy_weight": 0.01,
+      "variogram_weight": 0.01,
+      "ramp_weight": 0.05
+    }
+  },
+  "sampling": {
+    "members": 4,
+    "jump_steps": 2,
+    "flow_steps": 2,
+    "day_batch": 1,
+    "member_chunk": 2,
+    "state_modes": ["none", "independent", "correlated", "mass_preserving"]
+  },
+  "evidence_label": "implementation smoke only"
+}

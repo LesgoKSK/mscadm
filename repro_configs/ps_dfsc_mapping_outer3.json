@@ -1,0 +1,90 @@
+{
+  "cyclic_sensitivity_wind_buses": [
+    [
+      3,
+      5,
+      7,
+      16,
+      21,
+      23
+    ],
+    [
+      5,
+      7,
+      16,
+      21,
+      23,
+      3
+    ],
+    [
+      7,
+      16,
+      21,
+      23,
+      3,
+      5
+    ],
+    [
+      16,
+      21,
+      23,
+      3,
+      5,
+      7
+    ],
+    [
+      21,
+      23,
+      3,
+      5,
+      7,
+      16
+    ],
+    [
+      23,
+      3,
+      5,
+      7,
+      16,
+      21
+    ]
+  ],
+  "fit_role": "base_generator_train_only",
+  "groups": [
+    [
+      0,
+      8
+    ],
+    [
+      1,
+      9
+    ],
+    [
+      2
+    ],
+    [
+      3
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      6,
+      7
+    ]
+  ],
+  "mapping_sha256": "7fe21d10b3a00ba764d04dbaf4ca06bdded300c1795a1aeeeed937d8dce07b48",
+  "outer": 3,
+  "schema": "ps_dfsc_wind_farm_mapping_v1",
+  "split_registry": "repro_configs/ps_dfsc_splits.json",
+  "wind_buses": [
+    3,
+    5,
+    7,
+    16,
+    21,
+    23
+  ],
+  "zone_capacity_mw": 120.0
+}

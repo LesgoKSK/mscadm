@@ -1,0 +1,2911 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="MS-CADM 后续研究路线十分详细复审、文献碰撞、实验协议与停止门">
+<title>MS-CADM 后续研究路线十分详细复审</title>
+<style>
+:root {
+  --navy: #17365d; --blue: #286aa3; --blue-soft: #eaf3fa;
+  --gold: #bd8424; --green: #217a48; --green-soft: #eaf6ef;
+  --red: #b8384b; --red-soft: #fceef0; --amber: #a96600;
+  --ink: #24313d; --muted: #647484; --line: #d7e0e8;
+  --surface: #fff; --surface-2: #f6f8fa; --canvas: #eaf0f5;
+  --code: #132b45; --shadow: 0 12px 38px rgba(24,52,83,.12);
+  --sidebar: 324px; --reader: 1040px;
+}
+html.dark {
+  --navy: #91c8f4; --blue: #80bce9; --blue-soft: #20384b;
+  --gold: #e9bd69; --green: #72cc94; --green-soft: #1e3b2c;
+  --red: #ff8997; --red-soft: #47262e; --amber: #f1b75d;
+  --ink: #e7edf3; --muted: #a9b6c2; --line: #3a4a59;
+  --surface: #18232e; --surface-2: #202e3b; --canvas: #101820;
+  --code: #0e1b28; --shadow: 0 12px 38px rgba(0,0,0,.28);
+}
+* { box-sizing: border-box; }
+html { max-width: 100%; overflow-x: hidden; scroll-behavior: smooth; background: var(--canvas); color: var(--ink); }
+body { max-width: 100%; margin: 0; overflow-x: hidden; font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif; font-size: 16px; line-height: 1.78; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.progress { position: fixed; inset: 0 0 auto; height: 4px; z-index: 120; background: transparent; }
+.progress > span { display: block; width: 0; height: 100%; background: linear-gradient(90deg,var(--blue),var(--gold)); }
+.topbar { position: fixed; z-index: 110; top: 4px; left: 0; right: 0; height: 54px; display: flex; align-items: center; gap: 12px; padding: 0 18px; color: white; background: rgba(23,54,93,.97); box-shadow: 0 2px 12px rgba(0,0,0,.18); }
+.brand { font-weight: 800; letter-spacing: .02em; white-space: nowrap; color: white; }
+.topbar .spacer { flex: 1; }
+.topbar button { border: 1px solid rgba(255,255,255,.46); border-radius: 18px; padding: 6px 12px; color: white; background: transparent; cursor: pointer; font: inherit; font-size: 13px; }
+.topbar button:hover { background: rgba(255,255,255,.12); }
+.menu-button { display: none; }
+.sidebar { position: fixed; z-index: 100; top: 58px; bottom: 0; left: 0; width: var(--sidebar); padding: 20px 18px 28px; overflow-y: auto; background: var(--surface); border-right: 1px solid var(--line); }
+.offline { margin: 0 0 14px; padding: 11px 12px; border-radius: 8px; background: var(--green-soft); color: var(--green); font-size: 12px; line-height: 1.5; font-weight: 700; }
+.search { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: var(--surface-2); font: inherit; font-size: 13px; outline: none; }
+.search:focus { border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb,var(--blue) 18%, transparent); }
+.toc { margin-top: 14px; }
+.toc-link { display: block; padding: 7px 10px; border-left: 3px solid transparent; border-radius: 0 6px 6px 0; color: var(--muted); font-size: 12.5px; line-height: 1.38; }
+.toc-link:hover { color: var(--blue); background: var(--blue-soft); text-decoration: none; }
+.toc-link.active { color: var(--blue); background: var(--blue-soft); border-left-color: var(--blue); font-weight: 700; }
+.toc-sub { padding-left: 24px; font-size: 11.5px; }
+.toc-link.filtered { display: none; }
+.layout { min-width: 0; margin-left: var(--sidebar); padding: 88px 40px 90px; }
+.reader { width: 100%; min-width: 0; max-width: var(--reader); margin: 0 auto; padding: 0 52px 72px; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+.hero { margin: 0 -52px 42px; padding: 64px 52px 44px; color: white; background: #17365d; border-top: 8px solid #bd8424; }
+.hero-kicker { color: #f0c46e; font-weight: 800; letter-spacing: .14em; font-size: 12px; }
+.hero h1 { margin: 12px 0 10px; color: white; font-size: clamp(30px,5vw,50px); line-height: 1.18; border: 0; }
+.hero p { max-width: 840px; margin: 0; color: rgba(255,255,255,.9); font-size: 17px; }
+.hero-stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin-top: 28px; }
+.stat { padding: 13px 15px; border: 1px solid rgba(255,255,255,.24); border-radius: 10px; background: rgba(255,255,255,.09); }
+.stat strong { display: block; color: white; font-size: 21px; }
+.stat span { color: rgba(255,255,255,.75); font-size: 12px; }
+.browser-note { margin: -20px 0 30px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2); color: var(--muted); font-size: 13px; }
+article > h1:first-of-type, article > h1:first-of-type + blockquote, article > h1:first-of-type + blockquote + p { display: none; }
+h1,h2,h3,h4 { color: var(--navy); line-height: 1.35; scroll-margin-top: 76px; }
+h2 { margin: 66px -52px 28px; padding: 24px 52px 14px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: linear-gradient(90deg,var(--surface-2),transparent); font-size: 28px; }
+h2::before { content: "CRITICAL REVIEW"; display: block; margin-bottom: 5px; color: var(--gold); font-size: 10px; letter-spacing: .16em; }
+h3 { margin: 34px 0 14px; font-size: 21px; }
+h4 { margin: 25px 0 10px; font-size: 17px; }
+p { margin: 0 0 15px; overflow-wrap: anywhere; }
+strong { color: var(--navy); }
+blockquote { margin: 22px 0; padding: 16px 20px; border-left: 5px solid var(--blue); border-radius: 0 8px 8px 0; background: var(--blue-soft); color: var(--navy); }
+blockquote p:last-child { margin-bottom: 0; }
+ul,ol { margin: 8px 0 20px; padding-left: 28px; }
+li { margin: 5px 0; }
+li.task { list-style: none; margin-left: -24px; }
+li.task input { margin-right: 8px; accent-color: var(--blue); }
+hr { margin: 52px 0; border: 0; border-top: 1px solid var(--line); }
+code { padding: 2px 6px; border-radius: 5px; color: var(--blue); background: var(--blue-soft); font-family: Consolas,"SFMono-Regular",monospace; font-size: .91em; overflow-wrap: anywhere; }
+pre { position: relative; margin: 20px 0 25px; padding: 18px 20px; overflow-x: auto; border-radius: 10px; color: #eff7ff; background: var(--code); box-shadow: inset 0 1px 0 rgba(255,255,255,.07); white-space: pre-wrap; overflow-wrap: anywhere; }
+pre::before { content: "PLAIN TEXT · UTF-8"; display: block; margin-bottom: 9px; color: #83b7df; font-family: Arial,sans-serif; font-size: 9px; letter-spacing: .13em; }
+pre code { padding: 0; color: inherit; background: transparent; font-size: 13px; line-height: 1.58; }
+.table-wrap { width: 100%; margin: 19px 0 28px; overflow-x: auto; border: 1px solid var(--line); border-radius: 9px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.45; }
+thead { position: sticky; top: 0; z-index: 1; }
+th { padding: 11px 12px; color: white; background: var(--navy); text-align: left; white-space: nowrap; }
+html.dark th { color: #102030; background: #91c8f4; }
+td { min-width: 105px; padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+tbody tr:nth-child(even) { background: var(--surface-2); }
+tbody tr:hover { background: var(--blue-soft); }
+img { display: block; max-width: 100%; max-height: 760px; margin: 28px auto; border: 1px solid var(--line); border-radius: 9px; box-shadow: 0 8px 28px rgba(23,54,93,.10); object-fit: contain; }
+.source-meta { margin: 60px 0 0; padding: 15px 18px; border-radius: 8px; background: var(--surface-2); color: var(--muted); font-size: 12px; word-break: break-all; }
+.back-top { position: fixed; right: 22px; bottom: 22px; z-index: 90; display: none; width: 42px; height: 42px; border: 0; border-radius: 50%; color: white; background: var(--blue); box-shadow: var(--shadow); cursor: pointer; font-size: 18px; }
+.back-top.show { display: block; }
+.print-only { display: none; }
+@media (max-width: 1020px) {
+  .menu-button { display: inline-block; }
+  .sidebar { transform: translateX(-102%); transition: transform .2s ease; box-shadow: var(--shadow); }
+  .sidebar.open { transform: translateX(0); }
+  .layout { margin-left: 0; padding: 78px 18px 60px; }
+  .reader { padding: 0 30px 60px; }
+  .hero { margin-left: -30px; margin-right: -30px; padding-left: 30px; padding-right: 30px; }
+  h2 { margin-left: -30px; margin-right: -30px; padding-left: 30px; padding-right: 30px; }
+}
+@media (max-width: 640px) {
+  body { font-size: 15px; }
+  .topbar { gap: 6px; padding: 0 8px; }
+  .topbar button { padding: 5px 9px; }
+  .topbar #print-button { display: none; }
+  .brand { flex: 1; min-width: 0; max-width: none; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+  .layout { padding-left: 0; padding-right: 0; }
+  .reader { border-radius: 0; padding: 0 18px 50px; }
+  .hero { margin-left: -18px; margin-right: -18px; padding: 48px 18px 32px; }
+  .hero-stats { grid-template-columns: 1fr; }
+  h2 { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; font-size: 24px; }
+  .toc-sub { display: none; }
+}
+@media print {
+  @page { size: A4; margin: 15mm 14mm 17mm; }
+  html,body { background: white !important; color: #222 !important; font-size: 9.5pt; }
+  .topbar,.sidebar,.progress,.back-top,.browser-note { display: none !important; }
+  .layout { margin: 0; padding: 0; }
+  .reader { max-width: none; margin: 0; padding: 0; box-shadow: none; overflow: visible; }
+  .hero { min-height: 245mm; margin: 0 0 15mm; padding: 70mm 15mm 20mm; page-break-after: always; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  h2 { margin: 12mm 0 5mm; padding: 4mm 0 2mm; page-break-before: always; background: none; }
+  h3,h4 { break-after: avoid; }
+  p,li { orphans: 3; widows: 3; }
+  pre,blockquote,img,.table-wrap { break-inside: avoid; }
+  .table-wrap { overflow: visible; }
+  table { font-size: 7pt; }
+  th { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  a { color: inherit; }
+  .source-meta { break-before: page; }
+  .print-only { display: block; }
+}
+</style>
+</head>
+<body>
+<div class="progress" aria-hidden="true"><span id="progress-fill"></span></div>
+<header class="topbar">
+  <button class="menu-button" id="menu-button" type="button" aria-label="打开目录">目录</button>
+  <a class="brand" href="#top">MS-CADM 路线复审</a>
+  <span class="spacer"></span>
+  <button id="font-button" type="button" aria-label="调整字号">字号</button>
+  <button id="theme-button" type="button" aria-label="切换深浅色">深色</button>
+  <button id="print-button" type="button" aria-label="打印文档">打印</button>
+</header>
+<aside class="sidebar" id="sidebar" aria-label="文档目录">
+  <div class="offline">离线单文件 · 图片已内嵌<br>公式为 UTF-8 纯文本，不依赖 MathJax</div>
+  <input class="search" id="toc-search" type="search" placeholder="筛选目录…" aria-label="筛选目录">
+  <nav class="toc"><a class="toc-link toc-main" href="#0-先给决策-原文哪些保留-哪些降级-哪些删除">0. 先给决策：原文哪些保留，哪些降级，哪些删除</a>
+<a class="toc-link toc-sub" href="#0-1-复审后的优先级">0.1 复审后的优先级</a>
+<a class="toc-link toc-sub" href="#0-2-原路线图最值得保留的部分">0.2 原路线图最值得保留的部分</a>
+<a class="toc-link toc-sub" href="#0-3-原路线图必须改写的部分">0.3 原路线图必须改写的部分</a>
+<a class="toc-link toc-main" href="#1-复审方法-证据等级与边界">1. 复审方法、证据等级与边界</a>
+<a class="toc-link toc-sub" href="#1-1-本次实际审了什么">1.1 本次实际审了什么</a>
+<a class="toc-link toc-sub" href="#1-2-本文的证据标签">1.2 本文的证据标签</a>
+<a class="toc-link toc-sub" href="#1-3-文献调研能证明什么-不能证明什么">1.3 文献调研能证明什么，不能证明什么</a>
+<a class="toc-link toc-sub" href="#1-4-时间与检索边界">1.4 时间与检索边界</a>
+<a class="toc-link toc-main" href="#2-仓库事实审计-先把实现和历史证据说准">2. 仓库事实审计：先把实现和历史证据说准</a>
+<a class="toc-link toc-sub" href="#2-1-当前最稳的正结果是什么">2.1 当前最稳的正结果是什么</a>
+<a class="toc-link toc-sub" href="#2-2-16-steps-不是-16-flow-nfe">2.2 16 steps 不是 16 flow NFE</a>
+<a class="toc-link toc-sub" href="#2-3-旧-proper-score-pilot-不是对新路线的干净反证">2.3 旧 proper-score pilot 不是对新路线的干净反证</a>
+<a class="toc-link toc-sub" href="#2-4-原文对-fair-score-的表述过于绝对">2.4 原文对 fair score 的表述过于绝对</a>
+<a class="toc-link toc-sub" href="#2-5-固定-checkpoint-cfg-在当前实现中不成立">2.5 固定 checkpoint CFG 在当前实现中不成立</a>
+<a class="toc-link toc-sub" href="#2-6-atom-gaussian-completion-不可识别">2.6 atom Gaussian completion 不可识别</a>
+<a class="toc-link toc-sub" href="#2-7-coverage-窄门没有充分统计依据">2.7 coverage 窄门没有充分统计依据</a>
+<a class="toc-link toc-main" href="#3-新增仓库机制证据-ramp-gap-到底来自哪里">3. 新增仓库机制证据：ramp gap 到底来自哪里</a>
+<a class="toc-link toc-sub" href="#3-1-为什么必须做这个分解">3.1 为什么必须做这个分解</a>
+<a class="toc-link toc-sub" href="#3-2-本次只读审计协议">3.2 本次只读审计协议</a>
+<a class="toc-link toc-sub" href="#3-3-结果">3.3 结果</a>
+<a class="toc-link toc-sub" href="#3-4-它支持什么">3.4 它支持什么</a>
+<a class="toc-link toc-sub" href="#3-5-它不支持什么">3.5 它不支持什么</a>
+<a class="toc-link toc-main" href="#4-原路线逐项复审总表">4. 原路线逐项复审总表</a>
+<a class="toc-link toc-main" href="#5-方向-a-复审-proper-score-后训练仍可行-但论文故事必须重写">5. 方向 A 复审：proper-score 后训练仍可行，但论文故事必须重写</a>
+<a class="toc-link toc-sub" href="#5-1-可行性的正证据">5.1 可行性的正证据</a>
+<a class="toc-link toc-sub" href="#5-2-当前剩余的新颖性到底在哪里">5.2 当前剩余的新颖性到底在哪里</a>
+<a class="toc-link toc-sub" href="#5-3-理论上必须守住的边界">5.3 理论上必须守住的边界</a>
+<a class="toc-link toc-sub" href="#5-4-signature-kernel-是有价值的诊断-不是当前首轮训练-loss">5.4 signature kernel 是有价值的诊断，不是当前首轮训练 loss</a>
+<a class="toc-link toc-sub" href="#5-5-极端-ramp-不能只在真实极端日上评价">5.5 极端 ramp 不能只在真实极端日上评价</a>
+<a class="toc-link toc-sub" href="#5-6-方向-a-的复审判定">5.6 方向 A 的复审判定</a>
+<a class="toc-link toc-main" href="#6-方向-b-c-复审-动态依赖与-whitening-必须合并-收窄并先诊断">6. 方向 B/C 复审：动态依赖与 whitening 必须合并、收窄并先诊断</a>
+<a class="toc-link toc-sub" href="#6-1-为什么原-动态图-动态依赖-故事已经不够新">6.1 为什么原“动态图/动态依赖”故事已经不够新</a>
+<a class="toc-link toc-sub" href="#6-2-conditional-source-whitening-的直接碰撞">6.2 conditional source / whitening 的直接碰撞</a>
+<a class="toc-link toc-sub" href="#6-3-为什么只预测-correlation-而不是再预测-variance">6.3 为什么只预测 correlation，而不是再预测 variance</a>
+<a class="toc-link toc-sub" href="#6-4-统计可辨识性是最大风险">6.4 统计可辨识性是最大风险</a>
+<a class="toc-link toc-sub" href="#6-5-atom-state-对-covariance-的影响不能忽略">6.5 atom state 对 covariance 的影响不能忽略</a>
+<a class="toc-link toc-sub" href="#6-6-b-的-nested-oof-诊断协议">6.6 B 的 nested-OOF 诊断协议</a>
+<a class="toc-link toc-sub" href="#6-7-b-的生成实验最小矩阵">6.7 B 的生成实验最小矩阵</a>
+<a class="toc-link toc-sub" href="#6-8-whitening-的复审判定">6.8 whitening 的复审判定</a>
+<a class="toc-link toc-sub" href="#6-9-方向-b-c-的最终判定">6.9 方向 B/C 的最终判定</a>
+<a class="toc-link toc-main" href="#7-mixed-measure-与-ramp-文献复审-还能新在哪里">7. mixed-measure 与 ramp 文献复审：还能新在哪里</a>
+<a class="toc-link toc-sub" href="#7-1-边界原子-联合风电-已经有直接先例">7.1 “边界原子 + 联合风电”已经有直接先例</a>
+<a class="toc-link toc-sub" href="#7-2-mixed-discrete-continuous-flow-也不是通用空白">7.2 mixed discrete–continuous flow 也不是通用空白</a>
+<a class="toc-link toc-sub" href="#7-3-新备用方案-state-duration-amplitude-marked-mixed-flow">7.3 新备用方案：state-duration–amplitude marked mixed flow</a>
+<a class="toc-link toc-sub" href="#7-4-直接-ramp-forecasting-的碰撞">7.4 直接 ramp forecasting 的碰撞</a>
+<a class="toc-link toc-main" href="#8-其他方向复审与新增系统路线">8. 其他方向复审与新增系统路线</a>
+<a class="toc-link toc-sub" href="#8-1-atom-aware-联合轨迹-conformal-certificate">8.1 atom-aware 联合轨迹 conformal certificate</a>
+<a class="toc-link toc-sub" href="#8-2-interior-only-calibration">8.2 interior-only calibration</a>
+<a class="toc-link toc-sub" href="#8-3-extreme-regime">8.3 extreme / regime</a>
+<a class="toc-link toc-sub" href="#8-4-decision-focused">8.4 decision-focused</a>
+<a class="toc-link toc-sub" href="#8-5-ot-cfm-schrödinger-bridge">8.5 OT-CFM / Schrödinger Bridge</a>
+<a class="toc-link toc-sub" href="#8-6-采样效率">8.6 采样效率</a>
+<a class="toc-link toc-main" href="#9-推荐主方案-a-可以直接开工的详细实验协议">9. 推荐主方案 A：可以直接开工的详细实验协议</a>
+<a class="toc-link toc-sub" href="#9-1-精确研究问题">9.1 精确研究问题</a>
+<a class="toc-link toc-sub" href="#9-2-先定义两个-estimand-不允许混写">9.2 先定义两个 estimand，不允许混写</a>
+<a class="toc-link toc-sub" href="#9-3-推荐-score-结构">9.3 推荐 score 结构</a>
+<a class="toc-link toc-sub" href="#9-4-推荐-loss-阶梯">9.4 推荐 loss 阶梯</a>
+<a class="toc-link toc-sub" href="#9-5-数值安全设计">9.5 数值安全设计</a>
+<a class="toc-link toc-sub" href="#9-6-a0-在任何参数更新前做-6-组审计">9.6 A0：在任何参数更新前做 6 组审计</a>
+<a class="toc-link toc-sub" href="#9-7-最小训练矩阵">9.7 最小训练矩阵</a>
+<a class="toc-link toc-sub" href="#9-8-评价卡">9.8 评价卡</a>
+<a class="toc-link toc-sub" href="#9-9-go-no-go-不应再写成一串未经-power-审计的-1-门">9.9 Go/No-Go 不应再写成一串未经 power 审计的 1% 门</a>
+<a class="toc-link toc-sub" href="#9-10-失败结果如何解释">9.10 失败结果如何解释</a>
+<a class="toc-link toc-sub" href="#9-11-可写与不可写的论文主张">9.11 可写与不可写的论文主张</a>
+<a class="toc-link toc-main" href="#10-统一统计协议的修订版">10. 统一统计协议的修订版</a>
+<a class="toc-link toc-sub" href="#10-1-先声明发布对象和随机性来源">10.1 先声明发布对象和随机性来源</a>
+<a class="toc-link toc-sub" href="#10-2-日期不确定性与训练随机性分开报告">10.2 日期不确定性与训练随机性分开报告</a>
+<a class="toc-link toc-sub" href="#10-3-时间依赖">10.3 时间依赖</a>
+<a class="toc-link toc-sub" href="#10-4-多重比较">10.4 多重比较</a>
+<a class="toc-link toc-sub" href="#10-5-score-power-先于-score-preference">10.5 score power 先于 score preference</a>
+<a class="toc-link toc-sub" href="#10-6-mixed-distribution-的校准指标">10.6 mixed distribution 的校准指标</a>
+<a class="toc-link toc-sub" href="#10-7-数据角色">10.7 数据角色</a>
+<a class="toc-link toc-main" href="#11-最小但足够公平的基线与评价矩阵">11. 最小但足够公平的基线与评价矩阵</a>
+<a class="toc-link toc-sub" href="#11-1-主方案-a-的必需内部基线">11.1 主方案 A 的必需内部基线</a>
+<a class="toc-link toc-sub" href="#11-2-方向-b-的必需内部基线">11.2 方向 B 的必需内部基线</a>
+<a class="toc-link toc-sub" href="#11-3-文献级外部基线如何控制成本">11.3 文献级外部基线如何控制成本</a>
+<a class="toc-link toc-sub" href="#11-4-统一指标表">11.4 统一指标表</a>
+<a class="toc-link toc-main" href="#12-复审后的-可以研究的新方案-总览">12. 复审后的“可以研究的新方案”总览</a>
+<a class="toc-link toc-sub" href="#12-1-方案-a-有限集合语义下的-sampler-matched-level-ramp-adaptation">12.1 方案 A：有限集合语义下的 sampler-matched level–ramp adaptation</a>
+<a class="toc-link toc-sub" href="#12-2-方案-b-mixed-measure-full-trajectory-condition-structured-source-flow">12.2 方案 B：mixed-measure full-trajectory condition-structured source flow</a>
+<a class="toc-link toc-sub" href="#12-3-方案-c-atom-aware-trajectory-conformal-certificate">12.3 方案 C：atom-aware trajectory conformal certificate</a>
+<a class="toc-link toc-sub" href="#12-4-方案-d-state-duration-amplitude-marked-flow">12.4 方案 D：state-duration–amplitude marked flow</a>
+<a class="toc-link toc-sub" href="#12-5-方案-e-threshold-weighted-ramp-scoring">12.5 方案 E：threshold-weighted ramp scoring</a>
+<a class="toc-link toc-sub" href="#12-6-方案-f-signature-score-as-diagnostic-atom-aware-extension">12.6 方案 F：signature score as diagnostic / atom-aware extension</a>
+<a class="toc-link toc-sub" href="#12-7-方案-g-nwp-neighbor-ot-cfm">12.7 方案 G：NWP-neighbor OT-CFM</a>
+<a class="toc-link toc-main" href="#13-详细文献证据卡-每篇究竟支撑什么">13. 详细文献证据卡：每篇究竟支撑什么</a>
+<a class="toc-link toc-sub" href="#13-1-proper-score-有限-ensemble-与-post-training">13.1 proper score、有限 ensemble 与 post-training</a>
+<a class="toc-link toc-sub" href="#13-2-extreme-tail-与-ramp">13.2 extreme、tail 与 ramp</a>
+<a class="toc-link toc-sub" href="#13-3-mixed-measure-边界状态与联合风电">13.3 mixed measure、边界状态与联合风电</a>
+<a class="toc-link toc-sub" href="#13-4-conditional-source-covariance-与动态依赖">13.4 conditional source、covariance 与动态依赖</a>
+<a class="toc-link toc-sub" href="#13-5-conformal-与-decision-focused">13.5 conformal 与 decision-focused</a>
+<a class="toc-link toc-main" href="#14-原-html-markdown-的精确勘误清单">14. 原 HTML/Markdown 的精确勘误清单</a>
+<a class="toc-link toc-sub" href="#14-1-修订后的配置骨架">14.1 修订后的配置骨架</a>
+<a class="toc-link toc-main" href="#15-建议补齐的全文文献清单">15. 建议补齐的全文文献清单</a>
+<a class="toc-link toc-sub" href="#15-1-最高优先级-直接决定新颖性">15.1 最高优先级：直接决定新颖性</a>
+<a class="toc-link toc-sub" href="#15-2-条件-source-方向进入生成训练前必须补">15.2 条件 source 方向进入生成训练前必须补</a>
+<a class="toc-link toc-sub" href="#15-3-当前本地已有-足以启动-a0-的核心-pdf">15.3 当前本地已有、足以启动 A0 的核心 PDF</a>
+<a class="toc-link toc-main" href="#16-12-周执行顺序与停止树">16. 12 周执行顺序与停止树</a>
+<a class="toc-link toc-sub" href="#16-1-前四周-只给主路线-a-最小预算">16.1 前四周：只给主路线 A 最小预算</a>
+<a class="toc-link toc-sub" href="#16-2-第五至八周-确认-a-平行只做-b-的离线诊断">16.2 第五至八周：确认 A，平行只做 B 的离线诊断</a>
+<a class="toc-link toc-sub" href="#16-3-第九至十二周-只推进通过硬门的路线">16.3 第九至十二周：只推进通过硬门的路线</a>
+<a class="toc-link toc-sub" href="#16-4-算力预算原则">16.4 算力预算原则</a>
+<a class="toc-link toc-main" href="#17-论文主张审计表">17. 论文主张审计表</a>
+<a class="toc-link toc-main" href="#18-最终推荐">18. 最终推荐</a>
+<a class="toc-link toc-sub" href="#18-1-现在最值得做的唯一训练实验">18.1 现在最值得做的唯一训练实验</a>
+<a class="toc-link toc-sub" href="#18-2-第二路线只做离线诊断">18.2 第二路线只做离线诊断</a>
+<a class="toc-link toc-sub" href="#18-3-可靠交付的后备路线">18.3 可靠交付的后备路线</a>
+<a class="toc-link toc-sub" href="#18-4-一句话论文定位">18.4 一句话论文定位</a>
+<a class="toc-link toc-main" href="#19-仓库证据索引">19. 仓库证据索引</a>
+<a class="toc-link toc-main" href="#20-复审结论的可信度声明">20. 复审结论的可信度声明</a></nav>
+</aside>
+<main class="layout" id="top">
+  <div class="reader">
+    <section class="hero">
+      <div class="hero-kicker">CRITICAL REVIEW · LITERATURE AUDIT · 2026</div>
+      <h1>MS-CADM 后续研究路线<br>十分详细复审</h1>
+      <p>逐节红队审计原路线图，以代码与冻结结果校正事实，以 2023–2026 原始文献核验碰撞，并给出可证伪的新方案、实验协议与停止门。</p>
+      <div class="hero-stats">
+        <div class="stat"><strong>21</strong><span>个主章节</span></div>
+        <div class="stat"><strong>7</strong><span>条重排研究路线</span></div>
+        <div class="stat"><strong>Offline</strong><span>无外部渲染依赖</span></div>
+      </div>
+    </section>
+    <div class="browser-note">使用左侧目录跳转；可切换深色和字号。按 <strong>Ctrl + P</strong> 可打印或另存 PDF。文内本地资料链接在仓库原位置打开。</div>
+    <article><h1 id="ms-cadm-后续研究路线决策与实验蓝图-十分详细复审">《MS-CADM 后续研究路线决策与实验蓝图》十分详细复审</h1>
+<p><strong>复审对象</strong>：<code>reports/FUTURE_RESEARCH_ROADMAP_STANDALONE.html</code> 及其 Markdown 源文件<br />
+<strong>复审日期</strong>：2026-08-13<br />
+<strong>复审性质</strong>：内容红队审计、代码—报告交叉核验、定向文献调研、研究路线重排<br />
+<strong>检索边界</strong>：以 2023–2026 年原始论文为主；遇到会直接否定“首次”主张的更早工作时向前追溯<br />
+<strong>输出定位</strong>：这不是对原路线图的简单增补，而是一份可以据此修改立项、实验协议和论文主张的独立复审报告</p>
+<blockquote>
+<p><strong>复审后的核心结论</strong>：原路线图的“先利用现有 MM-JDWind，而不是从头换大模型”这一总方向仍然正确；但优先级、估计对象、文献新颖性和若干实现细节需要实质性改写。最值得马上做的不是宽泛的“首次 proper-score 后训练”，而是：先明确有限场景集与 IID 分布两种评分语义，在与部署一致的 mass-preserving + Heun 采样器上，稳定地微调连续内部 flow，以 level 与 increment/ramp 评分修复已经确认的内部动态缺口。条件完整轨迹协方差只在 nested-OOF 诊断胜过静态和逐时协方差后立项；动态图、普通 whitening、固定 checkpoint CFG、Gaussian atom completion 和直接 decision-focused 训练均不应作为当前主贡献。</p>
+</blockquote>
+<hr />
+<h2 id="0-先给决策-原文哪些保留-哪些降级-哪些删除">0. 先给决策：原文哪些保留，哪些降级，哪些删除</h2>
+<h3 id="0-1-复审后的优先级">0.1 复审后的优先级</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:right">新优先级</th>
+<th>路线</th>
+<th>复审判定</th>
+<th>为什么</th>
+<th>下一道硬门</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">P0</td>
+<td><strong>A. sampler-matched、atom-safe 的 level–ramp score adaptation</strong></td>
+<td><strong>有条件立即做</strong></td>
+<td>仓库确认 MM ramp-CRPS 劣于 DDPM；本次机制归因表明 <code>I→I</code> 贡献约 95.99% 的正差距，支持冻结 jump、先修连续 flow</td>
+<td>先通过 estimand/estimator 审计、<code>sqrt-VS</code> 复现、完整部署 sampler 的 3-seed finite gate</td>
+</tr>
+<tr>
+<td style="text-align:right">P1</td>
+<td><strong>B. NWP 条件的完整 zone×lead structured source correlation</strong></td>
+<td><strong>诊断通过后才做</strong></td>
+<td>仍有“显式 PSD、完整 cross-lead、mixed-measure source geometry”的窄空位；但样本少、碰撞强、不可直接端到端解释</td>
+<td>nested OOF 必须同时胜过 diagonal、CW per-lead 和 static full；否则停止</td>
+</tr>
+<tr>
+<td style="text-align:right">P2</td>
+<td><strong>C. atom-aware 联合轨迹 conformal certificate</strong></td>
+<td><strong>低算力系统组件</strong></td>
+<td>可以为整个 <code>10×24</code> 轨迹给覆盖证书，不改生成器；但不能声称校准了 scenario law</td>
+<td>独立 selection/calibration；与 Bonferroni 同覆盖下区域更小；明确时间依赖假设</td>
+</tr>
+<tr>
+<td style="text-align:right">P3</td>
+<td><strong>D. interior-only calibration</strong></td>
+<td><strong>工程线保留</strong></td>
+<td>能修 coverage/interval score，且可冻结原子质量</td>
+<td>selection 与 calibration 分离；randomized PIT；CRPS/宽度非劣</td>
+</tr>
+<tr>
+<td style="text-align:right">P4</td>
+<td><strong>E. state-duration–amplitude marked mixed flow</strong></td>
+<td><strong>条件备用线</strong></td>
+<td>理论上能处理 zero run、进入/退出边界的振幅耦合；但当前平均 ramp gap 主要不是跨状态转移</td>
+<td>只有外部数据或细分诊断显示跨状态贡献大时才升级</td>
+</tr>
+<tr>
+<td style="text-align:right">P5</td>
+<td><strong>F. trajectory-wide separable whitening</strong></td>
+<td><strong>只作 B 的高风险组件</strong></td>
+<td>完整 cross-lead 仍有空位，但普通 whitening 已被 CW-Gen/TSFlow 等高度覆盖，原子潜变量又不可识别</td>
+<td>B 的 correlation 诊断已通过，且 masked 方案胜过 source-only 才做</td>
+</tr>
+<tr>
+<td style="text-align:right">Bonus</td>
+<td><strong>G. threshold-weighted ramp score、signature score 诊断、OT-CFM 效率 pilot</strong></td>
+<td><strong>小范围消融</strong></td>
+<td>各自能回答一个窄问题，但都不足以单独撑起主论文</td>
+<td>必须有预注册停止门，不允许演化成无边界模块堆叠</td>
+</tr>
+<tr>
+<td style="text-align:right">删除/暂停</td>
+<td><strong>固定 checkpoint CFG、动态图主标题、Gaussian atom completion、full SB、decision-focused 2.0</strong></td>
+<td><strong>当前 No-Go</strong></td>
+<td>要么实现前提不存在，要么新颖性直接碰撞，要么仓库已有明确负证据</td>
+<td>只有新的外部证据或任务边界变化后再重开</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="0-2-原路线图最值得保留的部分">0.2 原路线图最值得保留的部分</h3>
+<p>以下内容经过复审仍然扎实，应继续沿用：</p>
+<ol>
+<li>E0–E4 的证据等级，以及“内部确认不等于外部验证”的边界；</li>
+<li>现有 150 个 MM 确认日期已经用于发现新问题，因此必须降级为 seen evidence；</li>
+<li>calendar day 作为配对统计单位，不能把 240 个位置或 100 个成员当独立样本；</li>
+<li>locked candidate、manifest、checkpoint hash、failure bundle 和 fail-closed 发布思想；</li>
+<li>把 continued original-loss training 作为同预算对照；</li>
+<li>对 head、jump、flow 的归因式冻结与 hash 审计；</li>
+<li>DDPM 的跨区域联合指标只能作结构不对称的强参照，主要机制检验应对原生 joint flow；</li>
+<li>不从头堆更大模型，而是先利用已有最强结构和明确失败点。</li>
+</ol>
+<h3 id="0-3-原路线图必须改写的部分">0.3 原路线图必须改写的部分</h3>
+<p>最重要的不是措辞润色，而是以下科学边界：</p>
+<ul>
+<li>“proper-score 后训练”已经不是空白；2025–2026 年出现了 Swift、AIFS-CRPS 和 RMMD 等直接工作；</li>
+<li>“边界点质量 + 区域联合风电”也已有 2026 年 ZOIB + R-vine 的直接工作；</li>
+<li>“动态时空依赖 + 风电 diffusion/MoE”已被 MOE-STD、PSTDT 等覆盖；</li>
+<li>“conditional covariance / whitening / flow source”已被 TMDM、NsDiff、TSFlow、CW-Gen/CW-Flow 等密集覆盖；</li>
+<li>current mass-preserving ensemble 不是 IID，不能把 U-stat/fair estimator 写成无条件正确答案；</li>
+<li>16 个 Heun integration steps 实际需要 31 次 flow network evaluation，不能再统称“16 NFE”；</li>
+<li>MM-JDWind 没有 condition dropout/null branch，固定 checkpoint 不能合法做 CFG；</li>
+<li>atom 位置的高斯 latent completion 不可由数据识别，除非另立并验证“删失潜变量”假设；</li>
+<li>只在实际发生极端 ramp 的日期上评价普通 CRPS 会陷入 forecaster's dilemma；</li>
+<li>“coverage 必须进入 <code>[0.88,0.92]</code>”缺乏与有效样本量相匹配的统计依据。</li>
+</ul>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMzIwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDEzMjAgODAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+5aSN5a6h5ZCO55qE56CU56m25Yaz562W5qCRPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+5YWI5YGa6K+E5YiG6K+t5LmJ5LiO5pWw5YC856iz5a6a5a6h6K6h77yM54S25ZCO6L+b5YWl6L+e57ut5YaF6YOo6K+E5YiG5ZCO6K6t57uD77yb5p2h5Lu25Y2P5pa55beu5b+F6aG75YWI6YCa6L+H5bWM5aWX5Lqk5Y+J5ouf5ZCI77yb5YW25LuW6Lev57q/5oyJ5p2h5Lu26ZmN57qn44CCPC9kZXNjPgogIDxkZWZzPgogICAgPG1hcmtlciBpZD0iYXJyb3ciIG1hcmtlcldpZHRoPSIxMCIgbWFya2VySGVpZ2h0PSIxMCIgcmVmWD0iOCIgcmVmWT0iMyIgb3JpZW50PSJhdXRvIiBtYXJrZXJVbml0cz0ic3Ryb2tlV2lkdGgiPjxwYXRoIGQ9Ik0wLDAgTDAsNiBMOSwzIHoiIGZpbGw9IiM2YzdkOGQiLz48L21hcmtlcj4KICAgIDxmaWx0ZXIgaWQ9InNoYWRvdyIgeD0iLTEwJSIgeT0iLTE1JSIgd2lkdGg9IjEyMCUiIGhlaWdodD0iMTQwJSI+PGZlRHJvcFNoYWRvdyBkeD0iMCIgZHk9IjQiIHN0ZERldmlhdGlvbj0iNiIgZmxvb2QtY29sb3I9IiMxNzM2NWQiIGZsb29kLW9wYWNpdHk9IjAuMTMiLz48L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjEzMjAiIGhlaWdodD0iODAwIiByeD0iMjQiIGZpbGw9IiNmNWY4ZmIiLz4KICA8ZyBmb250LWZhbWlseT0iTWljcm9zb2Z0IFlhSGVpLCBOb3RvIFNhbnMgQ0pLIFNDLCBBcmlhbCwgc2Fucy1zZXJpZiI+CiAgICA8dGV4dCB4PSI2NCIgeT0iNjQiIGZvbnQtc2l6ZT0iMzEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMxNzM2NWQiPuWkjeWuoeWQjueahOeglOeptuWGs+etluagkTwvdGV4dD4KICAgIDx0ZXh0IHg9IjY0IiB5PSI5OSIgZm9udC1zaXplPSIxNyIgZmlsbD0iIzY0NzQ4NCI+5YWI6K+B5Lyq77yM5YaN6K6t57uD77yb5q+P5p2h6Lev57q/5Y+q5pyJ6YCa6L+H5LiK5ri46K+K5pat5omN6I635b6X566X5Yqb6aKE566XPC90ZXh0PgoKICAgIDxnIGZpbHRlcj0idXJsKCNzaGFkb3cpIj4KICAgICAgPHJlY3QgeD0iNDEwIiB5PSIxMzIiIHdpZHRoPSI1MDAiIGhlaWdodD0iOTQiIHJ4PSIxNiIgZmlsbD0iIzE3MzY1ZCIvPgogICAgPC9nPgogICAgPHRleHQgeD0iNjYwIiB5PSIxNjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmZmZmZmYiPlAw77yac2NvcmUg6K+t5LmJICsgc2FtcGxlciArIOair+W6puWuoeiuoTwvdGV4dD4KICAgIDx0ZXh0IHg9IjY2MCIgeT0iMTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE1IiBmaWxsPSIjZGNlYWY1Ij7ljLrliIYgSUlEIOWIhuW4g+S4jiBtYXNzLXByZXNlcnZpbmcg5pyJ6ZmQ6ZuG5ZCI77yb5aSN546wIHNxcnQtVlMg6Zu254K56aOO6ZmpPC90ZXh0PgoKICAgIDxsaW5lIHgxPSI2NjAiIHkxPSIyMjYiIHgyPSI2NjAiIHkyPSIyNzkiIHN0cm9rZT0iIzZjN2Q4ZCIgc3Ryb2tlLXdpZHRoPSIzIiBtYXJrZXItZW5kPSJ1cmwoI2Fycm93KSIvPgogICAgPGcgZmlsdGVyPSJ1cmwoI3NoYWRvdykiPjxyZWN0IHg9IjM1OCIgeT0iMjg2IiB3aWR0aD0iNjA0IiBoZWlnaHQ9IjExMCIgcng9IjE3IiBmaWxsPSIjZWFmNmVmIiBzdHJva2U9IiMyMTdhNDgiIHN0cm9rZS13aWR0aD0iMiIvPjwvZz4KICAgIDx0ZXh0IHg9IjY2MCIgeT0iMzIzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMjE3YTQ4Ij7ku5PlupPmnLrliLbor4Hmja7vvJpJ4oaSSSDotKHnjK4gOTUuOTklIHJhbXAgZ2FwPC90ZXh0PgogICAgPHRleHQgeD0iNjYwIiB5PSIzNTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTUiIGZpbGw9IiMzZjYyNTAiPummlui9ruWQiOeQhuWIhuaUr++8muWGu+e7kyBtaXhlZC1tZWFzdXJlIGhlYWQvanVtcO+8jOWMuemFjemDqOe9sumHh+agt+WZqDwvdGV4dD4KICAgIDx0ZXh0IHg9IjY2MCIgeT0iMzc5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNjQ3NDg0Ij7oi6XlpJbpg6jmlbDmja7liIbop6Pnm7jlj43vvIzlho3ovawgbWFya2VkIHN0YXRlLWR1cmF0aW9u4oCTYW1wbGl0dWRlIGZsb3c8L3RleHQ+CgogICAgPGxpbmUgeDE9IjUyMCIgeTE9IjM5NiIgeDI9IjI3MCIgeTI9IjQ3OCIgc3Ryb2tlPSIjNmM3ZDhkIiBzdHJva2Utd2lkdGg9IjMiIG1hcmtlci1lbmQ9InVybCgjYXJyb3cpIi8+CiAgICA8bGluZSB4MT0iODAwIiB5MT0iMzk2IiB4Mj0iMTA1MCIgeTI9IjQ3OCIgc3Ryb2tlPSIjNmM3ZDhkIiBzdHJva2Utd2lkdGg9IjMiIG1hcmtlci1lbmQ9InVybCgjYXJyb3cpIi8+CgogICAgPGcgZmlsdGVyPSJ1cmwoI3NoYWRvdykiPjxyZWN0IHg9IjcwIiB5PSI0OTIiIHdpZHRoPSI1MDAiIGhlaWdodD0iMTQwIiByeD0iMTciIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzI4NmFhMyIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9nPgogICAgPHRleHQgeD0iMzIwIiB5PSI1MzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMyODZhYTMiPuS4u+WunumqjCBB77yaYXRvbS1zYWZlIHNjb3JlIGFkYXB0YXRpb248L3RleHQ+CiAgICA8dGV4dCB4PSIzMjAiIHk9IjU2MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNSIgZmlsbD0iIzI0MzEzZCI+bGV2ZWwgKyBpbmNyZW1lbnTvvJtqb2ludCBhbmNob3Ig5ZCO572u77ybVlMg5pyA5ZCOPC90ZXh0PgogICAgPHRleHQgeD0iMzIwIiB5PSI1ODkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTUiIGZpbGw9IiMyNDMxM2QiPjE2IEhldW4gc3RlcHMgPSAzMSBmbG93IE5GRXPvvJvkvY4gTFIgYWRhcHRlcjwvdGV4dD4KICAgIDx0ZXh0IHg9IjMyMCIgeT0iNjE1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNjQ3NDg0Ij7liJvmlrDpnIDmlLbnqoTvvJrmnInpmZDpm4blkIjkvp3otZYgKyDlpJrlnLrnq5kgcmFtcO+8jOiAjOmdnummluasoSBDUlBTIOWQjuiuree7gzwvdGV4dD4KCiAgICA8ZyBmaWx0ZXI9InVybCgjc2hhZG93KSI+PHJlY3QgeD0iNzUwIiB5PSI0OTIiIHdpZHRoPSI1MDAiIGhlaWdodD0iMTQwIiByeD0iMTciIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iI2JkODQyNCIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9nPgogICAgPHRleHQgeD0iMTAwMCIgeT0iNTMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjYTk2NjAwIj7mnaHku7blrp7pqowgQu+8mmZ1bGwtdHJhamVjdG9yeSBzb3VyY2U8L3RleHQ+CiAgICA8dGV4dCB4PSIxMDAwIiB5PSI1NjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTUiIGZpbGw9IiMyNDMxM2QiPm5lc3RlZCBPT0bvvJvmmL7lvI8gUFNE77ybc2hhcmVkLWJhc2lzIGxvdyByYW5rPC90ZXh0PgogICAgPHRleHQgeD0iMTAwMCIgeT0iNTg5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE1IiBmaWxsPSIjMjQzMTNkIj7lhYjog5zov4cgc3RhdGljIGZ1bGwg5LiOIENXIHBlci1sZWFk77yM5YaN6K6t57uDIGZsb3c8L3RleHQ+CiAgICA8dGV4dCB4PSIxMDAwIiB5PSI2MTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2NDc0ODQiPuWKqOaAgeWbvuS7heS9nOWPguaVsOWMli/ln7rnur/vvIzkuI3og73lho3kvZzkuLrmoIfpopjliJvmlrA8L3RleHQ+CgogICAgPGxpbmUgeDE9IjMyMCIgeTE9IjYzMiIgeDI9IjMyMCIgeTI9IjY4NiIgc3Ryb2tlPSIjNmM3ZDhkIiBzdHJva2Utd2lkdGg9IjMiIG1hcmtlci1lbmQ9InVybCgjYXJyb3cpIi8+CiAgICA8bGluZSB4MT0iMTAwMCIgeTE9IjYzMiIgeDI9IjEwMDAiIHkyPSI2ODYiIHN0cm9rZT0iIzZjN2Q4ZCIgc3Ryb2tlLXdpZHRoPSIzIiBtYXJrZXItZW5kPSJ1cmwoI2Fycm93KSIvPgoKICAgIDxnIGZpbHRlcj0idXJsKCNzaGFkb3cpIj48cmVjdCB4PSI5MiIgeT0iNjk3IiB3aWR0aD0iNDU2IiBoZWlnaHQ9IjcwIiByeD0iMTUiIGZpbGw9IiNlYWYzZmEiLz48L2c+CiAgICA8dGV4dCB4PSIzMjAiIHk9IjcyOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzE3MzY1ZCI+6YCa6L+H77yabG9ja2VkIHRlc3QgLyDlpJbpg6jmlbDmja48L3RleHQ+CiAgICA8dGV4dCB4PSIzMjAiIHk9Ijc1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzY0NzQ4NCI+5aSx6LSl77ya5L+d55WZ6LSf57uT5p6c77yM6L2sIGNvbmZvcm1hbC/lt6XnqIvmoKHlh4Y8L3RleHQ+CgogICAgPGcgZmlsdGVyPSJ1cmwoI3NoYWRvdykiPjxyZWN0IHg9Ijc3MiIgeT0iNjk3IiB3aWR0aD0iNDU2IiBoZWlnaHQ9IjcwIiByeD0iMTUiIGZpbGw9IiNmZmY1ZTUiLz48L2c+CiAgICA8dGV4dCB4PSIxMDAwIiB5PSI3MjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTciIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM3ZTUyMDAiPuiviuaWremAmui/h+aJjee7meeUn+aIkOiuree7g+mihOeulzwvdGV4dD4KICAgIDx0ZXh0IHg9IjEwMDAiIHk9Ijc1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzY0NzQ4NCI+5aSx6LSl77ya5YGc5q2iIHdoaXRlbmluZyAvIGdyYXBoIOWkp+aooeWeizwvdGV4dD4KICA8L2c+Cjwvc3ZnPgo=" alt="复审后的研究决策树" /></p>
+<hr />
+<h2 id="1-复审方法-证据等级与边界">1. 复审方法、证据等级与边界</h2>
+<h3 id="1-1-本次实际审了什么">1.1 本次实际审了什么</h3>
+<p>本次复审不是只读 HTML 表面文字，而是交叉核对了四层材料：</p>
+<ol>
+<li><strong>路线文档层</strong>：逐节检查原 Markdown/HTML 的优先级、公式语义、门槛、基线和论文主张；</li>
+<li><strong>代码层</strong>：核对 <code>mm_jdwind/training.py</code>、<code>training_v2.py</code>、<code>sampling.py</code>、<code>model.py</code> 中 sampler、loss、state、梯度和冻结行为；</li>
+<li><strong>历史结果层</strong>：核对 MM-JDWind、STGF、CR-MS-CADM、PS-DFSC 的报告、场景文件和 failure JSON；</li>
+<li><strong>外部文献层</strong>：定向检索 proper-score training/post-training、mixed discrete–continuous generation、ramp/extreme scoring、conditional source/whitening、动态时空风电、conformal trajectory 和 decision-focused diffusion。</li>
+</ol>
+<h3 id="1-2-本文的证据标签">1.2 本文的证据标签</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标签</th>
+<th>含义</th>
+<th>例子</th>
+<th>能支持什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-CODE</td>
+<td>仓库代码直接事实</td>
+<td>Heun 调用次数、state allocation、VS 公式</td>
+<td>实现层确定结论</td>
+</tr>
+<tr>
+<td>R-LOCK</td>
+<td>仓库冻结/确认结果</td>
+<td>150 日、3 outer × 3 seeds 的 MM 结果</td>
+<td>同域内部确认结论</td>
+</tr>
+<tr>
+<td>R-SEEN</td>
+<td>已见数据上的新增机制审计</td>
+<td>本次 transition-attributed ramp gap</td>
+<td>路线选择与假设生成，不能冒充新 test</td>
+</tr>
+<tr>
+<td>L-DIRECT</td>
+<td>研究问题和技术都直接碰撞</td>
+<td>RMMD 的 GenCast CRPS 后训练、ZOIB-R-vine 风电</td>
+<td>否定宽泛首创</td>
+</tr>
+<tr>
+<td>L-ADJ</td>
+<td>相邻领域或部分模块</td>
+<td>AIFS-CRPS、Discrete Flow Models</td>
+<td>支持可行性或风险，不证明当前任务有效</td>
+</tr>
+<tr>
+<td>L-THEORY</td>
+<td>理论性质</td>
+<td>proper score 聚合、transformation、finite ensemble</td>
+<td>约束公式和主张</td>
+</tr>
+<tr>
+<td>L-PREVIEW</td>
+<td>只有官方摘要/article preview</td>
+<td>部分 2026 Elsevier 论文</td>
+<td>可判断大方向碰撞，不能替代全文逐式核验</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="1-3-文献调研能证明什么-不能证明什么">1.3 文献调研能证明什么，不能证明什么</h3>
+<p>文献证据被刻意分成三类：</p>
+<ul>
+<li><strong>技术可行性证据</strong>：说明某种 loss、sampler 反传或 covariance 结构在别处能工作；</li>
+<li><strong>新颖性碰撞证据</strong>：说明某个大标题已经不能再写成首次；</li>
+<li><strong>任务内有效性证据</strong>：必须来自本仓库或未来公平实验，不能由天气/图像论文替代。</li>
+</ul>
+<p>例如，AIFS-CRPS 证明小 ensemble 的 afCRPS 可以训练大规模随机天气模型，但它不证明 240 维 mixed-measure 风电 flow 的 ramp adapter 一定稳定；RMMD 证明预训练 diffusion 可以用 CRPS reward 后训练，但它主要优化边际 CRPS，不证明 level–increment 联合目标能修复跨区域 ramp。</p>
+<h3 id="1-4-时间与检索边界">1.4 时间与检索边界</h3>
+<p>检索截止 2026-08-13。以下情形会保守标注：</p>
+<ul>
+<li>arXiv v1 只称“预印本”，不写成正式同行评审结论；</li>
+<li>workshop 与主会分开写；</li>
+<li>只有 publisher preview 时，不断言摘要没有展示的模块一定不存在；</li>
+<li>“未发现直接先例”只限定在本次检索范围，不写成绝对世界首创；</li>
+<li>本地 CLDM 是机器翻译件，正式投稿前必须补英文原版。</li>
+</ul>
+<hr />
+<h2 id="2-仓库事实审计-先把实现和历史证据说准">2. 仓库事实审计：先把实现和历史证据说准</h2>
+<h3 id="2-1-当前最稳的正结果是什么">2.1 当前最稳的正结果是什么</h3>
+<p>MM-JDWind 的最清楚贡献仍然成立：相对 no-jump，同一连续生成 backbone 下引入 mixed-measure 与 mass-preserving state mechanism，稳定改善了 CRPS、coverage、Joint ES 和 zero-event 质量。与 250-step DDPM 比较时：</p>
+<ul>
+<li>CRPS 和 Joint ES 接近；</li>
+<li>MAE、区间锐度、zero Brier 等更好；</li>
+<li>ramp-CRPS 明显更差，差值 <code>+0.002527</code>，95% CI <code>[+0.002125,+0.002951]</code>；</li>
+<li>confirmation 的 one observed rate 约 <code>0.000139</code>，因此主要实证应围绕 zero atom，上边界只作机制完整性说明。</li>
+</ul>
+<p>本次复审没有推翻 mixed-measure 结果；它缩窄的是“还能如何声称新颖”以及“下一步到底应修哪一部分”。</p>
+<h3 id="2-2-16-steps-不是-16-flow-nfe">2.2 16 steps 不是 16 flow NFE</h3>
+<p><code>integrate_rectified_flow()</code> 的 Heun 实现中：</p>
+<pre><code class="language-text">每个非末步：velocity(current) + velocity(proposal)  → 2 次 flow forward
+最后一步：velocity(current)                         → 1 次 flow forward
+</code></pre>
+<p>所以：</p>
+<pre><code class="language-text">flow network evaluations = 2 × integration_steps - 1
+
+4 steps  →  7 flow NFEs
+8 steps  → 15 flow NFEs
+16 steps → 31 flow NFEs
+32 steps → 63 flow NFEs
+</code></pre>
+<p>此外，mass-preserving state 路径先运行 12 个 jump reveal steps，即 12 次 jump-network evaluation；head 还会运行一次。不同子网络的 NFE 不应粗暴相加成一个无解释数字，建议正式报告：</p>
+<pre><code class="language-text">integration steps = 16
+flow NFEs         = 31
+jump NFEs         = 12
+head calls        = 1
+member chunks     = ...
+wall time         = ...
+</code></pre>
+<p>原文中所有“16 NFE flow 对 250-step DDPM”的表述都应改为“16 Heun steps / 31 flow NFEs”，然后再以相同硬件的 wall time 作最终效率比较。</p>
+<h3 id="2-3-旧-proper-score-pilot-不是对新路线的干净反证">2.3 旧 proper-score pilot 不是对新路线的干净反证</h3>
+<p>旧 <code>ensemble_proper_loss()</code> 同时做了：</p>
+<pre><code class="language-text">state sampler  = independent
+flow sampler   = 4-step Euler
+members        = 6
+loss           = CRPS + 0.05 ES + 0.05 VS + 0.1 RampCRPS
+trainable      = full flow
+deployment     = mass-preserving states + 16-step Heun
+</code></pre>
+<p>结果是 87 个 flow 参数出现非有限值，所有 proper validation metrics 为 NaN，v2 协议因而正确地禁用了 proper stage。</p>
+<p>这次失败至少混合了四个问题：</p>
+<ol>
+<li>state distribution 与部署不一致；</li>
+<li>Euler 4-step 与部署 Heun 16-step 不一致；</li>
+<li>四种分数一次性叠加，无法归因；</li>
+<li>VS 使用 <code>sqrt(abs(delta))</code>，而 mixed-measure 产生大量精确相等/精确 0/1，<code>sqrt</code> 在 0 附近的导数奇异。</li>
+</ol>
+<p>因此最准确的结论是：<strong>旧组合协议失败</strong>，而不是“所有 proper-score adaptation 不可行”。<code>sqrt-VS</code> 是强嫌疑根因，但在复现单项梯度触发前仍应写成“高可能机制”，不能假装已经因果证明。</p>
+<h3 id="2-4-原文对-fair-score-的表述过于绝对">2.4 原文对 fair score 的表述过于绝对</h3>
+<p>当前代码的 CRPS、ES 和 ramp-CRPS pair term 都包含 <code>M×M</code> 对角零项，是 V-statistic。它有两种完全不同的解释：</p>
+<h4 id="解释-a-预测对象是一个底层-iid-条件分布">解释 A：预测对象是一个底层 IID 条件分布</h4>
+<p>若成员是从同一底层分布独立同分布抽样，排除 self-pairs 的 U-stat/fair estimator 可无偏估计该底层分布的 CRPS/ES。此时有限 M 的 V-stat 会有 ensemble-size bias。</p>
+<h4 id="解释-b-预测对象就是实际发布的有限等权场景集">解释 B：预测对象就是实际发布的有限等权场景集</h4>
+<p>若最终产品就是一个固定 <code>M=100</code> 的经验分布，那么包含 self-pairs 的 V-stat 正是这个经验分布本身的 CRPS/ES，不是“实现 bug”。它优化的是有限 support forecast，而不是某个不可见无限 ensemble 的无偏估计。</p>
+<p>当前 mass-preserving state allocator 会：</p>
+<ul>
+<li>把每个位置的 zero/one count 舍入为整数；</li>
+<li>按 member-wise probability 排序分配这些状态；</li>
+<li>因而使成员相互依赖且非 IID。</li>
+</ul>
+<p>所以原文“训练必须优先 fair/U-stat”不能成立为通用规则。正确做法是先声明 estimand：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>研究对象</th>
+<th>state/member 语义</th>
+<th>训练 score</th>
+<th>可以做的理论主张</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>底层随机条件分布</td>
+<td>IID independent state/noise</td>
+<td>fair/U-stat；或 afCRPS</td>
+<td>在 IID 假设下估计底层 score</td>
+</tr>
+<tr>
+<td>发布的有限质量守恒场景集</td>
+<td>mass-preserving、排序/配额耦合</td>
+<td>empirical/V-stat</td>
+<td>直接评分有限经验分布，不声称是底层分布的无偏估计</td>
+</tr>
+</tbody>
+</table></div>
+<p>论文可以同时研究两者，但不能混用公式后仍声称同一个无偏性结论。</p>
+<h3 id="2-5-固定-checkpoint-cfg-在当前实现中不成立">2.5 固定 checkpoint CFG 在当前实现中不成立</h3>
+<p>MM-JDWind 的 target-state absorbing mask 不是 classifier-free guidance 所需的 condition dropout。当前模型没有：</p>
+<ul>
+<li>null condition token；</li>
+<li>unconditional branch；</li>
+<li>训练期随机移除 NWP condition 的协议；</li>
+<li>可与 conditional output 正确配对的 unconditional velocity。</li>
+</ul>
+<p>因此原文提出“固定 checkpoint、半天 inference sweep”不合法。CFG 若要做，必须重训，而且会改变校准目标；在当前密集研究路线中性价比很低，建议删除。</p>
+<h3 id="2-6-atom-gaussian-completion-不可识别">2.6 atom Gaussian completion 不可识别</h3>
+<p>当前 <code>MMJDWind.residual()</code> 在 atom state 处返回 0，是为了屏蔽/占位，不代表存在一个真实但未观测的连续 residual。把 atom 当作缺失值，再按 Gaussian conditional 分布补全，隐含了一个很强的反事实：</p>
+<blockquote>
+<p>精确 0/1 是某个潜在连续功率被删失或截断后的观测。</p>
+</blockquote>
+<p>但实际 exact zero 可能来自无风、停机、限电、故障、数据裁剪或归一化规则。若它是结构状态，就不存在唯一可识别的“本来应是多少”的 interior latent。因此：</p>
+<ul>
+<li>zero-fill 只能是有偏消融；</li>
+<li>Gaussian completion 不能作为正式默认方案；</li>
+<li>更合理的是 state-masked covariance、变维 active-coordinate flow，或 marked discrete–continuous process；</li>
+<li>外部数据必须先审计 exact zero/one 的物理语义。</li>
+</ul>
+<h3 id="2-7-coverage-窄门没有充分统计依据">2.7 coverage 窄门没有充分统计依据</h3>
+<p>原文要求 90% coverage 进入 <code>[0.88,0.92]</code>。若 calendar day 是推断单位，150 个近似独立日期下 0.9 比例的普通二项近似 95% 误差已约为 ±4.8 个百分点；时间相关会进一步降低有效样本量。若把 36,000 个 zone-hour 位置当独立样本，又会严重夸大精度。</p>
+<p>建议替换为：</p>
+<ul>
+<li>报 Coverage50/80/90 的逐日聚合；</li>
+<li>使用 moving/stationary block CI；</li>
+<li>主安全指标用 interval/Winkler score；</li>
+<li>coverage 用“相对 baseline 向名义值靠近且不过度放宽”的复合解释；</li>
+<li>若需要硬门，门宽由开发数据上的有效样本量和 power analysis 预先决定。</li>
+</ul>
+<hr />
+<h2 id="3-新增仓库机制证据-ramp-gap-到底来自哪里">3. 新增仓库机制证据：ramp gap 到底来自哪里</h2>
+<h3 id="3-1-为什么必须做这个分解">3.1 为什么必须做这个分解</h3>
+<p>原路线图默认：MM 的 atom mechanism 已经好，ramp 差距主要来自 continuous interior flow，所以冻结 head/jump 即可。这个假设在逻辑上合理，但原文没有直接证据，因为平均 ramp-CRPS 混合了：</p>
+<ul>
+<li><code>I→I</code>：两个小时都在连续内部；</li>
+<li><code>0→I</code>、<code>I→0</code>；</li>
+<li><code>1→I</code>、<code>I→1</code>；</li>
+<li><code>0→0</code>、<code>1→1</code> 及极少的 atom-to-atom 跨类变化。</li>
+</ul>
+<p>若差距主要由 atom↔interior 产生，冻结 jump 可能永远修不好；若主要是 <code>I→I</code>，连续 flow adapter 才是机制匹配的首选。</p>
+<h3 id="3-2-本次只读审计协议">3.2 本次只读审计协议</h3>
+<p>输入：</p>
+<ul>
+<li>MM：3 outer × 3 seeds 的 mass-preserving confirmation 场景；</li>
+<li>DDPM：每个 outer 的 seed0 confirmation 场景；</li>
+<li>每个 outer 50 日、10 zone、24 小时、M=100；</li>
+<li>按观测真值的相邻小时状态给每个 ramp 打标签；</li>
+<li>对每个标签计算仓库定义一致的 empirical/V-stat ramp-CRPS 差；</li>
+<li>outer-specific DDPM 与三个 MM seeds 分别配对，因此 pooled 表中 DDPM observation 被按 MM seed 重复三次。</li>
+</ul>
+<p>这是 R-SEEN 机制审计：可用于选择下一条路线，但不构成新的 locked-test 优效证据。</p>
+<h3 id="3-3-结果">3.3 结果</h3>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEyODAgNjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+TU0tSkRXaW5kIOebuOWvuSBERFBNIOeahCByYW1wLUNSUFMg5beu6Led5b2S5ZugPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+5YaF6YOo5Yiw5YaF6YOo6L2s56e76LSh54yu55m+5YiG5LmL5Lmd5Y2B5LqU54K55Lmd5Lmd77yM5Y6f5a2Q5LiO5YaF6YOo5LmL6Ze06LSh54yu55m+5YiG5LmL5LiJ54K55LiD5Zub77yM5Y6f5a2Q5Yiw5Y6f5a2Q6LSh54yu55m+5YiG5LmL6Zu254K55LqM5LiD44CCPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiYXIiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIwIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMjg2YWEzIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzRlOWVkMCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxmaWx0ZXIgaWQ9InNoYWRvdyIgeD0iLTEwJSIgeT0iLTIwJSIgd2lkdGg9IjEyMCUiIGhlaWdodD0iMTUwJSI+CiAgICAgIDxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSI1IiBzdGREZXZpYXRpb249IjciIGZsb29kLWNvbG9yPSIjMTczNjVkIiBmbG9vZC1vcGFjaXR5PSIwLjE0Ii8+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjEyODAiIGhlaWdodD0iNjIwIiByeD0iMjQiIGZpbGw9IiNmNWY4ZmIiLz4KICA8dGV4dCB4PSI2NCIgeT0iNzAiIGZvbnQtZmFtaWx5PSJNaWNyb3NvZnQgWWFIZWksIE5vdG8gU2FucyBDSksgU0MsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMyIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMTczNjVkIj5yYW1wLUNSUFMg5q2j5beu6Led55Sx5LuA5LmI6YCg5oiQ77yfPC90ZXh0PgogIDx0ZXh0IHg9IjY0IiB5PSIxMDgiIGZvbnQtZmFtaWx5PSJNaWNyb3NvZnQgWWFIZWksIE5vdG8gU2FucyBDSksgU0MsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjNjQ3NDg0Ij4xNTAg5Liq5bey6KeB56Gu6K6k5pelIMK3IDMgb3V0ZXIgw5cgMyBNTSBzZWVkcyDCtyDkuI4gb3V0ZXItc3BlY2lmaWMgRERQTSBzZWVkMCDphY3lr7k8L3RleHQ+CgogIDxnIGZpbHRlcj0idXJsKCNzaGFkb3cpIj4KICAgIDxyZWN0IHg9IjY0IiB5PSIxNTQiIHdpZHRoPSIxMTUyIiBoZWlnaHQ9Ijk0IiByeD0iMTUiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxyZWN0IHg9Ijg4IiB5PSIxODQiIHdpZHRoPSIxMDgzIiBoZWlnaHQ9IjM0IiByeD0iMTciIGZpbGw9IiNlMWU4ZWYiLz4KICAgIDxyZWN0IHg9Ijg4IiB5PSIxODQiIHdpZHRoPSIxMDM5LjYiIGhlaWdodD0iMzQiIHJ4PSIxNyIgZmlsbD0idXJsKCNiYXIpIi8+CiAgICA8cmVjdCB4PSIxMTI3LjYiIHk9IjE4NCIgd2lkdGg9IjQwLjUiIGhlaWdodD0iMzQiIGZpbGw9IiNiZDg0MjQiLz4KICAgIDxyZWN0IHg9IjExNjguMSIgeT0iMTg0IiB3aWR0aD0iMi45IiBoZWlnaHQ9IjM0IiByeD0iMS41IiBmaWxsPSIjYjgzODRiIi8+CiAgICA8dGV4dCB4PSI4OCIgeT0iMTc0IiBmb250LWZhbWlseT0iTWljcm9zb2Z0IFlhSGVpLCBOb3RvIFNhbnMgQ0pLIFNDLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZmlsbD0iIzY0NzQ4NCI+5a+55oC75L2T5q2j5beu6Led55qE6LSh54yu5Lu96aKdPC90ZXh0PgogIDwvZz4KCiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNjQgMjg2KSIgZm9udC1mYW1pbHk9Ik1pY3Jvc29mdCBZYUhlaSwgTm90byBTYW5zIENKSyBTQywgQXJpYWwsIHNhbnMtc2VyaWYiPgogICAgPGcgZmlsdGVyPSJ1cmwoI3NoYWRvdykiPgogICAgICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMzYwIiBoZWlnaHQ9IjIzMiIgcng9IjE2IiBmaWxsPSIjZmZmZmZmIi8+CiAgICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyMzIiIHJ4PSI1IiBmaWxsPSIjMjg2YWEzIi8+CiAgICA8L2c+CiAgICA8dGV4dCB4PSIzMiIgeT0iNDkiIGZvbnQtc2l6ZT0iMjIiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMxNzM2NWQiPuWGhemDqCDihpIg5YaF6YOoPC90ZXh0PgogICAgPHRleHQgeD0iMzIiIHk9IjExMSIgZm9udC1zaXplPSI0OCIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iIzI4NmFhMyI+OTUuOTklPC90ZXh0PgogICAgPHRleHQgeD0iMzIiIHk9IjE1MCIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzY0NzQ4NCI+5qC35pys5Y2g5q+UIDkwLjg1JTwvdGV4dD4KICAgIDx0ZXh0IHg9IjMyIiB5PSIxNzkiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM2NDc0ODQiPuW5s+WdhyBnYXAgKzAuMDAyNjcwPC90ZXh0PgogICAgPHRleHQgeD0iMzIiIHk9IjIwOCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzIxN2E0OCI+5pSv5oyB5YWI5Ya757uTIGp1bXDjgIHkv64gY29udGludW91cyBmbG93PC90ZXh0PgoKICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDM5NiAwKSIgZmlsdGVyPSJ1cmwoI3NoYWRvdykiPgogICAgICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMzYwIiBoZWlnaHQ9IjIzMiIgcng9IjE2IiBmaWxsPSIjZmZmZmZmIi8+CiAgICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyMzIiIHJ4PSI1IiBmaWxsPSIjYmQ4NDI0Ii8+CiAgICA8L2c+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzOTYgMCkiPgogICAgICA8dGV4dCB4PSIzMiIgeT0iNDkiIGZvbnQtc2l6ZT0iMjIiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMxNzM2NWQiPuWOn+WtkCDihpQg5YaF6YOoPC90ZXh0PgogICAgICA8dGV4dCB4PSIzMiIgeT0iMTExIiBmb250LXNpemU9IjQ4IiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjYmQ4NDI0Ij4zLjc0JTwvdGV4dD4KICAgICAgPHRleHQgeD0iMzIiIHk9IjE1MCIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzY0NzQ4NCI+5qC35pys5Y2g5q+UIDMuNjclPC90ZXh0PgogICAgICA8dGV4dCB4PSIzMiIgeT0iMTc5IiBmb250LXNpemU9IjE2IiBmaWxsPSIjNjQ3NDg0Ij7lubPlnYcgZ2FwICswLjAwMjU3NDwvdGV4dD4KICAgICAgPHRleHQgeD0iMzIiIHk9IjIwOCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzY0NzQ4NCI+5oyB57ut5pyf6ICm5ZCI5L2c5Li65p2h5Lu25aSH55So57q/PC90ZXh0PgogICAgPC9nPgoKICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDc5MiAwKSIgZmlsdGVyPSJ1cmwoI3NoYWRvdykiPgogICAgICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMzYwIiBoZWlnaHQ9IjIzMiIgcng9IjE2IiBmaWxsPSIjZmZmZmZmIi8+CiAgICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyMzIiIHJ4PSI1IiBmaWxsPSIjYjgzODRiIi8+CiAgICA8L2c+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3OTIgMCkiPgogICAgICA8dGV4dCB4PSIzMiIgeT0iNDkiIGZvbnQtc2l6ZT0iMjIiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMxNzM2NWQiPuWOn+WtkCDihpIg5Y6f5a2QPC90ZXh0PgogICAgICA8dGV4dCB4PSIzMiIgeT0iMTExIiBmb250LXNpemU9IjQ4IiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjYjgzODRiIj4wLjI3JTwvdGV4dD4KICAgICAgPHRleHQgeD0iMzIiIHk9IjE1MCIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzY0NzQ4NCI+5qC35pys5Y2g5q+UIDUuNDglPC90ZXh0PgogICAgICA8dGV4dCB4PSIzMiIgeT0iMTc5IiBmb250LXNpemU9IjE2IiBmaWxsPSIjNjQ3NDg0Ij7lubPlnYcgZ2FwICswLjAwMDEyNDwvdGV4dD4KICAgICAgPHRleHQgeD0iMzIiIHk9IjIwOCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzY0NzQ4NCI+5LiN5piv5b2T5YmN5bmz5Z2HIHJhbXAg57y65Y+j5Li75ZugPC90ZXh0PgogICAgPC9nPgogIDwvZz4KICA8dGV4dCB4PSI2NCIgeT0iNTcxIiBmb250LWZhbWlseT0iTWljcm9zb2Z0IFlhSGVpLCBOb3RvIFNhbnMgQ0pLIFNDLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZmlsbD0iIzY0NzQ4NCI+6L6555WM77ya5oyJ6KeC5rWL55yf5YC86L2s56e75YiG5bGC77yM5Y+q5L2c5bey6KeB5pWw5o2u55qE5py65Yi25b2S5Zug77yb5LiN5piv5paw55qE56Gu6K6k5oCn5LyY5pWI5qOA6aqM44CCPC90ZXh0Pgo8L3N2Zz4K" alt="MM-JDWind 相对 DDPM 的 ramp-CRPS 差距归因" /></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>观测转移大类</th>
+<th style="text-align:right">样本占比</th>
+<th style="text-align:right">MM−DDPM 类内平均 gap</th>
+<th style="text-align:right">对总体 gap 的贡献</th>
+<th style="text-align:right">占总体正差距份额</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>I→I</code></td>
+<td style="text-align:right">90.8522%</td>
+<td style="text-align:right">+0.00266962</td>
+<td style="text-align:right">+0.00242541</td>
+<td style="text-align:right"><strong>95.99%</strong></td>
+</tr>
+<tr>
+<td>atom↔<code>I</code></td>
+<td style="text-align:right">3.6696%</td>
+<td style="text-align:right">+0.00257410</td>
+<td style="text-align:right">+0.00009446</td>
+<td style="text-align:right"><strong>3.74%</strong></td>
+</tr>
+<tr>
+<td>atom→atom</td>
+<td style="text-align:right">5.4783%</td>
+<td style="text-align:right">+0.00012403</td>
+<td style="text-align:right">+0.00000679</td>
+<td style="text-align:right"><strong>0.27%</strong></td>
+</tr>
+<tr>
+<td>全部</td>
+<td style="text-align:right">100%</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right"><strong>+0.00252666</strong></td>
+<td style="text-align:right">100%</td>
+</tr>
+</tbody>
+</table></div>
+<p>九个 outer-seed 配对的总体 gap 全部为正，范围约 <code>+0.002252</code> 至 <code>+0.002855</code>。</p>
+<h3 id="3-4-它支持什么">3.4 它支持什么</h3>
+<p>该结果直接支持：</p>
+<ol>
+<li>当前 GEFCom 同域 seen data 上，平均 ramp 缺口确实主要是连续内部段问题；</li>
+<li>首轮冻结 head/jump、只调 continuous flow 有机制依据；</li>
+<li>state-duration–amplitude coupling 不应抢占首轮主实验预算；</li>
+<li>后训练的主要 primary endpoint 应保持 unconditional overall ramp-CRPS，而不是只看跨状态子集。</li>
+</ol>
+<h3 id="3-5-它不支持什么">3.5 它不支持什么</h3>
+<p>该分解不能证明：</p>
+<ul>
+<li>jump transition probability 已完全校准；</li>
+<li>zero-run duration 和 atom onset timing 已经正确；</li>
+<li>极端跨状态 ramp 不重要；</li>
+<li>另一个风电数据域也会有同样的 95.99%；</li>
+<li>只要优化 increment-CRPS 就必然修好依赖。</li>
+</ul>
+<p>因此 marked state-duration 路线仍保留，但降为外部数据/细分诊断触发的备用线。完整数值与方法边界保存在 <a href="qa/ramp_transition_attribution.json"><code>ramp_transition_attribution.json</code></a>。</p>
+<hr />
+<h2 id="4-原路线逐项复审总表">4. 原路线逐项复审总表</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>原方向</th>
+<th>原判定</th>
+<th>复审判定</th>
+<th>支撑它的证据</th>
+<th>反证/碰撞</th>
+<th>剩余可写空间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>proper ramp dynamics</td>
+<td>P0 立即做</td>
+<td><strong>保留但收窄</strong></td>
+<td>MM ramp gap；本次 <code>I→I</code> 归因；JMLR、AIFS-CRPS、RMMD 证明 score training 可行</td>
+<td>Swift/RMMD 已覆盖 CRPS flow/diffusion 微调；旧 pilot NaN</td>
+<td>多场站 wind、mixed measure、level–increment、有限集合依赖语义与稳定化</td>
+</tr>
+<tr>
+<td>stable trajectory score post-training</td>
+<td>与 A 合并</td>
+<td><strong>合并但先做 estimand 审计</strong></td>
+<td>DRaFT/RMMD 支持 sampler 反传与参考正则</td>
+<td>不是通用首创；mass-preserving 非 IID；signature score 已覆盖路径评分</td>
+<td>sampler-matched、atom-safe adaptation 的方法/负结果研究</td>
+</tr>
+<tr>
+<td>NWP dynamic dependence</td>
+<td>P2 条件立项</td>
+<td><strong>只保留 explicit PSD source</strong></td>
+<td>residual regime 差异、CW-Gen/TSFlow/Correlated Errors</td>
+<td>MOE-STD/PSTDT/动态图风电密集；本地固定图失败</td>
+<td>完整 zone×lead、state-masked、nested-OOF、source vs feature 因果消融</td>
+</tr>
+<tr>
+<td>full structured whitening</td>
+<td>C 组件</td>
+<td><strong>明显降级</strong></td>
+<td>CW-Gen 证明条件 whitening 有理论与经验价值</td>
+<td>CW-Gen/CW-Flow/TSFlow 高碰撞；atom completion 不可识别</td>
+<td>trajectory-wide separable masked whitening，且只能作为 B 组件</td>
+</tr>
+<tr>
+<td>interior calibration</td>
+<td>低风险工程线</td>
+<td><strong>保留</strong></td>
+<td>coverage 84.5%、interval 尚有改善空间</td>
+<td>conformal/校准文献拥挤；易用变宽换覆盖</td>
+<td>atom-preserving system component，不作 dynamics 主创新</td>
+</tr>
+<tr>
+<td>regime/extreme</td>
+<td>diagnose first</td>
+<td><strong>保留诊断，进一步收窄</strong></td>
+<td>ramp 尾部存在</td>
+<td>MOE 与极端概率预测密集；小类样本不足</td>
+<td>train-only tw-ramp score；NWP 可预测的二类 regime 最多</td>
+</tr>
+<tr>
+<td>structured CFG</td>
+<td>快速消融</td>
+<td><strong>删除当前 sweep</strong></td>
+<td>无</td>
+<td>当前 checkpoint 不具备 CFG 前提；需重训</td>
+<td>未来单独重训消融，不进入近期论文</td>
+</tr>
+<tr>
+<td>flow sampling efficiency</td>
+<td>bonus</td>
+<td><strong>保留但改计数</strong></td>
+<td>低 integration-step backbone</td>
+<td>16 steps 实为 31 flow NFEs；wall time 未证实比例加速</td>
+<td>quality–latency curve，不作首要创新</td>
+</tr>
+<tr>
+<td>decision-focused 2.0</td>
+<td>pause</td>
+<td><strong>继续暂停</strong></td>
+<td>无安全候选</td>
+<td>本地 12/12 candidate fail；DO-MUDiff 2026 直接碰撞</td>
+<td>只有 exact-aligned surrogate 出现新证据才重开</td>
+</tr>
+<tr>
+<td>full SB/OT</td>
+<td>未主推</td>
+<td><strong>只做极小 pilot</strong></td>
+<td>OT-CFM/SB 理论可降低路径复杂度</td>
+<td>每个 condition 只有一个 target；跨日 OT 会错配 condition</td>
+<td>NWP-neighbor OT 的效率消融，shuffled control 必须失败</td>
+</tr>
+</tbody>
+</table></div>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMzIwIiBoZWlnaHQ9IjczMCIgdmlld0JveD0iMCAwIDEzMjAgNzMwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+5paH54yu56Kw5pKe5LiO5Ymp5L2Z56m65L2NPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+5bGV56S6IHByb3BlciBzY29yZSDlkI7orq3nu4PjgIHmt7flkIjmtYvluqbjgIHliqjmgIHkvp3otZbjgIHnmb3ljJbjgIHmnoHnq6/or4TliIbnrYnmlrnlkJHnmoTnorDmkp7lvLrluqbkuI7liankvZnnoJTnqbbnqbrkvY3jgII8L2Rlc2M+CiAgPGRlZnM+PGZpbHRlciBpZD0ic2hhZG93IiB4PSItMTAlIiB5PSItMTUlIiB3aWR0aD0iMTIwJSIgaGVpZ2h0PSIxNDAlIj48ZmVEcm9wU2hhZG93IGR4PSIwIiBkeT0iNCIgc3RkRGV2aWF0aW9uPSI1IiBmbG9vZC1jb2xvcj0iIzE3MzY1ZCIgZmxvb2Qtb3BhY2l0eT0iMC4xMiIvPjwvZmlsdGVyPjwvZGVmcz4KICA8cmVjdCB3aWR0aD0iMTMyMCIgaGVpZ2h0PSI3MzAiIHJ4PSIyNCIgZmlsbD0iI2Y1ZjhmYiIvPgogIDxnIGZvbnQtZmFtaWx5PSJNaWNyb3NvZnQgWWFIZWksIE5vdG8gU2FucyBDSksgU0MsIEFyaWFsLCBzYW5zLXNlcmlmIj4KICAgIDx0ZXh0IHg9IjYwIiB5PSI2MiIgZm9udC1zaXplPSIzMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzE3MzY1ZCI+5paH54yu56Kw5pKe5Zyw5Zu+77ya5ZOq5Lqb5aSn5qCH6aKY5bey57uP5LiN6IO95YaN5YaZPC90ZXh0PgogICAgPHRleHQgeD0iNjAiIHk9Ijk3IiBmb250LXNpemU9IjE3IiBmaWxsPSIjNjQ3NDg0Ij7nuqLoibLkuI3mmK/igJzmioDmnK/ml6DmlYjigJ3vvIzogIzmmK/igJzkuI3og73kvZzkuLrlvZPliY3orrrmlofnmoTlrr3ms5vpppbliJvkuLvlvKDigJ08L3RleHQ+CgogICAgPHRleHQgeD0iMzgyIiB5PSIxMzgiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM2NDc0ODQiPuebtOaOpeaIlumrmOW6puebuOmCu+W3peS9nDwvdGV4dD4KICAgIDx0ZXh0IHg9IjkxMCIgeT0iMTM4IiBmb250LXNpemU9IjE1IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNjQ3NDg0Ij7ku43lj6/og73miJDnq4vnmoTnqoTnqbrkvY08L3RleHQ+CgogICAgPGcgZmlsdGVyPSJ1cmwoI3NoYWRvdykiPgogICAgICA8cmVjdCB4PSI2MCIgeT0iMTU4IiB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4OCIgcng9IjE1IiBmaWxsPSIjZmZmZmZmIi8+CiAgICAgIDxyZWN0IHg9IjYwIiB5PSIxNTgiIHdpZHRoPSIyNTAiIGhlaWdodD0iODgiIHJ4PSIxNSIgZmlsbD0iI2ZjZWVmMCIvPgogICAgPC9nPgogICAgPHRleHQgeD0iODIiIHk9IjE5MyIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2I4Mzg0YiI+Q1JQUyAvIHByb3BlciDlkI7orq3nu4M8L3RleHQ+CiAgICA8dGV4dCB4PSI4MiIgeT0iMjIwIiBmb250LXNpemU9IjEzIiBmaWxsPSIjNmI0NDUwIj7norDmkp7vvJrpq5g8L3RleHQ+CiAgICA8dGV4dCB4PSIzNDAiIHk9IjE5MSIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzI0MzEzZCI+Sk1MUiBzY29yaW5nIMK3IERSYUZUIMK3IFN3aWZ0IMK3IEFJRlMtQ1JQUyDCtyBSTU1EPC90ZXh0PgogICAgPHRleHQgeD0iMzQwIiB5PSIyMTgiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiM2NDc0ODQiPueUn+aIkOmihOa1i+OAgeamgueOh+a1geWSjOmihOiuree7gyBkaWZmdXNpb24g55qEIENSUFMg6K6t57uDL+W+ruiwg+Wdh+W3suacieWFiOS+izwvdGV4dD4KICAgIDx0ZXh0IHg9Ijg3MiIgeT0iMTkxIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMjE3YTQ4Ij7lpJrlnLrnq5npo47nlLUgKyBsZXZlbC9yYW1wICsg5oiQ5ZGY5L6d6LWW6K+t5LmJPC90ZXh0PgogICAgPHRleHQgeD0iODcyIiB5PSIyMTgiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiM2NDc0ODQiPumhu+WBmueos+WumuWMluOAgeWunumZhSBzYW1wbGVyIOWvuem9kOS4juiBlOWQiOagoeWHhjwvdGV4dD4KCiAgICA8ZyBmaWx0ZXI9InVybCgjc2hhZG93KSI+PHJlY3QgeD0iNjAiIHk9IjI2NCIgd2lkdGg9IjEyMDAiIGhlaWdodD0iODgiIHJ4PSIxNSIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHg9IjYwIiB5PSIyNjQiIHdpZHRoPSIyNTAiIGhlaWdodD0iODgiIHJ4PSIxNSIgZmlsbD0iI2ZjZWVmMCIvPjwvZz4KICAgIDx0ZXh0IHg9IjgyIiB5PSIyOTkiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNiODM4NGIiPui+ueeVjOWOn+WtkCArIOiBlOWQiOmjjueUtTwvdGV4dD4KICAgIDx0ZXh0IHg9IjgyIiB5PSIzMjYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiM2YjQ0NTAiPueisOaSnu+8muS4remrmDwvdGV4dD4KICAgIDx0ZXh0IHg9IjM0MCIgeT0iMjk3IiBmb250LXNpemU9IjE0IiBmaWxsPSIjMjQzMTNkIj5aT0lCICsgUi12aW5lIHJlZ2lvbmFsIHdpbmQgKDIwMjYpIMK3IFpJQi1ITU0gKDIwMjYpPC90ZXh0PgogICAgPHRleHQgeD0iMzQwIiB5PSIzMjQiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiM2NDc0ODQiPjAvMSDngrnotKjph4/jgIHogZTlkIjkvp3otZbkuI7nirbmgIHliqjmgIHlt7LmnInnm7TmjqXpo47nlLXlu7rmqKE8L3RleHQ+CiAgICA8dGV4dCB4PSI4NzIiIHk9IjI5NyIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzIxN2E0OCI+5L2O5q2l5pWwIG1peGVkIGZsb3cg55qE6LSo6YeP5a6I5oGS5LiO54q25oCBLeaMr+W5heiApuWQiDwvdGV4dD4KICAgIDx0ZXh0IHg9Ijg3MiIgeT0iMzI0IiBmb250LXNpemU9IjEzIiBmaWxsPSIjNjQ3NDg0Ij7kuIrovrnnlYzkuovku7bov4flsJHvvIzkuLvlrp7or4HlupTlm7Tnu5UgemVybyBhdG9tPC90ZXh0PgoKICAgIDxnIGZpbHRlcj0idXJsKCNzaGFkb3cpIj48cmVjdCB4PSI2MCIgeT0iMzcwIiB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4OCIgcng9IjE1IiBmaWxsPSIjZmZmZmZmIi8+PHJlY3QgeD0iNjAiIHk9IjM3MCIgd2lkdGg9IjI1MCIgaGVpZ2h0PSI4OCIgcng9IjE1IiBmaWxsPSIjZmZmNWU1Ii8+PC9nPgogICAgPHRleHQgeD0iODIiIHk9IjQwNSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2E5NjYwMCI+5Yqo5oCB5pe256m6IGRpZmZ1c2lvbjwvdGV4dD4KICAgIDx0ZXh0IHg9IjgyIiB5PSI0MzIiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiM3NjViMmMiPueisOaSnu+8mumrmDwvdGV4dD4KICAgIDx0ZXh0IHg9IjM0MCIgeT0iNDAzIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMjQzMTNkIj5NT0UtU1REIMK3IFBTVERUIMK3IHBoeXNpY3MtYXdhcmUgZHluYW1pYyBncmFwaCBNb0U8L3RleHQ+CiAgICA8dGV4dCB4PSIzNDAiIHk9IjQzMCIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzY0NzQ4NCI+4oCc5Yqo5oCB5Zu+L+aXtuepuuS4k+WutuaPkOWNh+mjjueUteamgueOh+mihOa1i+KAneW3suaLpeaMpDwvdGV4dD4KICAgIDx0ZXh0IHg9Ijg3MiIgeT0iNDAzIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMjE3YTQ4Ij7mmL7lvI8gUFNEIOeahCBOV1Ag5p2h5Lu2IHpvbmXDl2xlYWQgc291cmNlIGNvdmFyaWFuY2U8L3RleHQ+CiAgICA8dGV4dCB4PSI4NzIiIHk9IjQzMCIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzY0NzQ4NCI+5Zu+5Y+q6IO95pivIGNvdmFyaWFuY2Ug5Y+C5pWw5YyW5oiWIGZlYXR1cmUtb25seSDlr7nnhac8L3RleHQ+CgogICAgPGcgZmlsdGVyPSJ1cmwoI3NoYWRvdykiPjxyZWN0IHg9IjYwIiB5PSI0NzYiIHdpZHRoPSIxMjAwIiBoZWlnaHQ9Ijg4IiByeD0iMTUiIGZpbGw9IiNmZmZmZmYiLz48cmVjdCB4PSI2MCIgeT0iNDc2IiB3aWR0aD0iMjUwIiBoZWlnaHQ9Ijg4IiByeD0iMTUiIGZpbGw9IiNmZmY1ZTUiLz48L2c+CiAgICA8dGV4dCB4PSI4MiIgeT0iNTExIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjYTk2NjAwIj5jb25kaXRpb25hbCB3aGl0ZW5pbmc8L3RleHQ+CiAgICA8dGV4dCB4PSI4MiIgeT0iNTM4IiBmb250LXNpemU9IjEzIiBmaWxsPSIjNzY1YjJjIj7norDmkp7vvJrmnoHpq5g8L3RleHQ+CiAgICA8dGV4dCB4PSIzNDAiIHk9IjUwOSIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzI0MzEzZCI+VE1ETSDCtyBOc0RpZmYgwrcgQ1ctR2VuL0NXLUZsb3cgwrcgVFNGbG93IMK3IERTUEQ8L3RleHQ+CiAgICA8dGV4dCB4PSIzNDAiIHk9IjUzNiIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzY0NzQ4NCI+5Z2H5YC844CB5pa55beu44CB6YCQ5pe25Y2P5pa55beu44CBR1Agc291cmNl44CBd2hpdGVuaW5nIOWdh+W3suimhuebljwvdGV4dD4KICAgIDx0ZXh0IHg9Ijg3MiIgeT0iNTA5IiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMjE3YTQ4Ij7lrozmlbQgY3Jvc3MtbGVhZOOAgXN0YXRlLW1hc2tlZOOAgeS9juaVsOaNruWPr+S8sOiuoee7k+aehDwvdGV4dD4KICAgIDx0ZXh0IHg9Ijg3MiIgeT0iNTM2IiBmb250LXNpemU9IjEzIiBmaWxsPSIjNjQ3NDg0Ij7ku4XkvZwgQiDnu4Tku7bvvJtHYXVzc2lhbiBhdG9tIGNvbXBsZXRpb24g5LiN5Y+v6K+G5YirPC90ZXh0PgoKICAgIDxnIGZpbHRlcj0idXJsKCNzaGFkb3cpIj48cmVjdCB4PSI2MCIgeT0iNTgyIiB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4OCIgcng9IjE1IiBmaWxsPSIjZmZmZmZmIi8+PHJlY3QgeD0iNjAiIHk9IjU4MiIgd2lkdGg9IjI1MCIgaGVpZ2h0PSI4OCIgcng9IjE1IiBmaWxsPSIjZWFmNmVmIi8+PC9nPgogICAgPHRleHQgeD0iODIiIHk9IjYxNyIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzIxN2E0OCI+5p6B56uvIC8gcmFtcCBwcm9wZXIgc2NvcmU8L3RleHQ+CiAgICA8dGV4dCB4PSI4MiIgeT0iNjQ0IiBmb250LXNpemU9IjEzIiBmaWxsPSIjM2Y2MjUwIj7lj6/ooYzkvYbpnZ7pppbliJs8L3RleHQ+CiAgICA8dGV4dCB4PSIzNDAiIHk9IjYxNSIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzI0MzEzZCI+d2VpZ2h0ZWQgc2NvcmVzIMK3IGV4dHJlbWUgd2luZCB0d0NSUFMgwrcgdGFpbCBjYWxpYnJhdGlvbjwvdGV4dD4KICAgIDx0ZXh0IHg9IjM0MCIgeT0iNjQyIiBmb250LXNpemU9IjEzIiBmaWxsPSIjNjQ3NDg0Ij7lsL7pg6jmlLnlloTkuI7kuLvkvZPpgIDljJbnmoQgdHJhZGUtb2ZmIOW3suiiq+WunuivgTwvdGV4dD4KICAgIDx0ZXh0IHg9Ijg3MiIgeT0iNjE1IiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMjE3YTQ4Ij7lr7nmiYDmnInml6XorqHnrpfnmoQgdHctcmFtcCBzY29yZSArIOWFqOWxgOmUmjwvdGV4dD4KICAgIDx0ZXh0IHg9Ijg3MiIgeT0iNjQyIiBmb250LXNpemU9IjEzIiBmaWxsPSIjNjQ3NDg0Ij7pgb/lhY3lj6rlnKjnnJ/lrp7mnoHnq6/ml6Xor4Tku7fpgKDmiJAgZm9yZWNhc3RlcuKAmXMgZGlsZW1tYTwvdGV4dD4KCiAgICA8dGV4dCB4PSI2MCIgeT0iNzA0IiBmb250LXNpemU9IjE0IiBmaWxsPSIjNjQ3NDg0Ij7mo4DntKLmiKrmraLvvJoyMDI2LTA4LTEz44CC6YOo5YiGIDIwMjYg5bel5L2c55uu5YmN5LuF5pyJ5q2j5byP5pGY6KaBL2FydGljbGUgcHJldmlld++8jOWFqOaWh+i+ueeVjOmcgOWcqOaKleeov+WJjeWGjeasoeaguOmqjOOAgjwvdGV4dD4KICA8L2c+Cjwvc3ZnPgo=" alt="文献碰撞与剩余空位" /></p>
+<hr />
+<h2 id="5-方向-a-复审-proper-score-后训练仍可行-但论文故事必须重写">5. 方向 A 复审：proper-score 后训练仍可行，但论文故事必须重写</h2>
+<h3 id="5-1-可行性的正证据">5.1 可行性的正证据</h3>
+<p>以下文献共同说明“可微概率评分能够训练/微调生成预测模型”不是空想：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>文献</th>
+<th>实际做到什么</th>
+<th>对本项目的支持</th>
+<th>不能外推的部分</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://jmlr.org/papers/v25/23-0038.html">Pacchiardi et al., JMLR 2024</a></td>
+<td>用 proper scoring-rule minimization 训练隐式生成网络，并给出 dependent-data 一致性结果</td>
+<td>proper score 可以成为非对抗生成训练目标</td>
+<td>主要实验不是 240 维多步 mixed wind sampler 后训练</td>
+</tr>
+<tr>
+<td><a href="https://openreview.net/forum?id=1vmSEVL19f">DRaFT, ICLR 2024</a></td>
+<td>穿过 diffusion sampler 优化可微 reward；比较 truncated backprop</td>
+<td>支持 adapter、reference、K-step 反传设计</td>
+<td>图像 reward 不等于概率 proper score；长链有过优化/不稳风险</td>
+</tr>
+<tr>
+<td><a href="https://www.nature.com/articles/s44387-026-00073-7">AIFS-CRPS, npj AI 2026</a></td>
+<td>M=2/4、afCRPS、最多 12-step rollout；用 α=0.95 避免 fair-CRPS 退化</td>
+<td>直接支持小 ensemble、低 LR、progressive rollout 和正项重排</td>
+<td>不是 diffusion/flow 后训练；主要是 marginal CRPS</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2509.25631">Swift, 2025 preprint/workshop</a></td>
+<td>对单步 consistency/probability-flow weather model 做 multi-step fair-CRPS finetuning</td>
+<td>已证明 probability-flow forecast 可用 CRPS 微调</td>
+<td>不是现成 mixed-measure wind model；venue 必须写准确</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2606.30414">RMMD, arXiv:2606.30414</a></td>
+<td>GenCast 59 NFE→8-step student，再用 2-sample CRPS reward 与 frozen reference 正则微调</td>
+<td>是“预训练 diffusion/weather + CRPS post-training”的直接先例；也给稳定化思路</td>
+<td>主要为逐变量/逐 lead marginal CRPS；截至检索日为预印本</td>
+</tr>
+<tr>
+<td><a href="https://www.nature.com/articles/s41586-024-07744-y">NeuralGCM, Nature 2024</a></td>
+<td>用小 ensemble 的 CRPS 型目标训练长 rollout 随机天气模型</td>
+<td>支持大规模多步 probabilistic training 可行</td>
+<td>混合动力学天气模型，不是 wind flow post-training</td>
+</tr>
+</tbody>
+</table></div>
+<p>这些证据足以支撑“值得做稳定 pilot”，但已经否定以下宽泛主张：</p>
+<ul>
+<li>首次用 proper score 训练生成网络；</li>
+<li>首次对 probability-flow forecast 做 CRPS 微调；</li>
+<li>首次对预训练 diffusion weather model 做 CRPS 后训练；</li>
+<li>首次用小 ensemble proper score 训练多步随机模型。</li>
+</ul>
+<h3 id="5-2-当前剩余的新颖性到底在哪里">5.2 当前剩余的新颖性到底在哪里</h3>
+<p>截至本次检索，没有发现与以下组合完全相同的直接工作：</p>
+<pre><code class="language-text">预训练多场站风电 mixed-measure joint flow
++ 最终部署 sampler 对齐
++ level 与 increment/ramp 的复合评分
++ 有限场景质量守恒导致的成员依赖语义
++ 冻结边界原子并验证 ramp/atom trade-off
+</code></pre>
+<p>这只能写成：</p>
+<blockquote>
+<p>“在本次检索范围内，尚未发现系统研究有限成员校正与质量守恒成员依赖条件下，level–increment/ramp scoring-rule adaptation 对预训练多场站风电 diffusion/flow 场景生成器作用的工作。”</p>
+</blockquote>
+<p>不能写成绝对“世界首个”。</p>
+<h3 id="5-3-理论上必须守住的边界">5.3 理论上必须守住的边界</h3>
+<h4 id="差分评分不识别原轨迹">差分评分不识别原轨迹</h4>
+<p><code>Delta(X)</code> 是非单射变换：给整条轨迹加同一个常数，增量完全不变。因此只对 increment 使用严格 proper score，也只会严格识别 increment distribution，不能识别 level 或完整 path law。</p>
+<h4 id="逐位置-level-crps-仍只识别边缘">逐位置 level CRPS 仍只识别边缘</h4>
+<p>对 240 个位置分别求 CRPS 再相加，可以识别各位置边缘分布，但不能唯一识别跨时、跨区联合依赖。</p>
+<h4 id="组合严格性需要完整-outcome-space-锚">组合严格性需要完整 outcome-space 锚</h4>
+<p><a href="https://ascmo.copernicus.org/articles/11/23/2025/">Pic et al. 2025</a> 支持：固定非负权重的 proper scores 之和仍 proper；若其中一个正权重分量在相同 outcome space 上严格 proper，合成可保持严格性。但需要：</p>
+<ul>
+<li>权重非负并在 test 前固定；</li>
+<li>分数定义在明确的同一预测对象上；</li>
+<li>所需矩存在；</li>
+<li>normalization scale 为 train-only 固定正数；</li>
+<li>anchor/reference regularizer 单独标为工程正则，不能伪装成 proper score。</li>
+</ul>
+<p>对于完整 <code>10×24</code> Euclidean trajectory，可用 full-trajectory ES 或 characteristic-kernel score 作 joint anchor。只用 level marginal CRPS + increment marginal CRPS 仍不能保证完整联合分布正确。</p>
+<h3 id="5-4-signature-kernel-是有价值的诊断-不是当前首轮训练-loss">5.4 signature kernel 是有价值的诊断，不是当前首轮训练 loss</h3>
+<p><a href="https://openreview.net/forum?id=LOLXpt4E5D">Signature Kernel Scoring Rule, TMLR 2026</a> 已把严格 proper 的 path score 用于概率天气验证和训练，轨迹最长 15 steps。这会继续压缩“首次轨迹级评分训练”的新颖性。</p>
+<p>同时该论文明确暴露了：</p>
+<ul>
+<li>多次数值 Inf/NaN 或训练塌缩；</li>
+<li>高维 path augmentation 的理论/数值伸缩问题；</li>
+<li>需要经验 scaling，稳定性依赖 kernel bandwidth；</li>
+<li>dense signature 对 zero-inflated precipitation 等非稠密过程仍是开放问题。</li>
+</ul>
+<p>MM-JDWind 恰有精确 0/1 atoms，因此 signature score 更适合：</p>
+<ol>
+<li>用 synthetic perturbation 做 finite-sample power test；</li>
+<li>作为冻结场景的诊断性 scorecard；</li>
+<li>若要训练，先研究 atom-aware marked/masked signature，而不是直接把 dense signature 加进 P0。</li>
+</ol>
+<h3 id="5-5-极端-ramp-不能只在真实极端日上评价">5.5 极端 ramp 不能只在真实极端日上评价</h3>
+<p><a href="https://arxiv.org/abs/1512.09244">Forecaster's Dilemma</a> 指出：按已实现的极端结果筛选样本再评价普通 forecast score，会产生反直觉和不诚实的模型排序。原文的“极端 ramp 日分层”可以保留为解释性诊断，但不能成为主优效检验。</p>
+<p>更合理的是：</p>
+<ul>
+<li>阈值只从 train 确定；</li>
+<li>在<strong>所有评价日期</strong>上计算 threshold-weighted ramp CRPS、weighted ES/VS 或 event Brier；</li>
+<li>同时保留 ordinary score，审计 body–tail trade-off；</li>
+<li>不用 test truth 决定“这一天是否进入主评价”。</li>
+</ul>
+<p><a href="https://journals.ametsoc.org/view/journals/mwre/153/8/MWR-D-24-0151.1.xml">Wessel et al., MWR 2025</a> 已证明 twCRPS 训练能改善极端风速，但会伤害分布主体；<a href="https://arxiv.org/abs/2506.13687">Enforcing tail calibration, 2026</a> 又在 conditional generative models 上观察到尾部校准改善与整体校准/skill 退化的权衡。因此 extreme branch 必须与全局 level/ramp score 绑定，不应单独宣称全面改善。</p>
+<h3 id="5-6-方向-a-的复审判定">5.6 方向 A 的复审判定</h3>
+<p><strong>科学价值：高。</strong> 有明确仓库缺口、机制归因和可证伪 protocol。<br />
+<strong>通用新颖性：低到中。</strong> proper-score post-training 大标题已经被直接占据。<br />
+<strong>任务组合新颖性：中。</strong> 有机会来自 mixed-measure multi-zone wind、finite-set dependence 和 level–ramp joint adaptation。<br />
+<strong>工程风险：中高。</strong> 旧 pilot 非有限、完整 Heun chain 反传昂贵、score/成员语义复杂。<br />
+<strong>最终判定：Conditional Go，作为第一研究实验，但必须使用第 9 节的新协议。</strong></p>
+<hr />
+<h2 id="6-方向-b-c-复审-动态依赖与-whitening-必须合并-收窄并先诊断">6. 方向 B/C 复审：动态依赖与 whitening 必须合并、收窄并先诊断</h2>
+<h3 id="6-1-为什么原-动态图-动态依赖-故事已经不够新">6.1 为什么原“动态图/动态依赖”故事已经不够新</h3>
+<p>2026 年的直接碰撞比原路线图估计得更强：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>工作</th>
+<th>已覆盖内容</th>
+<th>对原路线的影响</th>
+<th>尚未完全覆盖的窄空位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S0378779626007297">MOE-STD, EPSR 2026</a></td>
+<td>风电概率 diffusion；动态空间专家 MOSE；动态时间专家 MOTE；真实 offshore/inland farms</td>
+<td>“probabilistic wind diffusion + dynamic spatial/temporal dependency” 已不能作主创新</td>
+<td>公开摘要未声称显式 PSD source covariance；投稿前需全文复核</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1109/TSTE.2025.3591920">PSTDT, IEEE TSTE</a></td>
+<td>probabilistic wind-speed diffusion transformer；静态位置与动态空间 attention；时间依赖</td>
+<td>“动态图/attention + probabilistic wind diffusion” 更拥挤</td>
+<td>未见完整 NWP-conditioned zone×lead source operator</td>
+</tr>
+<tr>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S0142061526002115">Zhao et al., IJEPES 2026</a></td>
+<td>physics-aware dynamic graph、CNN-Transformer、gated MoE、风电</td>
+<td>“physics-aware dynamic graph + MoE + wind” 已被直接占据</td>
+<td>是点预测，不是联合概率 source</td>
+</tr>
+<tr>
+<td><a href="https://openreview.net/forum?id=EO5jwQ5NCw">GCGNet, ICLR 2026</a></td>
+<td>future exogenous variables、temporal/channel graph、structure alignment</td>
+<td>动态 channel/temporal graph 也不是空白</td>
+<td>主要不是 mixed-measure scenario source</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.mlr.press/v286/yang25c.html">MSCGrapher, UAI 2025</a></td>
+<td>多尺度动态跨序列相关图</td>
+<td>“dynamic cross-series graph” 不是新颖点</td>
+<td>确定性任务，未做联合概率 source</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.iclr.cc/paper_files/paper/2024/hash/b52b07a239a7afa155ca25cf17a55074-Abstract-Conference.html">LIFT, ICLR 2024</a></td>
+<td>local lead–lag dependence</td>
+<td>lead-lag dynamic dependency 本身也有成熟工作</td>
+<td>不直接生成 mixed-measure joint distribution</td>
+</tr>
+</tbody>
+</table></div>
+<p>再结合本地 STGF 相对 time-domain joint flow 的确认性负结果：CRPS 恶化 3.99%，Joint ES 与 adjacency VS 也变差。因此未来不应再写：</p>
+<blockquote>
+<p>“我们引入动态图来捕捉风电场之间动态相关性。”</p>
+</blockquote>
+<p>这句话既缺新颖性，又没有仓库正证据。</p>
+<h3 id="6-2-conditional-source-whitening-的直接碰撞">6.2 conditional source / whitening 的直接碰撞</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>工作</th>
+<th>已覆盖内容</th>
+<th>与剩余方向的边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://openreview.net/forum?id=2T0Qn9rP6N">TMDM, ICLR 2024</a></td>
+<td>条件均值作为 diffusion endpoint/prior</td>
+<td>mean-only 已被覆盖，本地 residualization 也已做</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.mlr.press/v267/ye25i.html">NsDiff, ICML 2025</a></td>
+<td>conditional mean、sliding variance、adaptive endpoint/schedule</td>
+<td>diagonal variance 已被覆盖</td>
+</tr>
+<tr>
+<td><a href="https://openreview.net/forum?id=GG01lCopSK">CW-Gen, ICLR 2026</a></td>
+<td>conditional mean、逐提前期 multivariate covariance、whitening、CW-Diff/CW-Flow、理论充分条件</td>
+<td>普通 conditional whitening 与 CW-Flow 领域迁移基本被撞完；其公开方法仍按 lead 分列，cross-lead source 是窄空位</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.iclr.cc/paper_files/paper/2025/hash/ee1a1ecc92f35702b5c29dad3dc909ea-Abstract-Conference.html">TSFlow, ICLR 2025</a></td>
+<td>data-dependent/GP source、future-point temporal covariance、conditional flow matching、OT path</td>
+<td>“correlated source + flow matching” 已被覆盖；多输出 NWP 条件完整 zone×lead 仍可能不同</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.mlr.press/v202/bilos23a.html">DSPD, ICML 2023</a></td>
+<td>GP/OU correlated diffusion noise、完整时间 covariance</td>
+<td>时间相关噪声不是新意；其多变量 source 主要是重复的 time block</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.neurips.cc/paper_files/paper/2024/hash/619b8e3ead58dce90bc615f2a7d5d102-Abstract-Conference.html">Correlated Errors, NeurIPS 2024</a></td>
+<td>contemporaneous low-rank covariance、autocovariance、cross-lag error</td>
+<td>不能声称首次考虑 cross-lag；仍可区别于非自回归 mixed flow source</td>
+</tr>
+</tbody>
+</table></div>
+<p>还必须向前追溯：</p>
+<ul>
+<li><a href="https://doi.org/10.1016/j.ijepes.2021.106955">Tan et al., IJEPES 2021</a> 已在多风场场景生成中使用非可分离时空 covariance；</li>
+<li><a href="https://arxiv.org/abs/2409.16308">Li &amp; Ludkovski 2024</a> 对大量风场和一天各小时建立完整 space×hour joint probability model；</li>
+<li>多风场 vine-copula joint scenario 也已存在，例如 <a href="https://doi.org/10.1109/TPWRS.2023.3298004">IEEE TPWRS</a>。</li>
+</ul>
+<p>所以不能写“首次将完整时空协方差用于联合风电场景”。剩余可辩护问题只能是：</p>
+<blockquote>
+<p><strong>在现有 mixed-measure 十区域非自回归 joint flow 中，显式构造低数据可估计、PSD、NWP 条件的完整 zone×lead source correlation，并用 nested-OOF 与 source-vs-feature 对照证明它改善 cross-lead calibration 或低-step 运输。</strong></p>
+</blockquote>
+<h3 id="6-3-为什么只预测-correlation-而不是再预测-variance">6.3 为什么只预测 correlation，而不是再预测 variance</h3>
+<p>当前 MM head 已有逐位置 location 和 scale。若 B 再输出完整 covariance，任何收益可能只是重复调了边际 variance，而不是学习新的 cross-dimension structure。</p>
+<p>第一版更干净的参数化是：</p>
+<pre><code class="language-text">R(c) = correlation operator
+Sigma(c) = diag(scale_head(c)) · R(c) · diag(scale_head(c))
+</code></pre>
+<p>或在标准化 residual 上直接使用：</p>
+<pre><code class="language-text">R(c) = D_fixed + B diag(s(c)) B^T
+</code></pre>
+<p>并规范化对角到 1。这样 B 的问题被收窄为“head 标准化后仍存在的条件 correlation”，避免与 CR-MS-CADM 的异方差结果重复。</p>
+<h3 id="6-4-统计可辨识性是最大风险">6.4 统计可辨识性是最大风险</h3>
+<p><code>p=240</code> 的任意对称 covariance 有 28,920 个唯一元素，而通用训练日约 481–581。更关键的是，每个 NWP condition 只有一条未来轨迹。因此任意神经网络逐日输出 full Cholesky 基本不可辨识。</p>
+<p>可接受的低自由度形式包括：</p>
+<pre><code class="language-text">R(c) = diag(d) + B diag(s(c)) B^T
+</code></pre>
+<p>其中 <code>B</code> 在所有日期共享，只预测非负强度 <code>s(c)</code>；或：</p>
+<pre><code class="language-text">R(c) = D + sum_k w_k(c) B_k B_k^T,  w_k(c) &gt;= 0
+</code></pre>
+<p>也可比较：</p>
+<pre><code class="language-text">R(c) = R_zone(c) ⊗ R_lead(c) + D
+</code></pre>
+<p>但必须承认：</p>
+<ul>
+<li>factor <code>B</code> 只在旋转意义下可辨识，单个 factor 不能强解释为特定物理机制；</li>
+<li>source 与高容量 flow 联合端到端也不可分解辨识；</li>
+<li>因此 correlation estimator 应先 cross-fit、冻结，再训练同一 flow；</li>
+<li>只有 source-vs-feature-only 控制才能部分说明收益来自 source geometry。</li>
+</ul>
+<h3 id="6-5-atom-state-对-covariance-的影响不能忽略">6.5 atom state 对 covariance 的影响不能忽略</h3>
+<p>同一个 condition 下，active interior coordinate set 会随 sampled state pattern <code>s</code> 变化。只用双方均 interior 的 observed pairs 估计 <code>R(c)</code>，不自动保证部署到任意 <code>s</code> 时正确。</p>
+<p>至少要比较：</p>
+<pre><code class="language-text">B0  R(c)                     condition-only
+B1  masked R(c, s)           state-mask aware
+B2  R(c, shuffled_s)         state pairing control
+B3  feature-only encoder     same encoder, source remains I
+</code></pre>
+<p>正式模型应在 active coordinates 上采样或应用 operator，不为 atom 位置虚构连续 latent truth。</p>
+<h3 id="6-6-b-的-nested-oof-诊断协议">6.6 B 的 nested-OOF 诊断协议</h3>
+<p>进入任何生成训练前，所有步骤都必须位于 outer train 内部：</p>
+<ol>
+<li>连续 time-blocked folds；</li>
+<li>每 fold 用其余块拟合 location/scale head；</li>
+<li>在 held-out fold 产生 OOF residual；</li>
+<li>covariance basis 也只用 fold-train；</li>
+<li>rank、shrinkage、eigenfloor 由 inner validation 选择；</li>
+<li>conditional covariance head 在 fold-train 拟合；</li>
+<li>held-out fold 评价 NLL、Mahalanobis calibration、whiteness 和 subspace stability；</li>
+<li>汇总所有 OOF predictions 后才决定是否进入 flow。</li>
+</ol>
+<p>候选必须包括：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>estimator</th>
+<th>科学问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B-D0</td>
+<td>diagonal / identity correlation</td>
+<td>标准化后是否还有结构</td>
+</tr>
+<tr>
+<td>B-D1</td>
+<td>CW-style per-lead block</td>
+<td>cross-zone、无 cross-lead 的强基线</td>
+</tr>
+<tr>
+<td>B-D2</td>
+<td>temporal GP block</td>
+<td>仅时间相关是否足够</td>
+</tr>
+<tr>
+<td>B-D3</td>
+<td>static full shrinkage</td>
+<td>条件性是否必要</td>
+</tr>
+<tr>
+<td>B-D4</td>
+<td>static low-rank + diagonal</td>
+<td>低秩本身是否有效</td>
+</tr>
+<tr>
+<td>B-D5</td>
+<td>conditional shared-basis low-rank</td>
+<td>核心候选</td>
+</tr>
+<tr>
+<td>B-D6</td>
+<td>Kronecker + diagonal</td>
+<td>可分离结构是否更稳</td>
+</tr>
+<tr>
+<td>B-D7</td>
+<td>conditional covariance atoms</td>
+<td>少量 regime mixture 是否足够</td>
+</tr>
+<tr>
+<td>B-D8</td>
+<td>B-D5 + shuffled condition</td>
+<td>NWP 配对是否真实有用</td>
+</tr>
+</tbody>
+</table></div>
+<p>建议诊断 Go 条件不是武断固定一个百分比，而是同时满足：</p>
+<ul>
+<li>cross-lead off-block energy 在至少 2/3 outer train partitions 稳定存在；</li>
+<li>low-rank principal subspace 跨 fold 不发生灾难性旋转；</li>
+<li>conditional structured estimator 的 held-out NLL 与 cross-lead whiteness 同时胜过 B-D1 和 B-D3；</li>
+<li>condition number 与 eigenfloor 触发率受控；</li>
+<li>shuffled condition 丢失大部分 improvement；</li>
+<li>改善量大于开发数据 power analysis 得出的最小可检测效应。</li>
+</ul>
+<p>任何一项失败，都应停止大模型训练。</p>
+<h3 id="6-7-b-的生成实验最小矩阵">6.7 B 的生成实验最小矩阵</h3>
+<p>保持同一 MM-JDWind time-domain flow backbone，只换 source：</p>
+<pre><code class="language-text">G0  N(0, I)
+G1  conditional diagonal
+G2  CW per-lead cross-zone source
+G3  temporal GP source
+G4  static full low-rank source
+G5  proposed conditional full structured source
+G6  same covariance encoder as feature only, source = I
+G7  G5 with shuffled condition
+</code></pre>
+<p>必须锁定相同：</p>
+<ul>
+<li>head/jump checkpoint；</li>
+<li>train/validation dates；</li>
+<li>trainable parameter count 或参数量匹配对照；</li>
+<li>integration steps、flow NFEs 与 optimizer updates；</li>
+<li>member count、state field、base random numbers；</li>
+<li>calibration protocol。</li>
+</ul>
+<p>主要检验相对 G0、G2、G4 和 G6，而不是只对独立 DDPM。</p>
+<h3 id="6-8-whitening-的复审判定">6.8 whitening 的复审判定</h3>
+<p>若 B 诊断通过，whitening 可作为以下对照：</p>
+<pre><code class="language-text">source-only:      epsilon ~ N(0, R(c)), target coordinates unchanged
+whitening-only:   z = W(c) r, source ~ N(0, I)
+both:             structured source + transformed target
+</code></pre>
+<p>但原方案实质是 zone×time Kronecker/带状近似，应改名为 <strong>trajectory-wide separable whitening</strong>，而不是“任意 full 240×240 whitening”。</p>
+<p>正式约束：</p>
+<ul>
+<li>active interior coordinates only；</li>
+<li>无 Gaussian atom completion；</li>
+<li>PSD、eigenfloor、condition-number cap；</li>
+<li>OOF round-trip 与 whiteness；</li>
+<li>必须显著胜过 source-only，才有资格成为贡献；</li>
+<li>不能把 CW-Gen 的 KL sufficient condition 写成有限容量模型必然改善 CRPS/ES。</li>
+</ul>
+<h3 id="6-9-方向-b-c-的最终判定">6.9 方向 B/C 的最终判定</h3>
+<p><strong>动态图主线：No-Go。</strong> 只作 covariance 参数化或 feature-only baseline。<br />
+<strong>普通 CW-Flow for wind：No-Go。</strong> 属于高碰撞领域迁移。<br />
+<strong>完整 zone×lead structured source：Conditional Go。</strong> 有窄空位，但必须先通过 nested-OOF。<br />
+<strong>trajectory-wide separable whitening：高风险组件。</strong> 只有 source route 已通过后才有预算。</p>
+<hr />
+<h2 id="7-mixed-measure-与-ramp-文献复审-还能新在哪里">7. mixed-measure 与 ramp 文献复审：还能新在哪里</h2>
+<h3 id="7-1-边界原子-联合风电-已经有直接先例">7.1 “边界原子 + 联合风电”已经有直接先例</h3>
+<p><a href="https://www.sciencedirect.com/science/article/pii/S2590123026008613">Joint probability aggregation via R-vine and KAN, 2026</a> 明确使用 Zero–One Inflated Beta：</p>
+<ul>
+<li>在 0/1 处放点质量；</li>
+<li>continuous interior 使用 Beta；</li>
+<li>R-vine 建模区域联合依赖；</li>
+<li>使用 PIT/联合概率评价；</li>
+<li>publisher highlight 报告 Energy Score 改善。</li>
+</ul>
+<p>因此不能再把“风电的 0/1 mixed distribution + regional dependence”本身写成首创。MM-JDWind 仍可区别于它的地方是：</p>
+<ul>
+<li>一次生成完整多区域、多 lead trajectory；</li>
+<li>离散 state field 与连续 rectified flow 联合；</li>
+<li>finite-M atom mass preservation；</li>
+<li>低 integration-step sampler；</li>
+<li>后续 state–amplitude 或 score adaptation。</li>
+</ul>
+<p>若论文继续以 mixed measure 为核心，ZOIB-R-vine 至少应作为文献基线；能复现时最好加入模型对照。</p>
+<h3 id="7-2-mixed-discrete-continuous-flow-也不是通用空白">7.2 mixed discrete–continuous flow 也不是通用空白</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>文献</th>
+<th>已覆盖</th>
+<th>对新方案的边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://proceedings.mlr.press/v235/campbell24a.html">Discrete Flow Models, ICML 2024</a></td>
+<td>CTMC 形式的 discrete flow，并与 continuous flow 组成 multimodal generation</td>
+<td>不能声称首次统一离散/连续 flow</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.mlr.press/v267/guzman-cordero25a.html">TabbyFlow, ICML 2025</a></td>
+<td>exponential-family variational flow matching，处理 mixed continuous/discrete tabular variables</td>
+<td>通用 mixed-type flow 已存在；风电时序结构仍不同</td>
+</tr>
+<tr>
+<td><a href="https://onlinelibrary.wiley.com/doi/full/10.1002/we.70110">ZIB-HMM for wind-turbine icing, Wind Energy 2026</a></td>
+<td>bounded zero-inflated state-dependent distribution、serial latent states、covariate-dependent transitions</td>
+<td>直接支持状态持续期/转移与连续分布耦合有风电价值</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-3-新备用方案-state-duration-amplitude-marked-mixed-flow">7.3 新备用方案：state-duration–amplitude marked mixed flow</h3>
+<p>当前 MM 把 state 与 continuous residual 分阶段生成，尚未显式建模：</p>
+<ul>
+<li>zero run duration；</li>
+<li>state age；</li>
+<li>进入/离开 zero 的具体时刻；</li>
+<li><code>0→I</code> 或 <code>I→0</code> 时 interior amplitude；</li>
+<li>多区域同步进入/退出 atom；</li>
+<li>transition class 与 continuous velocity 的交互。</li>
+</ul>
+<p>最小结构：</p>
+<pre><code class="language-text">M0 current MM-JDWind
+M1 jump + duration/run-length head
+M2 flow + transition-class/state-age embedding
+M3 M1 + M2
+M4 M3 with shuffled transition/age
+</code></pre>
+<p>评价：</p>
+<ul>
+<li>unconditional overall ramp-CRPS；</li>
+<li>transition Brier；</li>
+<li>zero-run length CRPS；</li>
+<li>onset/exit timing error；</li>
+<li><code>I→I</code> 与 atom↔<code>I</code> contribution；</li>
+<li>overall CRPS/ES、zero Brier、finite atom counts。</li>
+</ul>
+<p>然而，本次仓库归因显示 atom↔<code>I</code> 只解释约 3.74% 的平均正 gap，因此在当前数据上它是 <strong>P4 备用线</strong>。以下任一条件出现才升级：</p>
+<ol>
+<li>外部数据中 atom↔<code>I</code> 贡献显著更大；</li>
+<li>zero-run duration 或 onset timing 明显失校准；</li>
+<li>proper score adapter 修好 <code>I→I</code> 后，剩余 gap 集中到 transition；</li>
+<li>应用方明确更关心停机/恢复事件而非平均 ramp。</li>
+</ol>
+<h3 id="7-4-直接-ramp-forecasting-的碰撞">7.4 直接 ramp forecasting 的碰撞</h3>
+<p>generic ramp modeling 也不是新意：</p>
+<ul>
+<li><a href="https://doi.org/10.1109/TSTE.2025.3585404">IEEE TSTE 2025/2026</a> 已联合预测 wind power 与 ramp rate，并给概率结果；</li>
+<li><a href="https://www.sciencedirect.com/science/article/pii/S014206152500328X">IJEPES 2025 two-step ramp framework</a> 直接针对 day-ahead probabilistic wind forecasting and ramp events；</li>
+<li>多个更早工作已做 ordinal ramp event、ramp timing/frequency 等。</li>
+</ul>
+<p>所以可发表点不能只是“加入 ramp loss”，而必须是：</p>
+<ul>
+<li>score 对最终 joint sampler 生效；</li>
+<li>保留 ensemble diversity；</li>
+<li>与 mixed atom 兼容；</li>
+<li>区分 finite-set 与 IID score；</li>
+<li>有严格的 level/joint anchor 与 reward-hacking 审计。</li>
+</ul>
+<hr />
+<h2 id="8-其他方向复审与新增系统路线">8. 其他方向复审与新增系统路线</h2>
+<h3 id="8-1-atom-aware-联合轨迹-conformal-certificate">8.1 atom-aware 联合轨迹 conformal certificate</h3>
+<p>这条路线不改 scenario generator，而是在外层构造覆盖整个 <code>10×24</code> trajectory 的 prediction region。它的正确定位是“可靠性证书”，不是“把 scenario distribution 校准正确”。</p>
+<p>直接相邻工作：</p>
+<ul>
+<li><a href="https://proceedings.mlr.press/v230/galvao-lopes24a.html">ConForME 2024</a>：multi-horizon conformal time-series forecasting；</li>
+<li><a href="https://proceedings.mlr.press/v235/zhou24l.html">Conformalized Adaptive Forecasting of Heterogeneous Trajectories, ICML 2024</a>：同时覆盖完整 trajectory 的 band；</li>
+<li><a href="https://arxiv.org/abs/2403.03850">MultiDimSPCI, ICML 2024</a>：多维时间序列 ellipsoidal prediction regions；</li>
+<li><a href="https://icml.cc/virtual/2024/poster/33483">Conformal Predictions under Markovian Data, ICML 2024</a>：量化时间依赖导致的 coverage gap；</li>
+<li><a href="https://www.sciencedirect.com/science/article/pii/S0306261924002836">Regional wind conformal predictive distribution, Applied Energy 2024</a>：风电概率预测已有 conformal 直接工作。</li>
+</ul>
+<p>因此 generic conformal 不是论文主创新。可做的窄系统组件是 mixed atom/interior-aware nonconformity：</p>
+<pre><code class="language-text">score(y, scenarios)
+  = atom-state violation component
+  + active-interior standardized distance
+  + max trajectory/ramp deviation component
+</code></pre>
+<p>协议：</p>
+<ol>
+<li>selection 集只选一种 score 结构；</li>
+<li>冻结 scale、basis、atom rule；</li>
+<li>完全独立 calibration 集估 conformal quantile；</li>
+<li>locked test 报 whole-trajectory coverage、区域体积/宽度、atom set size、ramp band；</li>
+<li>对比 marginal rectangle、Bonferroni、ConForME-like band、MultiDimSPCI-like ellipsoid；</li>
+<li>明确原 scenario CRPS/Brier 没有因 CP 自动得到校准。</li>
+</ol>
+<p>这条线算力低、论文新颖性低到中、系统价值较高，适合作为主路线失败时仍可交付的可靠性组件。</p>
+<h3 id="8-2-interior-only-calibration">8.2 interior-only calibration</h3>
+<p>原路线可以保留，但需修改：</p>
+<ul>
+<li>selection 集选择 global/zone/lead/NWP map；</li>
+<li>冻结结构后，另一个 calibration 集拟合参数；</li>
+<li>test 只运行一次；</li>
+<li>mixed distribution 使用 randomized PIT/tie-aware rank；</li>
+<li>报 Coverage50/80/90、interval score、width、zero reliability；</li>
+<li>50–100 日不足以支持细粒度 zone×lead map，必须强 shrinkage；</li>
+<li>不以 <code>[0.88,0.92]</code> 点门替代置信区间。</li>
+</ul>
+<p>如果它成功，定位为：</p>
+<blockquote>
+<p>atom-preserving validation-only calibration layer</p>
+</blockquote>
+<p>不能称为解决 dynamics，也不宜单独作为主论文。</p>
+<h3 id="8-3-extreme-regime">8.3 extreme / regime</h3>
+<p>“先诊断后建模”仍正确，但建议进一步约束：</p>
+<ul>
+<li>581 日中 10% 小类约 58 日，五折后每 fold 很少；</li>
+<li>第一轮最多 <code>k=2</code> regime；</li>
+<li>truth-derived cluster 只能产生训练标签，部署 gate 必须由 NWP 预测；</li>
+<li>最终仍以无条件 proper score 为主；</li>
+<li>MOE-STD 和大量 MoE literature 已使“多专家处理 regime”高度拥挤。</li>
+</ul>
+<p>这条线更适合作为 B 的 covariance atoms 或 A 的 score weighting，不应单独堆三个大 adapter。</p>
+<h3 id="8-4-decision-focused">8.4 decision-focused</h3>
+<p>继续暂停，理由比原文更强：</p>
+<ol>
+<li>本地 PS-DFSC 的 12 个候选全部未通过安全门，最终严格 identity；</li>
+<li>surrogate 与 exact SUC 的对齐尚未建立；</li>
+<li><a href="https://www.sciencedirect.com/science/article/pii/S0360544226017846">DO-MUDiff, Energy 2026</a> 已直接把 wind diffusion、meteorological uncertainty 与 differentiable economic-dispatch information 合并。</li>
+</ol>
+<p>若未来重启，必须先有：</p>
+<ul>
+<li>no-decision、weights-only、transport-only 消融；</li>
+<li>surrogate gain 与 exact realized cost 的稳定相关；</li>
+<li>独立 locked test；</li>
+<li>不牺牲 probability quality 的安全候选。</li>
+</ul>
+<h3 id="8-5-ot-cfm-schrödinger-bridge">8.5 OT-CFM / Schrödinger Bridge</h3>
+<p>OT/SB 本身已有大量方法：</p>
+<ul>
+<li><a href="https://proceedings.neurips.cc/paper_files/paper/2023/hash/c428adf74782c2092d254329b6b02482-Abstract-Conference.html">Diffusion Schrödinger Bridge Matching, NeurIPS 2023</a>；</li>
+<li><a href="https://proceedings.mlr.press/v238/tong24a.html">Simulation-Free SB, AISTATS 2024</a>；</li>
+<li><a href="https://openreview.net/forum?id=HgDwiZrpVq">OT-CFM, TMLR</a>。</li>
+</ul>
+<p>本项目的问题是：每个 NWP condition 只有一个 target trajectory。跨日期 minibatch OT 会把 residual 与错误 weather condition 配对，可能得到更直路径却学错 conditional law。</p>
+<p>只建议一个明确封顶的效率 pilot：</p>
+<pre><code class="language-text">O0 independent coupling
+O1 OT within NWP-neighbor strata
+O2 condition-shuffled OT control
+steps = 4 / 8 / 16
+flow NFEs = 7 / 15 / 31
+</code></pre>
+<p>只有 <code>O1@8 steps</code> 相对 <code>O0@16 steps</code> 质量非劣、wall time 至少下降约 25%，且 O2 丢失收益，才继续。否则停止，不启动 full SB。</p>
+<h3 id="8-6-采样效率">8.6 采样效率</h3>
+<p>采样效率仍可成为 bonus，但评价必须至少包括：</p>
+<ul>
+<li>integration steps；</li>
+<li>flow/jump/head 分网络调用数；</li>
+<li>M=100 单日 latency；</li>
+<li>多日 batch throughput；</li>
+<li>member chunk 数；</li>
+<li>peak VRAM；</li>
+<li>warm-up 后重复计时；</li>
+<li>同硬件、同 dtype；</li>
+<li>quality–time Pareto curve。</li>
+</ul>
+<p>不能仅用“31 flow calls vs 250 denoiser calls”推断 wall-time 加速比，因为网络大小、jump、chunking 和 memory traffic 都不同。</p>
+<hr />
+<h2 id="9-推荐主方案-a-可以直接开工的详细实验协议">9. 推荐主方案 A：可以直接开工的详细实验协议</h2>
+<h3 id="9-1-精确研究问题">9.1 精确研究问题</h3>
+<blockquote>
+<p>在保持 MM-JDWind 的 mixed-measure head、相关 jump 和 finite-M atom mass preservation 不变的前提下，能否通过与部署 sampler 对齐的稳定 score adaptation，改善连续内部 <code>10 zone × 24 h</code> 轨迹的 level–increment/ramp 分布，同时不牺牲边际、联合和 zero-event 质量？</p>
+</blockquote>
+<p>这个问题比“proper score 是否有效”更窄，也更可证伪。</p>
+<h3 id="9-2-先定义两个-estimand-不允许混写">9.2 先定义两个 estimand，不允许混写</h3>
+<h4 id="track-a-iid-底层条件随机分布">Track A-IID：底层条件随机分布</h4>
+<pre><code class="language-text">state field: 每个 member 独立从 correlated jump sampler 生成
+flow noise:  独立
+forecast:    条件随机分布的 Monte Carlo ensemble
+score:       fair/U-stat 或 afCRPS
+</code></pre>
+<p>注意：这里应使用“成员间独立、成员内 state field 相关”的 correlated sampler，而不是旧 pilot 的逐位置 independent state sampler。这样保留单场景的时空 state dependence，同时满足跨成员 IID 的近似前提。</p>
+<h4 id="track-a-set-实际发布的有限质量守恒场景集">Track A-SET：实际发布的有限质量守恒场景集</h4>
+<pre><code class="language-text">state field: mass-preserving count + rank allocation
+flow noise:  各 member 独立，但 state allocation 使成员整体依赖
+forecast:    固定 M 的等权经验分布
+score:       empirical/V-stat score of this finite forecast
+</code></pre>
+<p>这条 track 与当前部署对象最一致。它不声称 V-stat 是某个无限底层分布 CRPS 的无偏估计，而是直接优化发布场景集的 score。</p>
+<h4 id="为什么两条都要做">为什么两条都要做</h4>
+<ul>
+<li>A-IID 回答“底层 stochastic model 是否改善”；</li>
+<li>A-SET 回答“实际交给调度/评估的 M 个场景是否改善”；</li>
+<li>两者结果一致时主张更稳；</li>
+<li>只在 A-IID 改善、mass-preserving 部署不改善时，说明 sampler mismatch 仍是核心问题；</li>
+<li>只在 A-SET 改善时，应把贡献写成 finite-set adaptation，不能泛化到底层 distribution。</li>
+</ul>
+<h3 id="9-3-推荐-score-结构">9.3 推荐 score 结构</h3>
+<h4 id="level-empirical-crps">Level empirical CRPS</h4>
+<p>对每个 <code>(zone, lead)</code> 的功率 ensemble 计算 CRPS，再平均。A-IID 用 afCRPS/fair 版本；A-SET 用经验分布 V-stat。</p>
+<h4 id="increment-empirical-crps">Increment empirical CRPS</h4>
+<pre><code class="language-text">Delta X[z,t] = X[z,t] - X[z,t-1]
+</code></pre>
+<p>对每个增量位置计算相同语义的 CRPS。它保留 pairwise diversity term，不会像逐样本 L1 那样把每个 member 都拉向唯一 truth。</p>
+<h4 id="joint-anchor">Joint anchor</h4>
+<p>稳定后使用 full path ES，或对 train-fixed scaling 后的 augmented path：</p>
+<pre><code class="language-text">Phi(X) = concat(a · X, b · Delta X)
+</code></pre>
+<p>计算 Energy Score。因为 <code>Phi</code> 中保留完整 <code>X</code>，该映射是单射；它比只对 <code>Delta X</code> 评分更适合作为完整 outcome-space joint anchor。<code>a,b&gt;0</code> 必须由 train scale 固定，不能按 batch/test 自适应。</p>
+<h4 id="lagged-vs">Lagged VS</h4>
+<p>只在其他分数完全稳定后加入：</p>
+<ul>
+<li>首选 <code>p=1</code>；</li>
+<li>或使用经过理论/数值审计的 smooth distance；</li>
+<li>不再首轮使用裸 <code>sqrt(abs(delta))</code>；</li>
+<li>A-IID 与 A-SET 分别使用对应的 underlying-distribution estimator 或 empirical forecast definition；</li>
+<li>VS 只补充依赖敏感性，不作严格性锚。</li>
+</ul>
+<h4 id="reference-regularizer">Reference regularizer</h4>
+<p>可选：</p>
+<pre><code class="language-text">L_ref = mean ||v_theta - stopgrad(v_frozen)||²
+</code></pre>
+<p>或 adapter parameter norm。它用于防止 drift/mode collapse，必须单列为 regularizer，不纳入“proper score 合成仍严格 proper”的理论表述。</p>
+<h3 id="9-4-推荐-loss-阶梯">9.4 推荐 loss 阶梯</h3>
+<p>不要一开始四项全加。顺序如下：</p>
+<pre><code class="language-text">A0  no update：score/gradient/sampler audit
+A1  level score only
+A2  level + lambda_delta · increment score
+A3  A2 + reference regularizer
+A4  A3 + small joint ES anchor
+A5  A4 + lagged VS（仅若有独立证据表明仍存在依赖缺口）
+</code></pre>
+<p>极端分支在 A3 稳定后才运行：</p>
+<pre><code class="language-text">T0 ordinary increment score
+T1 ordinary + low-weight tw-ramp score at train P90/P95 threshold
+T2 ordinary + event Brier diagnostic
+</code></pre>
+<p>不要直接固定 <code>0.2/0.3</code> 作为唯一阈值；仓库的旧分位可用于 planning，但最终 threshold 必须由每个外层 train 独立冻结。</p>
+<h3 id="9-5-数值安全设计">9.5 数值安全设计</h3>
+<h4 id="可训练参数">可训练参数</h4>
+<p>优先级：</p>
+<ol>
+<li>flow output layer；</li>
+<li>rank-4 adapter；</li>
+<li>rank-8 adapter；</li>
+<li>adapter + last axial block；</li>
+<li>full flow 只在前四者都无信号、且完整安全审计通过后尝试。</li>
+</ol>
+<p>head 与 jump 必须：</p>
+<ul>
+<li><code>requires_grad=False</code>；</li>
+<li>前后 state-dict hash 相同；</li>
+<li>固定 condition/state RNG 下输出逐字节一致；</li>
+<li>zero/one analytic probability 不变。</li>
+</ul>
+<h4 id="sampler">Sampler</h4>
+<p>首轮科学实验必须匹配部署：</p>
+<pre><code class="language-text">state_mode        = mass_preserving（A-SET）或 correlated IID（A-IID）
+jump_steps        = 12
+flow_steps        = 16
+integrator        = Heun
+flow NFEs         = 31
+</code></pre>
+<p>4-step Euler 只用于复现旧失败，不作为新主实验训练 proxy。</p>
+<p>若完整链显存不足：</p>
+<ol>
+<li>先做 gradient checkpointing；</li>
+<li>降低 member chunk/batch；</li>
+<li>再将 truncated K=1/5 作为明确独立消融；</li>
+<li>不把 truncated 结果写成“完全对最终 sampler 对齐”。</li>
+</ol>
+<h4 id="member-数">Member 数</h4>
+<pre><code class="language-text">M=4    只作 unit/gradient debug
+M=8    小型 IID pilot
+M=16   建议的 SET pilot 起点，减轻 atom count 过粗
+M=100  最终部署评价
+M=200  sampling-noise sensitivity（只在必要时）
+</code></pre>
+<p>mass-preserving 在小 M 下有很粗的 count resolution；所以必须报告 <code>M_train→M_eval</code> transfer，而不能直接援引天气论文“M=2/4 可训练”作为充分依据。</p>
+<h4 id="精度-学习率与-guard">精度、学习率与 guard</h4>
+<ul>
+<li>初始阶段模型和 score reduction 都用 FP32；</li>
+<li>参考 AIFS-CRPS 的后期量级，首选 LR <code>{5e-7, 1e-6, 3e-6}</code>，不从 <code>1e-5</code> 起步；</li>
+<li>gradient norm clip 预审 <code>{0.1,0.2,0.5}</code>，只锁一个值进入 pilot；</li>
+<li>每 step 检查 generated ensemble、loss components、gradients、parameters 是否 finite；</li>
+<li>一次 nonfinite 即保存 batch、state/noise RNG、score components、parameter/gradient snapshot；</li>
+<li>回滚到 latest safe checkpoint；同一配置重复 nonfinite 直接终止；</li>
+<li>validation 固定 paired state/noise seeds，训练仍使用随机 samples；</li>
+<li>score component scale 只从 train/selection 固定，禁止 batch z-score。</li>
+</ul>
+<h3 id="9-6-a0-在任何参数更新前做-6-组审计">9.6 A0：在任何参数更新前做 6 组审计</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>审计</th>
+<th>比较</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A0-1</td>
+<td>current sqrt-VS vs <code>p=1</code> vs smoothed</td>
+<td>定位零点梯度是否触发 Inf/NaN</td>
+</tr>
+<tr>
+<td>A0-2</td>
+<td>4-step Euler vs 16-step Heun</td>
+<td>量化 sampler mismatch 的 loss/gradient 差</td>
+</tr>
+<tr>
+<td>A0-3</td>
+<td>independent-position vs correlated-IID vs mass-preserving</td>
+<td>量化 state semantics 对 score 的影响</td>
+</tr>
+<tr>
+<td>A0-4</td>
+<td>V-stat vs U-stat vs afCRPS α=.95</td>
+<td>区分 finite-set score、IID unbiasedness 与退化风险</td>
+</tr>
+<tr>
+<td>A0-5</td>
+<td>M=4/8/16</td>
+<td>梯度方差、atom resolution、显存和 wall time</td>
+</tr>
+<tr>
+<td>A0-6</td>
+<td>output-only/rank4/rank8/last-block</td>
+<td>参数范围与 gradient concentration</td>
+</tr>
+</tbody>
+</table></div>
+<p>每组至少在 200 个 batch 上记录：</p>
+<ul>
+<li>component mean/SD；</li>
+<li>gradient norm P50/P90/P99/max；</li>
+<li>component gradient cosine similarity；</li>
+<li>nonfinite count；</li>
+<li>member duplication rate；</li>
+<li>peak VRAM 与 batch wall time；</li>
+<li>zero-count resolution；</li>
+<li>validation score Monte Carlo variance。</li>
+</ul>
+<p>只有无 nonfinite 且 P99/max 不表现出未受控爆炸的组合进入 A1。</p>
+<h3 id="9-7-最小训练矩阵">9.7 最小训练矩阵</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>state/estimand</th>
+<th>trainable</th>
+<th>objective</th>
+<th>回答的问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A-F0</td>
+<td>frozen deployment</td>
+<td>none</td>
+<td>none</td>
+<td>当前基线</td>
+</tr>
+<tr>
+<td>A-C0</td>
+<td>deployment</td>
+<td>same as candidate</td>
+<td>continued flow-MSE</td>
+<td>收益是否只是多训练</td>
+</tr>
+<tr>
+<td>A-I1</td>
+<td>correlated IID</td>
+<td>adapter</td>
+<td>level afCRPS</td>
+<td>IID score pipeline 是否稳定</td>
+</tr>
+<tr>
+<td>A-I2</td>
+<td>correlated IID</td>
+<td>adapter</td>
+<td>level + increment afCRPS</td>
+<td>IID ramp 目标是否有效</td>
+</tr>
+<tr>
+<td>A-S1</td>
+<td>mass-preserving set</td>
+<td>adapter</td>
+<td>level empirical CRPS</td>
+<td>deployment-set score 是否稳定</td>
+</tr>
+<tr>
+<td>A-S2</td>
+<td>mass-preserving set</td>
+<td>adapter</td>
+<td>level + increment empirical CRPS</td>
+<td>核心候选</td>
+</tr>
+<tr>
+<td>A-S3</td>
+<td>mass-preserving set</td>
+<td>adapter</td>
+<td>A-S2 + reference</td>
+<td>drift 是否被抑制</td>
+</tr>
+<tr>
+<td>A-S4</td>
+<td>mass-preserving set</td>
+<td>adapter</td>
+<td>A-S3 + augmented-path ES</td>
+<td>joint anchor 是否必要</td>
+</tr>
+<tr>
+<td>A-X</td>
+<td>shuffled state/noise pairing</td>
+<td>adapter</td>
+<td>winner objective</td>
+<td>改善是否依赖正确 sampler pairing</td>
+</tr>
+</tbody>
+</table></div>
+<p>pilot 阶段不同时做所有 rank/LR 的笛卡尔积。建议：</p>
+<ol>
+<li>A0 锁定一个参数范围、一个 LR、一个 clip；</li>
+<li>先跑 A-C0/A-I1/A-S1；</li>
+<li>pipeline 稳定后跑 A-I2/A-S2；</li>
+<li>只给 A-S2 winner 加 reference/joint；</li>
+<li>最多一个候选进入 locked test。</li>
+</ol>
+<h3 id="9-8-评价卡">9.8 评价卡</h3>
+<h4 id="一个主要优效终点">一个主要优效终点</h4>
+<pre><code class="language-text">overall unconditional ramp-CRPS
+</code></pre>
+<p>不按 realized extreme 子集筛选。</p>
+<h4 id="关键非劣终点">关键非劣终点</h4>
+<ul>
+<li>marginal CRPS；</li>
+<li>full-trajectory Joint ES；</li>
+<li>zero-event Brier/reliability；</li>
+<li>interval score 或 coverage–width 组合。</li>
+</ul>
+<h4 id="独立诊断">独立诊断</h4>
+<ul>
+<li>signed up/down ramp；</li>
+<li>train-threshold tw-ramp CRPS；</li>
+<li>event Brier；</li>
+<li>daily maximum ramp timing/magnitude；</li>
+<li>ramp run length；</li>
+<li>ACF、PSD/high-frequency energy；</li>
+<li>cross-zone same-time 与 cross-lag covariance；</li>
+<li>randomized PIT/tie-aware rank；</li>
+<li>spread–skill；</li>
+<li>pairwise distance/duplication；</li>
+<li><code>I→I</code>、atom↔<code>I</code>、atom→atom attribution；</li>
+<li>zero-run duration/onset；</li>
+<li>sampler steps/NFE/wall time/VRAM。</li>
+</ul>
+<p>优化过的分数之外必须有独立指标，防止 reward hacking。</p>
+<h3 id="9-9-go-no-go-不应再写成一串未经-power-审计的-1-门">9.9 Go/No-Go 不应再写成一串未经 power 审计的 1% 门</h3>
+<p>推荐 gatekeeping：</p>
+<ol>
+<li><strong>数值门</strong>：3/3 pilot seeds，所有 batch 0 nonfinite，无静默 skip；</li>
+<li><strong>主要优效门</strong>：paired day/block CI 的 ramp-CRPS 上界小于 0，且 point improvement 超过开发数据预注册的最小实际重要差异；</li>
+<li><strong>关键非劣门</strong>：marginal CRPS、Joint ES、zero Brier 分别使用单侧 CI 与开发数据确定的 margin；</li>
+<li><strong>校准解释门</strong>：改善不能主要来自 interval 无差别变宽或 member collapse；</li>
+<li><strong>复现门</strong>：各 outer/seed effect 全部报告，至少方向不由单一 outer 驱动；</li>
+<li><strong>estimand 门</strong>：A-IID 与 A-SET 分开报告，主张只覆盖实际成功的对象；</li>
+<li><strong>确认门</strong>：现有 150 日只用于开发/机制审计，最终结论需 new locked block 或外部数据。</li>
+</ol>
+<p>原文的 3% 可保留为 provisional planning value，但正式 margin 应先在 seen development differences 上做 power/MDE 分析再锁定。</p>
+<h3 id="9-10-失败结果如何解释">9.10 失败结果如何解释</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>观察</th>
+<th>最合理解释</th>
+<th>下一步</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A-IID 改善，A-SET 不改善</td>
+<td>mass-preserving set 改变了目标或 M-transfer 失败</td>
+<td>研究 set-aware allocation；不宣称部署成功</td>
+</tr>
+<tr>
+<td>A-SET 改善，A-IID 不改善</td>
+<td>finite forecast quantization/配额优化有效</td>
+<td>写 finite-set adaptation，不泛化到底层分布</td>
+</tr>
+<tr>
+<td>level 改善、ramp 不变</td>
+<td>score pipeline 可用，但动态瓶颈不由 marginal level 解决</td>
+<td>进入 increment/augmented-path，不堆 graph</td>
+</tr>
+<tr>
+<td>ramp 改善、Joint ES 变差</td>
+<td>依赖或整体 path 被破坏</td>
+<td>加小 joint anchor/降低 ramp 权重；只允许预注册一次迭代</td>
+</tr>
+<tr>
+<td>ramp 改善、width 暴涨</td>
+<td>通过无差别增宽获益</td>
+<td>No-Go 或加强 reference；不能包装成功</td>
+</tr>
+<tr>
+<td>tw-ramp 改善、ordinary 变差</td>
+<td>典型 body–tail trade-off</td>
+<td>只作风险偏好版本，不能声称全面提升</td>
+</tr>
+<tr>
+<td>p=1 稳定、sqrt-VS 爆炸</td>
+<td>旧 NaN 机制得到强支持</td>
+<td>永久禁用裸 sqrt-VS training</td>
+</tr>
+<tr>
+<td>output-only/低 LR 仍反复 NaN</td>
+<td>score path 或 sampler 的系统不稳定</td>
+<td>停止后训练，转 B/C 或外层 calibration</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="9-11-可写与不可写的论文主张">9.11 可写与不可写的论文主张</h3>
+<p>可以写，前提是结果真实支持：</p>
+<blockquote>
+<p>“We study sampler-matched level–increment scoring-rule adaptation for a pre-trained mixed-measure multi-zone wind scenario flow, explicitly distinguishing IID distributional estimation from dependent mass-preserving finite-ensemble forecasts.”</p>
+</blockquote>
+<p>可以写得更保守：</p>
+<blockquote>
+<p>“在本次检索范围内，这是首批系统研究有限成员校正与成员依赖如何影响多场站风电生成模型 level–ramp 后训练的工作之一。”</p>
+</blockquote>
+<p>不可写：</p>
+<ul>
+<li>first proper-score generative training；</li>
+<li>first CRPS fine-tuning of a diffusion/flow forecast；</li>
+<li>first ramp-aware wind scenario generator；</li>
+<li>level CRPS + increment CRPS guarantees the full joint path law；</li>
+<li>fair score is always correct for mass-preserving members；</li>
+<li>16 NFE sampler；</li>
+<li>all metrics outperform DDPM，除非新确认逐项支持。</li>
+</ul>
+<hr />
+<h2 id="10-统一统计协议的修订版">10. 统一统计协议的修订版</h2>
+<h3 id="10-1-先声明发布对象和随机性来源">10.1 先声明发布对象和随机性来源</h3>
+<p>每篇结果必须明确 estimand 是：</p>
+<ol>
+<li>单个 model seed；</li>
+<li>三个 independently trained models 的 mixture；</li>
+<li>单模型生成的 IID ensemble；</li>
+<li>mass-preserving finite set；</li>
+<li>多 model seed 合并出的 M=100 scenario set。</li>
+</ol>
+<p>这些对象的 score、seed averaging 和 CI 解释不同。</p>
+<h3 id="10-2-日期不确定性与训练随机性分开报告">10.2 日期不确定性与训练随机性分开报告</h3>
+<p>推荐：</p>
+<ul>
+<li>对每个 outer、每个 model seed 先形成逐日 paired difference；</li>
+<li>每 seed 单独给 day/block CI；</li>
+<li>再报告跨 seed mean、SD、min/max 和方向；</li>
+<li>pooled summary 可以有，但不能声称单一 day-bootstrap 已包含训练随机性；</li>
+<li>不把 9 个 outer-seed 当 9 个独立日期。</li>
+</ul>
+<h3 id="10-3-时间依赖">10.3 时间依赖</h3>
+<p>固定 7 日 block 没有自动正确性。建议：</p>
+<ul>
+<li>在 selection 阶段根据 paired difference ACF/有效样本量预选 block；</li>
+<li>locked report 同时报 3/7/14 日 moving-block 或 stationary-bootstrap sensitivity；</li>
+<li>block length 在 test 前锁定；</li>
+<li>20,000 次重采样不能弥补错误的 block 假设。</li>
+</ul>
+<h3 id="10-4-多重比较">10.4 多重比较</h3>
+<ul>
+<li>每条路线一个 primary superiority endpoint；</li>
+<li>关键 safety endpoints 用 gatekeeping non-inferiority，而不是对十几个指标各做 1% 硬门；</li>
+<li>A/B 若共用一次 locked test，对 primary hypotheses 做 Holm 或预注册层级检验；</li>
+<li>pilot 的 winner CI 只作探索，不当确认性 p-value；</li>
+<li>外部数据如果被用来选权重，就不能同时声称是 untouched confirmation。</li>
+</ul>
+<h3 id="10-5-score-power-先于-score-preference">10.5 score power 先于 score preference</h3>
+<p><a href="https://icml.cc/virtual/2023/poster/23762">Regions of Reliability, ICML 2023</a> 表明：proper 并不保证有限样本下有足够 discrimination power。对 ES、VS、signature、tw-ramp 等都应先做 synthetic perturbation power study：</p>
+<pre><code class="language-text">mean bias
+variance/spread error
+cross-zone correlation error
+cross-lead lag error
+ramp tail underprediction
+atom probability error
+</code></pre>
+<p>在当前日期数、M、维度下估计每个 score 识别这些 perturbations 的 rejection/power region，再决定 primary/diagnostic 地位。原文任意给 “≥3%” 的门应由这一分析校准。</p>
+<h3 id="10-6-mixed-distribution-的校准指标">10.6 mixed distribution 的校准指标</h3>
+<ul>
+<li>analytic zero/one probability reliability；</li>
+<li>Brier decomposition；</li>
+<li>randomized PIT 或 tie-aware rank；</li>
+<li>interior-only PIT；</li>
+<li>zero-run/transition calibration；</li>
+<li>Coverage50/80/90 与 interval score；</li>
+<li>finite-M atom count resolution；</li>
+<li>one atom 因极少只作保守描述。</li>
+</ul>
+<h3 id="10-7-数据角色">10.7 数据角色</h3>
+<pre><code class="language-text">Train              parameters, basis, score scales, thresholds
+Head validation    checkpoint early stopping
+Selection           rank/LR/loss/adapter/model choice
+Calibration         frozen transform or conformal quantile only
+Locked test         one-shot evaluation
+External domain     only “external” if never used for choice
+</code></pre>
+<p>若数据不足，宁可称 rolling-origin internal validation，也不要复用 seen 150 日后仍称“新确认”。</p>
+<hr />
+<h2 id="11-最小但足够公平的基线与评价矩阵">11. 最小但足够公平的基线与评价矩阵</h2>
+<h3 id="11-1-主方案-a-的必需内部基线">11.1 主方案 A 的必需内部基线</h3>
+<ol>
+<li>frozen MM-JDWind mass-preserving；</li>
+<li>同预算 continued flow-MSE；</li>
+<li>level-only score adaptation；</li>
+<li>level + increment；</li>
+<li>有/无 reference；</li>
+<li>有/无 joint anchor；</li>
+<li>correlated-IID vs mass-preserving SET；</li>
+<li>V/U/afCRPS 语义消融；</li>
+<li>strong DDPM；</li>
+<li>若实现成本可控，加一个 inference-time loss guidance 对照，排除无需训练也能取得同样收益。</li>
+</ol>
+<h3 id="11-2-方向-b-的必需内部基线">11.2 方向 B 的必需内部基线</h3>
+<ol>
+<li>identity source；</li>
+<li>conditional diagonal；</li>
+<li>CW per-lead block；</li>
+<li>temporal GP；</li>
+<li>static full low-rank；</li>
+<li>conditional full structured；</li>
+<li>same encoder feature-only；</li>
+<li>shuffled condition/state；</li>
+<li>source-only vs whitening-only；</li>
+<li>same backbone、same budget、same NFE。</li>
+</ol>
+<h3 id="11-3-文献级外部基线如何控制成本">11.3 文献级外部基线如何控制成本</h3>
+<p>pilot 不应把十个外部模型全部重跑。确认阶段建议按“最相邻一篇 + 本地强基线”选择：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>主张</th>
+<th>最相邻外部基线</th>
+<th>本地强基线</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>proper score adaptation</td>
+<td>RMMD/Swift 思想实现或同等 reference/truncated control</td>
+<td>frozen、continued-MSE、DDPM、MM</td>
+</tr>
+<tr>
+<td>conditional source</td>
+<td>CW-Gen/CW-style、TSFlow-style GP</td>
+<td>identity/diagonal/static full MM flow</td>
+</tr>
+<tr>
+<td>mixed joint wind</td>
+<td>ZOIB-R-vine 或一个 multi-farm vine copula</td>
+<td>MM no-jump/mass-preserving、DDPM</td>
+</tr>
+<tr>
+<td>state-duration</td>
+<td>ZIB-HMM 或 duration-aware categorical baseline</td>
+<td>current jump、shuffled transition</td>
+</tr>
+<tr>
+<td>conformal trajectory</td>
+<td>ConForME/MultiDimSPCI-like</td>
+<td>marginal/Bonferroni bands</td>
+</tr>
+</tbody>
+</table></div>
+<p>模型无法公平复现时，明确标为 literature comparison，不把不同数据表格数值强行横比。</p>
+<h3 id="11-4-统一指标表">11.4 统一指标表</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>主指标</th>
+<th>独立诊断</th>
+<th>常见作弊方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>边际</td>
+<td>CRPS、MAE</td>
+<td>RMSE、quantile score</td>
+<td>收缩到均值</td>
+</tr>
+<tr>
+<td>动态</td>
+<td>overall ramp-CRPS</td>
+<td>tw-ramp、timing、run、PSD</td>
+<td>全局变宽、只顾 tail</td>
+</tr>
+<tr>
+<td>联合</td>
+<td>full path ES</td>
+<td>signature/kernel power probe</td>
+<td>高维 ES 不敏感</td>
+</tr>
+<tr>
+<td>依赖</td>
+<td>lagged VS</td>
+<td>covariance/ACF/cross-lag error</td>
+<td>只拟合同期相关</td>
+</tr>
+<tr>
+<td>atom</td>
+<td>zero Brier/reliability</td>
+<td>duration、transition、counts</td>
+<td>舍入掩盖小概率</td>
+</tr>
+<tr>
+<td>校准</td>
+<td>interval score、Coverage50/80/90</td>
+<td>randomized PIT/rank</td>
+<td>无差别增宽</td>
+</tr>
+<tr>
+<td>多样性</td>
+<td>pairwise distance</td>
+<td>duplication、effective scenarios</td>
+<td>mode collapse</td>
+</tr>
+<tr>
+<td>效率</td>
+<td>wall time、throughput</td>
+<td>steps、分网络 NFEs、VRAM</td>
+<td>只报名义 steps</td>
+</tr>
+<tr>
+<td>稳定</td>
+<td>nonfinite count</td>
+<td>grad quantiles、seed SD</td>
+<td>静默 skip/rollback 不报告</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="12-复审后的-可以研究的新方案-总览">12. 复审后的“可以研究的新方案”总览</h2>
+<h3 id="12-1-方案-a-有限集合语义下的-sampler-matched-level-ramp-adaptation">12.1 方案 A：有限集合语义下的 sampler-matched level–ramp adaptation</h3>
+<p><strong>可行性</strong>：最高。<br />
+<strong>证据</strong>：明确 ramp gap；<code>I→I</code> 归因；AIFS/RMMD/Swift 可行性。<br />
+<strong>风险</strong>：直接新颖性碰撞、NaN、成员依赖、M-transfer。<br />
+<strong>论文级空位</strong>：finite-set mass preservation 与 IID proper-score semantics 的系统比较。</p>
+<h3 id="12-2-方案-b-mixed-measure-full-trajectory-condition-structured-source-flow">12.2 方案 B：mixed-measure full-trajectory condition-structured source flow</h3>
+<p><strong>可行性</strong>：未知，必须先诊断。<br />
+<strong>证据</strong>：条件 covariance/GP source 有理论基础；仓库 residual regime 差异。<br />
+<strong>风险</strong>：样本不足、source/flow 不可分解、CW/TSFlow/动态图碰撞。<br />
+<strong>论文级空位</strong>：显式 PSD 的 NWP-conditioned complete zone×lead source，与 per-lead/static/feature-only 的可证伪对照。</p>
+<p>建议标题：</p>
+<blockquote>
+<p><strong>Condition-Structured Full-Trajectory Source Flow for Mixed-Measure Joint Wind Scenarios</strong></p>
+</blockquote>
+<p>不要在标题使用 Graph-Conditionally Whitened。</p>
+<h3 id="12-3-方案-c-atom-aware-trajectory-conformal-certificate">12.3 方案 C：atom-aware trajectory conformal certificate</h3>
+<p><strong>可行性</strong>：高、算力低。<br />
+<strong>证据</strong>：trajectory/multidimensional CP 已成熟。<br />
+<strong>风险</strong>：新颖性较低、时间依赖假设、小样本区域巨大。<br />
+<strong>价值</strong>：可形成可靠性组件或组会/系统成果，不改变 scenario law。</p>
+<h3 id="12-4-方案-d-state-duration-amplitude-marked-flow">12.4 方案 D：state-duration–amplitude marked flow</h3>
+<p><strong>可行性</strong>：条件。<br />
+<strong>证据</strong>：ZIB-HMM、DFM、TabbyFlow；结构上解释 state/continuous separation 的缺口。<br />
+<strong>当前反证</strong>：本地平均 ramp gap 只有约 3.74% 来自 atom↔interior。<br />
+<strong>触发条件</strong>：外部数据 transition contribution 大、duration 明显失校准、A 修完 interior 后剩余 gap 转移。</p>
+<h3 id="12-5-方案-e-threshold-weighted-ramp-scoring">12.5 方案 E：threshold-weighted ramp scoring</h3>
+<p><strong>可行性</strong>：高，作为 A 的子实验。<br />
+<strong>证据</strong>：weighted score 理论和极端风速实证。<br />
+<strong>风险</strong>：body–tail trade-off；generic novelty 已被覆盖。<br />
+<strong>正确位置</strong>：所有日期上的 secondary proper score，不是 truth-only extreme subset。</p>
+<h3 id="12-6-方案-f-signature-score-as-diagnostic-atom-aware-extension">12.6 方案 F：signature score as diagnostic / atom-aware extension</h3>
+<p><strong>可行性</strong>：诊断高、训练低。<br />
+<strong>证据</strong>：TMLR 2026 的严格 proper path score。<br />
+<strong>风险</strong>：数值不稳、高维 scaling、zero-inflated open problem。<br />
+<strong>潜在高风险创新</strong>：marked/masked signature kernel for mixed atom–continuous wind paths；需先做理论与 toy simulation，不能直接塞入主模型。</p>
+<h3 id="12-7-方案-g-nwp-neighbor-ot-cfm">12.7 方案 G：NWP-neighbor OT-CFM</h3>
+<p><strong>可行性</strong>：只作效率 pilot。<br />
+<strong>证据</strong>：OT-CFM/SB。<br />
+<strong>风险</strong>：conditional pairing 错误。<br />
+<strong>硬停止</strong>：8-step 不能以 ≥25% wall-time 优势达到 16-step 非劣，立即停止。</p>
+<hr />
+<h2 id="13-详细文献证据卡-每篇究竟支撑什么">13. 详细文献证据卡：每篇究竟支撑什么</h2>
+<h3 id="13-1-proper-score-有限-ensemble-与-post-training">13.1 proper score、有限 ensemble 与 post-training</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>文献</th>
+<th>venue/status</th>
+<th>核心事实</th>
+<th>对本项目的作用</th>
+<th>引用时的禁止外推</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://jmlr.org/papers/v25/23-0038.html">Pacchiardi et al., Probabilistic Forecasting with Generative Networks via Scoring Rule Minimization</a></td>
+<td>JMLR 25(45), 2024</td>
+<td>adversarial-free scoring-rule minimization；prequential construction；dependent-data consistency；ES/kernel U-stat</td>
+<td>理论/方法基础；本地已有 PDF <a href="../literature/core/01_JMLR_Scoring_Rule_Minimization.pdf"><code>01_JMLR...</code></a></td>
+<td>不能写成已验证 240D 多场站多步后训练；其 WeatherBench 任务边界更窄</td>
+</tr>
+<tr>
+<td><a href="https://ascmo.copernicus.org/articles/11/23/2025/">Pic et al., Proper scoring rules based on aggregation and transformation</a></td>
+<td>ASCMO 2025</td>
+<td>transformation preserves propriety for transformed target；nonnegative aggregation；strictness conditions</td>
+<td>约束 level/ramp/joint score 组合；本地 <a href="../literature/core/03_Proper_Scoring_Aggregation_Transformation.pdf"><code>03_Proper...</code></a></td>
+<td>非单射差分不保证原 path strict；VS common-shift blind spot仍在</td>
+</tr>
+<tr>
+<td><a href="https://epubs.siam.org/doi/abs/10.1137/22M1532184">Allen et al., Weighted scoring rules</a></td>
+<td>SIAM/ASA JUQ 2023</td>
+<td>threshold/transform weighted CRPS、ES、VS；kernel construction</td>
+<td>extreme ramp 应用所有 case 的 proper weighted score</td>
+<td>不能只在 truth-extreme subset 上算普通 score</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.mlr.press/v202/marcotte23a.html">Marcotte et al., Regions of Reliability</a></td>
+<td>ICML 2023</td>
+<td>proper score 在有限样本可能 discrimination power 很低；系统 power analysis</td>
+<td>要求先做 score power/MDE</td>
+<td>不能因“proper”就假定当前 150 日能识别 1% 差异</td>
+</tr>
+<tr>
+<td><a href="https://rmets.onlinelibrary.wiley.com/doi/10.1002/qj.2270">Ferro, Fair scores for ensemble forecasts</a></td>
+<td>QJRMS 2014</td>
+<td>finite ensemble fair correction 与成员抽样假设</td>
+<td>区分 IID 与依赖 member</td>
+<td>不能把 IID fair correction 原样用于排序/配额耦合成员</td>
+</tr>
+<tr>
+<td><a href="https://www.nature.com/articles/s44387-026-00073-7">AIFS-CRPS</a></td>
+<td>npj Artificial Intelligence 2:18, 2026</td>
+<td>M=2/4；afCRPS α=.95；fair CRPS degeneracy；正项重排；12-step rollout；LR 1e-6/5e-7</td>
+<td>数值设计最直接相邻证据</td>
+<td>afCRPS 不是“完全 fair 且无任何偏差”；主要约束边缘而非联合 path</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2509.25631">Swift</a></td>
+<td>2025 preprint/workshop；另有 2026 journal 版本</td>
+<td>probability-flow/consistency weather model 的 multi-step CRPS finetuning</td>
+<td>直接碰撞“首次 probability-flow CRPS 微调”</td>
+<td>workshop 不能写成 NeurIPS 主会；不是 mixed wind post-training</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2606.30414">RMMD</a></td>
+<td>arXiv v1, 2026-06</td>
+<td>GenCast 59 NFE→8-step；2-sample CRPS reward；frozen reference/moment regularization</td>
+<td>最直接碰撞“预训练 diffusion + CRPS post-training”；支持 reference</td>
+<td>截至检索日不是正式同行评审；主要是 marginal CRPS</td>
+</tr>
+<tr>
+<td><a href="https://openreview.net/forum?id=1vmSEVL19f">DRaFT</a></td>
+<td>ICLR 2024</td>
+<td>full/truncated differentiable reward fine-tuning；长链与 reward overoptimization 风险</td>
+<td>K=1/5/full、adapter、anchor 设计；本地 <a href="../literature/core/02_DRaFT_Diffusion_Differentiable_Rewards.pdf"><code>02_DRaFT...</code></a></td>
+<td>图像 reward 不证明概率校准</td>
+</tr>
+<tr>
+<td><a href="https://openreview.net/forum?id=2IoFFexvuw">Flow Matching Reward Fine-Tuning</a></td>
+<td>ICLR 2025</td>
+<td>flow model reward fine-tuning</td>
+<td>flow 后训练也不是空白</td>
+<td>不是 forecasting proper score</td>
+</tr>
+<tr>
+<td><a href="https://openreview.net/forum?id=LOLXpt4E5D">Signature Kernel Scoring Rule</a></td>
+<td>TMLR accepted 2026</td>
+<td>strictly proper path score、WeatherBench diagnostic/training、最长 15 steps；报告 numerical instability</td>
+<td>轨迹联合诊断与高风险新方向</td>
+<td>不可直接假定适合 240D exact-atom wind；其 zero-inflated 类问题仍开放</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="13-2-extreme-tail-与-ramp">13.2 extreme、tail 与 ramp</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>文献</th>
+<th>核心结果</th>
+<th>支撑</th>
+<th>风险边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://arxiv.org/abs/1512.09244">Forecaster's Dilemma</a></td>
+<td>outcome-conditioned extreme subset evaluation 可产生错误排名</td>
+<td>主评价改为所有 case 的 weighted proper score</td>
+<td>truth-stratified 表只作解释</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2407.15900">Wessel et al., extreme wind speed twCRPS</a></td>
+<td>twCRPS training 改善 extreme wind，存在 body–tail trade-off；pooling/weighted training 可缓解</td>
+<td>T branch 可行</td>
+<td>不是 wind-power ramp generator，不能作直接成功保证</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2506.13687">Enforcing tail calibration</a></td>
+<td>UK wind speed；EMOS/DRN/conditional generative models；tail penalty/twCRPS 改善 tail，可能伤整体 calibration</td>
+<td>强制报告整体与 tail trade-off</td>
+<td>generic tail calibration 已有直接工作，不是新颖点</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1109/TSTE.2025.3585404">Wind power and ramp rate forecasting</a></td>
+<td>同时预测 power 与 ramp rate，含概率结果</td>
+<td>ramp 是合理独立对象</td>
+<td>不能宣称首次做 probabilistic ramp</td>
+</tr>
+<tr>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S014206152500328X">Two-step day-ahead ramp framework</a></td>
+<td>day-ahead wind probabilistic forecast considering ramp events</td>
+<td>直接领域碰撞</td>
+<td>不是 final-sampler proper adaptation，仍留窄空间</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="13-3-mixed-measure-边界状态与联合风电">13.3 mixed measure、边界状态与联合风电</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>文献</th>
+<th>核心结果</th>
+<th>对本项目的意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S2590123026008613">ZOIB + R-vine + KAN regional wind</a></td>
+<td>0/1 点质量 + continuous Beta + regional R-vine；2026 direct wind</td>
+<td>mixed boundary + joint dependence 不能单独作首创；需加入文献/模型基线</td>
+</tr>
+<tr>
+<td><a href="https://onlinelibrary.wiley.com/doi/full/10.1002/we.70110">ZIB-HMM wind-turbine icing</a></td>
+<td>bounded inflated observation + latent serial states + covariate-dependent transition/density</td>
+<td>支持 duration/transition–amplitude coupling 有物理统计价值</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.mlr.press/v235/campbell24a.html">Discrete Flow Models</a></td>
+<td>discrete CTMC flow + multimodal continuous/discrete co-generation</td>
+<td>mixed discrete–continuous flow 不是通用首创</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.mlr.press/v267/guzman-cordero25a.html">TabbyFlow</a></td>
+<td>exponential-family variational flow matching for heterogeneous variables</td>
+<td>marked mixed flow 必须突出时序/风电/质量守恒，而非 mixed type 本身</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1016/j.epsr.2025.111779">ICGDM wind scenario generation</a></td>
+<td>改进条件生成 diffusion 的风电场景</td>
+<td>直接风电 diffusion 基线；本地 <a href="../literature/core/1-s4.0-S0378779625003712-main.pdf"><code>1-s4...pdf</code></a></td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1016/j.epsr.2026.112753">MS-CADM original</a></td>
+<td>multi-scale condition-adaptive diffusion；NWP 条件；风电场景</td>
+<td>原始复现对象；结论承认 fine-grained dependency 与 sampling 仍有挑战</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="13-4-conditional-source-covariance-与动态依赖">13.4 conditional source、covariance 与动态依赖</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>文献</th>
+<th>核心事实</th>
+<th>作用/边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://openreview.net/forum?id=GG01lCopSK">CW-Gen</a></td>
+<td>conditional mean/covariance、whitening、CW-Diff/CW-Flow、终端 KL sufficient condition</td>
+<td>最关键 whitening 碰撞；本地 <a href="../literature/core/08_CW_Gen.pdf"><code>08_CW_Gen.pdf</code></a>。剩余空位必须是完整 cross-lead、mixed-state</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.mlr.press/v267/ye25i.html">NsDiff</a></td>
+<td>non-stationary conditional mean/variance endpoint 与 uncertainty schedule</td>
+<td>diagonal endpoint 已覆盖；本地 <a href="../literature/core/07_NsDiff.pdf"><code>07_NsDiff.pdf</code></a></td>
+</tr>
+<tr>
+<td><a href="https://proceedings.iclr.cc/paper_files/paper/2025/hash/ee1a1ecc92f35702b5c29dad3dc909ea-Abstract-Conference.html">TSFlow</a></td>
+<td>GP/data-dependent source、conditional flow matching、OT</td>
+<td>correlated source + flow 直接相邻；需要全文</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.mlr.press/v202/bilos23a.html">DSPD</a></td>
+<td>GP/OU correlated diffusion process</td>
+<td>时间 covariance source 不是新意</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.neurips.cc/paper_files/paper/2024/hash/619b8e3ead58dce90bc615f2a7d5d102-Abstract-Conference.html">Correlated Errors</a></td>
+<td>low-rank contemporaneous + autocovariance/cross-lag errors</td>
+<td>cross-lag 不可声称首次；本地 <a href="../literature/core/09_Multivariate_Forecasting_Correlated_Errors.pdf"><code>09_Multivariate...</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S0378779626007297">MOE-STD</a></td>
+<td>dynamic spatial/temporal experts inside wind probabilistic diffusion</td>
+<td>动态图/专家主线直接碰撞；当前依据 publisher preview，需全文</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1109/TSTE.2025.3591920">PSTDT</a></td>
+<td>spatio-temporal probabilistic wind-speed diffusion transformer</td>
+<td>dynamic spatio-temporal diffusion 拥挤</td>
+</tr>
+<tr>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S0142061526002115">Physics-aware dynamic graph MoE wind</a></td>
+<td>dynamic graph、physical/data experts、wind point forecast</td>
+<td>graph + physics + MoE 不是新意；但非联合概率 source</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1016/j.ijepes.2021.106955">Tan et al. non-separable spatio-temporal covariance</a></td>
+<td>multi-wind-farm scenario covariance</td>
+<td>full spatio-temporal wind covariance 不能宣称首次</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="13-5-conformal-与-decision-focused">13.5 conformal 与 decision-focused</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>文献</th>
+<th>已覆盖</th>
+<th>对当前路线的定位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://proceedings.mlr.press/v230/galvao-lopes24a.html">ConForME</a></td>
+<td>multi-horizon conditional conformal forecasting</td>
+<td>trajectory certificate 强基线</td>
+</tr>
+<tr>
+<td><a href="https://proceedings.mlr.press/v235/zhou24l.html">Heterogeneous Trajectories CP</a></td>
+<td>whole-path simultaneous bands</td>
+<td>generic trajectory coverage 已覆盖</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2403.03850">MultiDimSPCI</a></td>
+<td>ellipsoidal regions for multivariate time series</td>
+<td>240D region 强基线</td>
+</tr>
+<tr>
+<td><a href="https://icml.cc/virtual/2024/poster/33483">Markovian CP</a></td>
+<td>correlation-induced coverage gap、K-split</td>
+<td>不可无视 time dependence</td>
+</tr>
+<tr>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S0306261924002836">Regional wind conformal forecast</a></td>
+<td>CQR/CPS/SCDRF for regional wind</td>
+<td>generic wind conformal 已直接碰撞</td>
+</tr>
+<tr>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S0360544226017846">DO-MUDiff</a></td>
+<td>wind diffusion + NWP uncertainty + differentiable ED information</td>
+<td>decision-focused diffusion 不再是空位；结合本地负结果继续暂停</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="14-原-html-markdown-的精确勘误清单">14. 原 HTML/Markdown 的精确勘误清单</h2>
+<p>以下不是“建议优化”，而是发布下一版前应逐项修正的内容。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>原位置</th>
+<th>当前内容/问题</th>
+<th style="text-align:right">严重性</th>
+<th>建议替换</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一句话结论、§1</td>
+<td>直接断言冻结原子、修 continuous ramp 是当前首选</td>
+<td style="text-align:right">中</td>
+<td>加入本次 transition attribution 证据与 seen-data 边界；现在可以保留，但不再写成未经验证假设</td>
+</tr>
+<tr>
+<td>§1 priority 与正文 §4–8</td>
+<td>路线字母含义前后错位</td>
+<td style="text-align:right">高</td>
+<td>全文采用新 A–G 命名，配置和目录同步</td>
+</tr>
+<tr>
+<td>§5、§11</td>
+<td>标题各重复一次</td>
+<td style="text-align:right">低</td>
+<td>删除重复 heading，避免 TOC 双条目</td>
+</tr>
+<tr>
+<td>全文 <code>16 NFE</code></td>
+<td>实际是 16 Heun steps / 31 flow NFEs</td>
+<td style="text-align:right">高</td>
+<td>全局改名，并另报 12 jump NFEs</td>
+</tr>
+<tr>
+<td>§1、§9 CFG</td>
+<td>称已有 condition mask，可固定 checkpoint sweep</td>
+<td style="text-align:right">高</td>
+<td>删除；target-state mask 不等于 condition dropout；CFG 必须重训</td>
+</tr>
+<tr>
+<td>§3 proper collision=中</td>
+<td>漏掉 Swift、AIFS-CRPS、RMMD</td>
+<td style="text-align:right">高</td>
+<td>调为高；将新意收窄到 wind level–ramp + finite-set dependence</td>
+</tr>
+<tr>
+<td>§3 dynamic/ramp collision=中</td>
+<td>漏掉 direct wind ramp 与 2026 spatio-temporal diffusion</td>
+<td style="text-align:right">中高</td>
+<td>调为中高/高，删除 generic ramp/graph 首创</td>
+</tr>
+<tr>
+<td>§4.4 score 组合</td>
+<td>建议 <code>zscore()</code>，未明确 scale 固定</td>
+<td style="text-align:right">中</td>
+<td>只允许 train-only fixed positive scale；batch/test normalization 禁止</td>
+</tr>
+<tr>
+<td>§4.4 strictness</td>
+<td>只写至少 <code>w_es&gt;0</code></td>
+<td style="text-align:right">中</td>
+<td>加入相同 outcome space、有限矩、差分非单射、marginal CRPS 不识别 joint 等条件</td>
+</tr>
+<tr>
+<td>§4.5 failure</td>
+<td>将多项组合描述为一般性“不稳”</td>
+<td style="text-align:right">中</td>
+<td>明确 state/sampler mismatch 与裸 sqrt-VS 零点奇异是关键嫌疑，需单项复现</td>
+</tr>
+<tr>
+<td>§4.6 sampler</td>
+<td>一处要求部署一致；配置又写 train=8/eval=16</td>
+<td style="text-align:right">高</td>
+<td>主科学实验锁 16 Heun steps；若 truncated/8-step，作为显式 mismatch/迁移消融</td>
+</tr>
+<tr>
+<td>§4.6 members</td>
+<td>直接引用 M=4/8</td>
+<td style="text-align:right">中</td>
+<td>区分 IID 与 mass-set；后者小 M atom count resolution 很粗，建议 M=16 pilot</td>
+</tr>
+<tr>
+<td>§4 extreme 分层</td>
+<td>可能把 realized extreme 子集当效果证据</td>
+<td style="text-align:right">高</td>
+<td>truth-stratification 只作解释；主评价用所有 case 的 train-threshold weighted score</td>
+</tr>
+<tr>
+<td>§4 Go 门</td>
+<td>一个主改善 + 多个 1% 门，无 power/multiplicity 依据</td>
+<td style="text-align:right">中高</td>
+<td>一个 primary、少数单侧 NI、MDE/power、gatekeeping</td>
+</tr>
+<tr>
+<td>§5 OOF</td>
+<td>只强调 residual OOF</td>
+<td style="text-align:right">高</td>
+<td>basis、rank、covariance head、shrinkage 全部 nested OOF</td>
+</tr>
+<tr>
+<td>§5 covariance</td>
+<td>同时重新预测 diagonal variance</td>
+<td style="text-align:right">中</td>
+<td>第一版锁 head scale，主要预测 correlation</td>
+</tr>
+<tr>
+<td>§5 source</td>
+<td>忽略 sampled state pattern</td>
+<td style="text-align:right">高</td>
+<td>加 masked <code>R(c,s)</code>、state-shuffled 与 feature-only controls</td>
+</tr>
+<tr>
+<td>§6 标题</td>
+<td>“完整/full whitening”但实质为 separable/Kronecker</td>
+<td style="text-align:right">中</td>
+<td>改名 trajectory-wide separable whitening</td>
+</tr>
+<tr>
+<td>§6.4</td>
+<td>Gaussian latent completion 作为正式方案</td>
+<td style="text-align:right">高</td>
+<td>删除，除非另立 censoring hypothesis；改 masked/marked flow</td>
+</tr>
+<tr>
+<td>§7 coverage</td>
+<td><code>[0.88,0.92]</code> 狭窄点门</td>
+<td style="text-align:right">中高</td>
+<td>block CI、interval score、effective sample/power-based margin</td>
+</tr>
+<tr>
+<td>§7 calibration</td>
+<td>selection 与 mapping calibration 未完全分开</td>
+<td style="text-align:right">高</td>
+<td>selection→freeze structure→untouched calibration→test</td>
+</tr>
+<tr>
+<td>§10.3</td>
+<td>seed 平均后 day bootstrap，容易被误读为含训练随机性</td>
+<td style="text-align:right">中</td>
+<td>每 seed effect/CI + 跨 seed SD；day CI 只量化日期</td>
+</tr>
+<tr>
+<td>§10.3</td>
+<td>固定 7-day block</td>
+<td style="text-align:right">中</td>
+<td>ACF/ESS 预选并报 3/7/14 sensitivity</td>
+</tr>
+<tr>
+<td>§10.5</td>
+<td>“训练必须优先 fair/U-stat”</td>
+<td style="text-align:right">高</td>
+<td>先声明 IID underlying distribution 或 dependent finite set；分别选 estimator</td>
+</tr>
+<tr>
+<td>§10.5</td>
+<td>未指出 mass-preserving member dependence</td>
+<td style="text-align:right">高</td>
+<td>加 count/rank allocation 破坏 IID 的理论边界</td>
+</tr>
+<tr>
+<td>§11 外部基线</td>
+<td>列表过长，容易变成不公平数值拼表</td>
+<td style="text-align:right">低中</td>
+<td>pilot 用最相邻 1 篇 + 本地强基线；确认再扩展</td>
+</tr>
+<tr>
+<td>§12 外部数据</td>
+<td>未强制审计 exact zero/one 物理来源</td>
+<td style="text-align:right">高</td>
+<td>加停机/限电/故障/裁剪/舍入/归一化审计</td>
+</tr>
+<tr>
+<td>§14 config</td>
+<td><code>fair_pairwise=true</code> + mass-preserving + train8/eval16</td>
+<td style="text-align:right">高</td>
+<td>配置新增 <code>estimand</code>、<code>score_semantics</code>；主结果 sampler 一致</td>
+</tr>
+<tr>
+<td>§14 sampler tests</td>
+<td>“4/8/16 NFE”</td>
+<td style="text-align:right">中</td>
+<td>改为 steps 及 7/15/31 flow NFEs</td>
+</tr>
+<tr>
+<td>§15 预算</td>
+<td>20–60 GPU h 未计 31 flow calls、9 fit 和淘汰候选</td>
+<td style="text-align:right">中</td>
+<td>用真实 50-step benchmark 外推，不先承诺绝对小时</td>
+</tr>
+<tr>
+<td>§17 title</td>
+<td>mixed measure + proper ramp dynamics 表述过宽</td>
+<td style="text-align:right">中高</td>
+<td>加 finite-set/member-dependence 或 sampler-matched 限定；引用 ZOIB-R-vine/RMMD</td>
+</tr>
+<tr>
+<td>§19 文献</td>
+<td>缺 RMMD、AIFS-CRPS、Swift、signature、ZOIB-R-vine、MOE-STD、ZIB-HMM、CP</td>
+<td style="text-align:right">高</td>
+<td>使用本复审第 13 节补齐</td>
+</tr>
+<tr>
+<td>§21 final recommendation</td>
+<td>直接说用 fair ramp-CRPS-only</td>
+<td style="text-align:right">高</td>
+<td>改为先定义 estimand；A-SET 用 empirical score，A-IID 用 afCRPS；level anchor 先于 ramp-only</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="14-1-修订后的配置骨架">14.1 修订后的配置骨架</h3>
+<pre><code class="language-json">{
+  &quot;protocol_revision&quot;: &quot;mm_jdwind_score_adaptation_pilot_v2&quot;,
+  &quot;source_checkpoint&quot;: &quot;.../flow_best.pt&quot;,
+  &quot;estimand&quot;: &quot;finite_mass_preserving_set&quot;,
+  &quot;score_semantics&quot;: &quot;empirical_v_stat&quot;,
+  &quot;freeze&quot;: {
+    &quot;head&quot;: true,
+    &quot;jump&quot;: true,
+    &quot;flow_backbone&quot;: true,
+    &quot;trainable&quot;: &quot;rank4_adapter_and_output&quot;
+  },
+  &quot;sampling&quot;: {
+    &quot;state_mode&quot;: &quot;mass_preserving&quot;,
+    &quot;jump_steps&quot;: 12,
+    &quot;flow_steps&quot;: 16,
+    &quot;flow_method&quot;: &quot;heun&quot;,
+    &quot;expected_flow_nfe&quot;: 31,
+    &quot;train_members&quot;: 16,
+    &quot;eval_members&quot;: 100
+  },
+  &quot;score&quot;: {
+    &quot;level_weight&quot;: 1.0,
+    &quot;increment_weight&quot;: 0.0,
+    &quot;joint_energy_weight&quot;: 0.0,
+    &quot;variogram_weight&quot;: 0.0,
+    &quot;scale_source&quot;: &quot;train_only_locked&quot;,
+    &quot;reduction_dtype&quot;: &quot;float32&quot;
+  },
+  &quot;optimizer&quot;: {
+    &quot;learning_rate&quot;: 0.000001,
+    &quot;gradient_clip&quot;: 0.2,
+    &quot;amp&quot;: false
+  },
+  &quot;safety&quot;: {
+    &quot;abort_on_nonfinite&quot;: true,
+    &quot;rollback_to_latest_safe&quot;: true,
+    &quot;save_failure_bundle&quot;: true,
+    &quot;verify_frozen_hashes&quot;: true
+  }
+}
+</code></pre>
+<p>另建一份 A-IID 配置：</p>
+<pre><code class="language-text">estimand       = underlying_iid_distribution
+state_mode     = correlated
+score_semantics= afCRPS_alpha_0.95 或 U-stat
+</code></pre>
+<p>不要用同一配置开关隐式切换而不改变实验 identity。</p>
+<hr />
+<h2 id="15-建议补齐的全文文献清单">15. 建议补齐的全文文献清单</h2>
+<h3 id="15-1-最高优先级-直接决定新颖性">15.1 最高优先级：直接决定新颖性</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:right">优先级</th>
+<th>论文</th>
+<th>为什么必须读全文</th>
+<th>当前状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1</td>
+<td>MOE-STD, EPSR 2026, DOI <code>10.1016/j.epsr.2026.113436</code></td>
+<td>确认其 dynamic modules 是否仅在 denoiser feature，还是已有显式 source/covariance</td>
+<td>当前仅依据 publisher preview</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td>CW-Gen camera-ready / supplement</td>
+<td>精确核验 per-lead independence、理论条件和 CW-Flow 实验</td>
+<td>本地已有 PDF，需逐式复核 supplement</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td>TSFlow, ICLR 2025</td>
+<td>source GP、OT coupling、conditional flow 的 exact implementation</td>
+<td>当前未在 core 目录</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td>RMMD, arXiv:2606.30414</td>
+<td>CRPS reward、reference regularization、2-sample 实现和 GenCast setup</td>
+<td>当前未在 core 目录</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td>AIFS-CRPS 及 supplement</td>
+<td>afCRPS 正项重排、退化、M=2/4、rollout training</td>
+<td>当前未在 core 目录</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td>ZOIB-R-vine regional wind, DOI <code>10.1016/j.rineng.2026.109822</code></td>
+<td>mixed boundary + joint wind 的最直接 baseline</td>
+<td>当前未在 core 目录</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td>ZIB-HMM wind icing, DOI <code>10.1002/we.70110</code></td>
+<td>duration/transition 与 state-dependent continuous distribution</td>
+<td>当前未在 core 目录</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td>Signature Kernel Score TMLR 2026 + code</td>
+<td>路径 score 的 strictness、scaling、NaN 与 zero-inflation 边界</td>
+<td>当前未在 core 目录</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="15-2-条件-source-方向进入生成训练前必须补">15.2 条件 source 方向进入生成训练前必须补</h3>
+<ul>
+<li>PSTDT，DOI <code>10.1109/TSTE.2025.3591920</code>；</li>
+<li>Zhao et al. dynamic graph MoE，DOI <code>10.1016/j.ijepes.2026.111769</code>；</li>
+<li>Tan et al. 2021 non-separable spatio-temporal covariance；</li>
+<li>Li &amp; Ludkovski 2024 full space×hour wind joint model；</li>
+<li>DSPD、TSFlow；</li>
+<li>一个可复现 multi-wind-farm vine-copula scenario baseline。</li>
+</ul>
+<h3 id="15-3-当前本地已有-足以启动-a0-的核心-pdf">15.3 当前本地已有、足以启动 A0 的核心 PDF</h3>
+<ul>
+<li><a href="../literature/core/01_JMLR_Scoring_Rule_Minimization.pdf"><code>01_JMLR_Scoring_Rule_Minimization.pdf</code></a>；</li>
+<li><a href="../literature/core/02_DRaFT_Diffusion_Differentiable_Rewards.pdf"><code>02_DRaFT_Diffusion_Differentiable_Rewards.pdf</code></a>；</li>
+<li><a href="../literature/core/03_Proper_Scoring_Aggregation_Transformation.pdf"><code>03_Proper_Scoring_Aggregation_Transformation.pdf</code></a>；</li>
+<li><a href="../literature/core/04_Variogram_Based_Proper_Scoring_Rules.pdf"><code>04_Variogram_Based_Proper_Scoring_Rules.pdf</code></a>；</li>
+<li><a href="../literature/core/07_NsDiff.pdf"><code>07_NsDiff.pdf</code></a>；</li>
+<li><a href="../literature/core/08_CW_Gen.pdf"><code>08_CW_Gen.pdf</code></a>；</li>
+<li><a href="../literature/core/09_Multivariate_Forecasting_Correlated_Errors.pdf"><code>09_Multivariate_Forecasting_Correlated_Errors.pdf</code></a>；</li>
+<li><a href="../literature/core/2407_Transformer_Modulated_Dif.pdf"><code>2407_Transformer_Modulated_Dif.pdf</code></a>；</li>
+<li><a href="../literature/core/7497_Diffusion_based_Decoupled.pdf"><code>7497_Diffusion_based_Decoupled.pdf</code></a>；</li>
+<li><a href="../literature/core/1-s4.0-S0378779625003712-main.pdf"><code>ICGDM 2025</code></a>；</li>
+<li>CLDM 机器翻译件仅作定位，不宜正式逐句引用。</li>
+</ul>
+<hr />
+<h2 id="16-12-周执行顺序与停止树">16. 12 周执行顺序与停止树</h2>
+<h3 id="16-1-前四周-只给主路线-a-最小预算">16.1 前四周：只给主路线 A 最小预算</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:right">周</th>
+<th>任务</th>
+<th>产物</th>
+<th>停止点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1</td>
+<td>固化本次 transition attribution；实现 estimator/estimand unit tests；复现 sqrt-VS</td>
+<td><code>score_semantics_audit.md</code>、failure bundle</td>
+<td>无法明确 A-IID/A-SET 或仍有 silent NaN，停止训练</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td>16-step Heun no-update gradient audit；M=4/8/16；output/rank4</td>
+<td>gradient/VRAM/wall-time table</td>
+<td>低 LR/output-only 仍有 nonfinite，A No-Go</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td>A-C0、A-I1、A-S1，3 seeds 短 pilot</td>
+<td>stability + continued-training control</td>
+<td>pipeline 不稳定或 level score 与 final sampler 方向不一致，停止</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td>A-I2、A-S2；只锁一个 adapter/LR</td>
+<td>ramp pilot report</td>
+<td>overall ramp 无信号或只靠 width 变宽，降级/停止</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="16-2-第五至八周-确认-a-平行只做-b-的离线诊断">16.2 第五至八周：确认 A，平行只做 B 的离线诊断</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:right">周</th>
+<th>A 线</th>
+<th>B 线</th>
+<th>决策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">5</td>
+<td>winner + reference</td>
+<td>nested OOF residual/basis pipeline</td>
+<td>A drift 能否控制；B 是否存在稳定 cross-lead energy</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td>winner + joint ES；tw-ramp 仅一档</td>
+<td>diagonal/per-lead/static-full estimator</td>
+<td>A joint 非劣；B static 是否已足够</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td>3-seed development confirmation</td>
+<td>conditional/shared-basis/shuffled</td>
+<td>B conditional 是否胜过 static/CW</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td>锁定唯一 A candidate</td>
+<td>B Go/No-Go review</td>
+<td>A 进入新 test；B 仅诊断全过才训练</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="16-3-第九至十二周-只推进通过硬门的路线">16.3 第九至十二周：只推进通过硬门的路线</h3>
+<pre><code class="language-text">A 通过
+  → new locked rolling block 或外部 data
+  → 完整 scorecard + wall-time + paper claim audit
+
+A 失败、B 诊断通过
+  → B source-only 最小生成矩阵
+
+A/B 都失败
+  → atom-aware conformal certificate + interior calibration
+  → 输出高质量负结果与可靠性组件
+
+外部 data 显示 atom↔I gap 大
+  → 启动 state-duration–amplitude pilot
+
+任何时候都不自动启动 CFG、full SB 或 decision-focused
+</code></pre>
+<h3 id="16-4-算力预算原则">16.4 算力预算原则</h3>
+<p>不预先写“20–60 GPU 小时”。先运行一个真实 benchmark：</p>
+<pre><code class="language-text">50 optimizer steps
+× M=16
+× 16 Heun steps / 31 flow NFEs
+× chosen adapter
+</code></pre>
+<p>测量 wall time、VRAM、data overhead 后，再乘：</p>
+<ul>
+<li>candidate count；</li>
+<li>seeds；</li>
+<li>outer fits；</li>
+<li>early-stop validation；</li>
+<li>failure/retry allowance。</li>
+</ul>
+<p>候选上限：A0 后最多 6 个训练 identity；A winner 只 1 个进入 locked test；B 诊断阶段不训练 flow。</p>
+<hr />
+<h2 id="17-论文主张审计表">17. 论文主张审计表</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>候选主张</th>
+<th>当前证据</th>
+<th>复审判定</th>
+<th>达成条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MM-JDWind 有效处理 zero atom</td>
+<td>本地 E3；two-chain evidence</td>
+<td><strong>可保留</strong></td>
+<td>对 one atom 保守；外部数据审计物理语义</td>
+</tr>
+<tr>
+<td>MM ramp gap 是 continuous interior 问题</td>
+<td>本次 seen attribution 95.99%</td>
+<td><strong>可作路线依据</strong></td>
+<td>不能称新 confirmation；外部域需复核</td>
+</tr>
+<tr>
+<td>proper score post-training 是新方法</td>
+<td>Swift/RMMD/AIFS direct collision</td>
+<td><strong>禁止</strong></td>
+<td>无</td>
+</tr>
+<tr>
+<td>finite-set/member-dependence aware wind adaptation 是新问题</td>
+<td>未发现直接同组合</td>
+<td><strong>可谨慎主张</strong></td>
+<td>完整文献再核验；A-IID/A-SET 公平实证</td>
+</tr>
+<tr>
+<td>dynamic graph improves wind scenarios</td>
+<td>本地负结果 + 2026 collision</td>
+<td><strong>禁止当前主张</strong></td>
+<td>新模型必须胜过同 backbone 且 graph 只作参数化</td>
+</tr>
+<tr>
+<td>conditional full-trajectory source is useful</td>
+<td>尚无仓库证据</td>
+<td><strong>假设</strong></td>
+<td>nested OOF + source-vs-feature + locked generation</td>
+</tr>
+<tr>
+<td>full spatio-temporal covariance for wind is first</td>
+<td>Tan 2021 等反证</td>
+<td><strong>禁止</strong></td>
+<td>无</td>
+</tr>
+<tr>
+<td>atom latent Gaussian completion 合理</td>
+<td>无可识别假设</td>
+<td><strong>禁止默认</strong></td>
+<td>明确 censoring model + sensitivity + external semantics</td>
+</tr>
+<tr>
+<td>tw-ramp improves extremes without trade-off</td>
+<td>文献明确有 trade-off</td>
+<td><strong>禁止</strong></td>
+<td>必须同时报告 ordinary/body/global calibration</td>
+</tr>
+<tr>
+<td>conformal calibrates scenario distribution</td>
+<td>CP 只保证集合覆盖</td>
+<td><strong>禁止</strong></td>
+<td>只能称 prediction-region coverage certificate</td>
+</tr>
+<tr>
+<td>16 NFE flow 高效</td>
+<td>实际 31 flow NFEs</td>
+<td><strong>修正后再评</strong></td>
+<td>同硬件 wall-time Pareto</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="18-最终推荐">18. 最终推荐</h2>
+<h3 id="18-1-现在最值得做的唯一训练实验">18.1 现在最值得做的唯一训练实验</h3>
+<blockquote>
+<p>从确认过的 MM-JDWind checkpoint 出发，冻结 mixed-measure head 与 jump；把研究对象明确成 A-IID 和 A-SET 两条；先在 16-step Heun / 31-flow-NFE 的最终 sampler 上做无更新 gradient audit，再以低学习率 rank-4 adapter 分别运行 level-only 与 level+increment score adaptation。A-IID 使用 correlated member-wise IID state fields 和 afCRPS/U-stat，A-SET 使用 mass-preserving state set 和 empirical/V-stat score。三 seed 全程 finite 后，才加入 reference 和小权重 augmented-path ES；VS 最后且不使用裸 <code>sqrt(abs(.))</code>。</p>
+</blockquote>
+<p>这条路线得到本次 <code>I→I</code> 贡献 95.99% ramp gap 的仓库机制证据支持，也与现有 backbone 和失败记录最贴合。</p>
+<h3 id="18-2-第二路线只做离线诊断">18.2 第二路线只做离线诊断</h3>
+<blockquote>
+<p>在 outer train 内构建完整 nested-OOF residual、basis 和 covariance estimator competition。只有 NWP-conditioned full zone×lead correlation 同时胜过 CW per-lead 与 static full，并通过 shuffled/condition-number/subspace stability 门，才训练 structured-source flow。动态图只能作为 operator parameterization 或 feature-only control。</p>
+</blockquote>
+<h3 id="18-3-可靠交付的后备路线">18.3 可靠交付的后备路线</h3>
+<p>若 A 数值或效果 No-Go，优先做：</p>
+<ol>
+<li>atom-aware whole-trajectory conformal certificate；</li>
+<li>selection/calibration 分离的 interior-only calibration；</li>
+<li>完整负结果与 score-semantics benchmark。</li>
+</ol>
+<p>这些结果不如一个新生成模型标题华丽，但更容易形成可信、可复现、不会被直接文献否定的研究产物。</p>
+<h3 id="18-4-一句话论文定位">18.4 一句话论文定位</h3>
+<p>如果 A 成功，最安全的定位不是：</p>
+<blockquote>
+<p>Proper-score trained wind diffusion</p>
+</blockquote>
+<p>而是：</p>
+<blockquote>
+<p><strong>Finite-Ensemble-Aware Level–Ramp Adaptation of Mixed-Measure Joint Flows for Multi-Zone Wind Scenarios</strong></p>
+</blockquote>
+<p>中文可写：</p>
+<blockquote>
+<p><strong>面向有限场景集与爬坡动态的多区域风电混合测度联合流适配</strong></p>
+</blockquote>
+<p>核心贡献顺序应是：</p>
+<ol>
+<li>区分 IID 分布与 mass-preserving finite-set forecast 的评分语义；</li>
+<li>sampler-matched、atom-safe 的稳定 adaptation；</li>
+<li>level–ramp–joint 的可审计 trade-off；</li>
+<li>外部数据或新 locked blocks 的严格验证。</li>
+</ol>
+<hr />
+<h2 id="19-仓库证据索引">19. 仓库证据索引</h2>
+<ul>
+<li>原路线图：<a href="FUTURE_RESEARCH_ROADMAP.md"><code>FUTURE_RESEARCH_ROADMAP.md</code></a>；</li>
+<li>原独立 HTML：<a href="FUTURE_RESEARCH_ROADMAP_STANDALONE.html"><code>FUTURE_RESEARCH_ROADMAP_STANDALONE.html</code></a>；</li>
+<li>综合证据报告：<a href="COMPREHENSIVE_RESEARCH_REPORT.md"><code>COMPREHENSIVE_RESEARCH_REPORT.md</code></a>；</li>
+<li>MM 研究报告：<a href="../MM_JDWIND_RESEARCH_REPORT.md"><code>MM_JDWIND_RESEARCH_REPORT.md</code></a>；</li>
+<li>旧 proper failure：<a href="../outputs/mm_jdwind_development/outer1/runs/seed0/proper_failure.json"><code>proper_failure.json</code></a>；</li>
+<li>locked v2 trainer：<a href="../mm_jdwind/training_v2.py"><code>training_v2.py</code></a>；</li>
+<li>proper loss：<a href="../mm_jdwind/training.py"><code>training.py</code></a>；</li>
+<li>sampler/NFE/state allocation：<a href="../mm_jdwind/sampling.py"><code>sampling.py</code></a>；</li>
+<li>mixed residual/reconstruct：<a href="../mm_jdwind/model.py"><code>model.py</code></a>；</li>
+<li>本次 ramp transition attribution：<a href="qa/ramp_transition_attribution.json"><code>ramp_transition_attribution.json</code></a>；</li>
+<li>STGF 报告：<a href="../STGF_FLOW_RESEARCH_REPORT.md"><code>STGF_FLOW_RESEARCH_REPORT.md</code></a>；</li>
+<li>CR-MS-CADM 报告：<a href="../CR_MSCADM_EXPERIMENT_REPORT.md"><code>CR_MSCADM_EXPERIMENT_REPORT.md</code></a>。</li>
+</ul>
+<hr />
+<h2 id="20-复审结论的可信度声明">20. 复审结论的可信度声明</h2>
+<p>本报告中最确定的部分是：</p>
+<ul>
+<li>代码级 NFE、state allocation、loss 与 sampler mismatch；</li>
+<li>仓库冻结结果与本次 seen-data ramp attribution；</li>
+<li>RMMD/AIFS-CRPS/Swift/CW-Gen/ZOIB-R-vine 等对宽泛新颖性的直接碰撞；</li>
+<li>Gaussian atom completion 的识别问题；</li>
+<li>finite-set 与 IID score estimand 的区分。</li>
+</ul>
+<p>仍需全文或新实验确认的部分是：</p>
+<ul>
+<li>MOE-STD 是否暗含公开摘要未展示的 explicit source covariance；</li>
+<li>当前 581 日 residual 是否足以支持稳定 conditional full-trajectory correlation；</li>
+<li>A-SET 在 M=16 train 到 M=100 deploy 的迁移；</li>
+<li><code>sqrt-VS</code> 是否确为旧 87-parameter NaN 的直接触发，而非仅一个共因；</li>
+<li>外部风电数据的 exact zero/one 物理语义与 transition attribution。</li>
+</ul>
+<p>因此本报告给出的不是“保证会发论文”的答案，而是一条更难被已有文献或实验漏洞直接否定的研究路径。</p>
+</article>
+    <div class="source-meta">
+      生成源：FUTURE_RESEARCH_ROADMAP_CRITICAL_REVIEW.md · SHA256 7c249cfbe6fb70659acbc97f1069ea280e0bcc5d0bce86d161c148fe5f9902c6<br>
+      内嵌图片：3 · 生成器：build_future_research_roadmap_critical_review_html.py（共享离线模板）
+    </div>
+  </div>
+</main>
+<button class="back-top" id="back-top" type="button" aria-label="返回顶部">↑</button>
+<script>
+const root = document.documentElement;
+const themeButton = document.getElementById('theme-button');
+const fontButton = document.getElementById('font-button');
+const sidebar = document.getElementById('sidebar');
+const menuButton = document.getElementById('menu-button');
+const backTop = document.getElementById('back-top');
+const progress = document.getElementById('progress-fill');
+const storage = {
+  get(key, fallback) { try { return localStorage.getItem(key) ?? fallback; } catch (_) { return fallback; } },
+  set(key, value) { try { localStorage.setItem(key, value); } catch (_) { /* file:// privacy mode */ } }
+};
+const savedTheme = storage.get('roadmap-theme', 'light');
+if (savedTheme === 'dark') root.classList.add('dark');
+themeButton.textContent = root.classList.contains('dark') ? '浅色' : '深色';
+themeButton.addEventListener('click', () => {
+  root.classList.toggle('dark');
+  storage.set('roadmap-theme', root.classList.contains('dark') ? 'dark' : 'light');
+  themeButton.textContent = root.classList.contains('dark') ? '浅色' : '深色';
+});
+const fontSizes = ['15px','16px','18px'];
+let fontIndex = Number(storage.get('roadmap-font', '1'));
+document.body.style.fontSize = fontSizes[fontIndex];
+fontButton.addEventListener('click', () => {
+  fontIndex = (fontIndex + 1) % fontSizes.length;
+  document.body.style.fontSize = fontSizes[fontIndex];
+  storage.set('roadmap-font', String(fontIndex));
+});
+document.getElementById('print-button').addEventListener('click', () => window.print());
+menuButton.addEventListener('click', () => sidebar.classList.toggle('open'));
+document.querySelectorAll('.toc-link').forEach(link => link.addEventListener('click', () => sidebar.classList.remove('open')));
+document.getElementById('toc-search').addEventListener('input', event => {
+  const query = event.target.value.trim().toLowerCase();
+  document.querySelectorAll('.toc-link').forEach(link => {
+    link.classList.toggle('filtered', query && !link.textContent.toLowerCase().includes(query));
+  });
+});
+function updateScroll() {
+  const height = document.documentElement.scrollHeight - window.innerHeight;
+  progress.style.width = (height > 0 ? (window.scrollY / height) * 100 : 0) + '%';
+  backTop.classList.toggle('show', window.scrollY > 700);
+}
+window.addEventListener('scroll', updateScroll, {passive:true});
+updateScroll();
+backTop.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+const tocLinks = new Map([...document.querySelectorAll('.toc-link')].map(a => [a.getAttribute('href').slice(1), a]));
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    document.querySelectorAll('.toc-link.active').forEach(a => a.classList.remove('active'));
+    const link = tocLinks.get(entry.target.id);
+    if (link) link.classList.add('active');
+  });
+}, {rootMargin:'-68px 0px -75% 0px',threshold:0});
+document.querySelectorAll('h2[id],h3[id]').forEach(h => observer.observe(h));
+</script>
+</body>
+</html>

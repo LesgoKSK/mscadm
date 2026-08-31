@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="620" viewBox="0 0 1280 620" role="img" aria-labelledby="title desc">
+  <title id="title">MM-JDWind 相对 DDPM 的 ramp-CRPS 差距归因</title>
+  <desc id="desc">内部到内部转移贡献百分之九十五点九九，原子与内部之间贡献百分之三点七四，原子到原子贡献百分之零点二七。</desc>
+  <defs>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#286aa3"/>
+      <stop offset="1" stop-color="#4e9ed0"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="150%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#17365d" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="620" rx="24" fill="#f5f8fb"/>
+  <text x="64" y="70" font-family="Microsoft YaHei, Noto Sans CJK SC, Arial, sans-serif" font-size="32" font-weight="700" fill="#17365d">ramp-CRPS 正差距由什么造成？</text>
+  <text x="64" y="108" font-family="Microsoft YaHei, Noto Sans CJK SC, Arial, sans-serif" font-size="18" fill="#647484">150 个已见确认日 · 3 outer × 3 MM seeds · 与 outer-specific DDPM seed0 配对</text>
+
+  <g filter="url(#shadow)">
+    <rect x="64" y="154" width="1152" height="94" rx="15" fill="#ffffff"/>
+    <rect x="88" y="184" width="1083" height="34" rx="17" fill="#e1e8ef"/>
+    <rect x="88" y="184" width="1039.6" height="34" rx="17" fill="url(#bar)"/>
+    <rect x="1127.6" y="184" width="40.5" height="34" fill="#bd8424"/>
+    <rect x="1168.1" y="184" width="2.9" height="34" rx="1.5" fill="#b8384b"/>
+    <text x="88" y="174" font-family="Microsoft YaHei, Noto Sans CJK SC, Arial, sans-serif" font-size="15" fill="#647484">对总体正差距的贡献份额</text>
+  </g>
+
+  <g transform="translate(64 286)" font-family="Microsoft YaHei, Noto Sans CJK SC, Arial, sans-serif">
+    <g filter="url(#shadow)">
+      <rect x="0" y="0" width="360" height="232" rx="16" fill="#ffffff"/>
+      <rect x="0" y="0" width="10" height="232" rx="5" fill="#286aa3"/>
+    </g>
+    <text x="32" y="49" font-size="22" font-weight="700" fill="#17365d">内部 → 内部</text>
+    <text x="32" y="111" font-size="48" font-weight="800" fill="#286aa3">95.99%</text>
+    <text x="32" y="150" font-size="16" fill="#647484">样本占比 90.85%</text>
+    <text x="32" y="179" font-size="16" fill="#647484">平均 gap +0.002670</text>
+    <text x="32" y="208" font-size="14" fill="#217a48">支持先冻结 jump、修 continuous flow</text>
+
+    <g transform="translate(396 0)" filter="url(#shadow)">
+      <rect x="0" y="0" width="360" height="232" rx="16" fill="#ffffff"/>
+      <rect x="0" y="0" width="10" height="232" rx="5" fill="#bd8424"/>
+    </g>
+    <g transform="translate(396 0)">
+      <text x="32" y="49" font-size="22" font-weight="700" fill="#17365d">原子 ↔ 内部</text>
+      <text x="32" y="111" font-size="48" font-weight="800" fill="#bd8424">3.74%</text>
+      <text x="32" y="150" font-size="16" fill="#647484">样本占比 3.67%</text>
+      <text x="32" y="179" font-size="16" fill="#647484">平均 gap +0.002574</text>
+      <text x="32" y="208" font-size="14" fill="#647484">持续期耦合作为条件备用线</text>
+    </g>
+
+    <g transform="translate(792 0)" filter="url(#shadow)">
+      <rect x="0" y="0" width="360" height="232" rx="16" fill="#ffffff"/>
+      <rect x="0" y="0" width="10" height="232" rx="5" fill="#b8384b"/>
+    </g>
+    <g transform="translate(792 0)">
+      <text x="32" y="49" font-size="22" font-weight="700" fill="#17365d">原子 → 原子</text>
+      <text x="32" y="111" font-size="48" font-weight="800" fill="#b8384b">0.27%</text>
+      <text x="32" y="150" font-size="16" fill="#647484">样本占比 5.48%</text>
+      <text x="32" y="179" font-size="16" fill="#647484">平均 gap +0.000124</text>
+      <text x="32" y="208" font-size="14" fill="#647484">不是当前平均 ramp 缺口主因</text>
+    </g>
+  </g>
+  <text x="64" y="571" font-family="Microsoft YaHei, Noto Sans CJK SC, Arial, sans-serif" font-size="15" fill="#647484">边界：按观测真值转移分层，只作已见数据的机制归因；不是新的确认性优效检验。</text>
+</svg>

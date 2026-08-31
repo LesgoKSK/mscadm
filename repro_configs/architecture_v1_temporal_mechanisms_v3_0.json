@@ -1,0 +1,183 @@
+{
+  "schema": "architecture_v1_temporal_mechanisms_v3_0",
+  "status": "frozen_before_any_retained_T0_T1_training",
+  "created_date": "2026-08-21",
+  "objective": "test whether explicit chronological state improves the continuous joint wind trajectory beyond a parameter-matched memoryless control",
+  "evidence_scope": "architecture development using train and validation only; selection and calibration remain sealed",
+  "output_root": "outputs/architecture_v1_temporal_mechanisms_v3_0",
+  "lineage": {
+    "R0_D_result": "outputs/architecture_v1_r0_stability_v2_3_formal/FORMAL_D_RESULT.json",
+    "R0_D_result_sha256": "c7a614ccc46a7bee1f357bed4113257fee860dc29d7f598aaacee82e1f06529b",
+    "R0_D_status_required": "D_G1_GO",
+    "shared_EA_checkpoint": "outputs/architecture_v1_formal_v2_2_1/runs/R0_seed0/atom/best.pt",
+    "shared_EA_checkpoint_sha256": "0cdde72fc8d3b89f19b9f0805ca85c5afca9c24346738e93f346d9538705eb46",
+    "shared_EA_state_sha256": "270d3ec01ed70954b33c4a44e4ff249121f64cd5081743ceea3b32c681c69ef6"
+  },
+  "role_access": {
+    "allowed_target_roles": ["train", "validation"],
+    "forbidden_target_roles": ["calibration", "selection", "r_seen", "final"],
+    "selection_state": "sealed",
+    "calibration_state": "sealed"
+  },
+  "common_model": {
+    "condition_dim": 20,
+    "zones": 10,
+    "hours": 24,
+    "encoder_dim": 64,
+    "encoder_depth": 2,
+    "flow_dim": 96,
+    "flow_depth": 4,
+    "heads": 4,
+    "ff_multiplier": 4,
+    "dropout": 0.0,
+    "atom_hidden_dim": 64,
+    "atom_initial_probabilities": [0.08155814915523832, 0.9184183986871631, 0.000023452157598499062],
+    "atom_fixed_one_probability": 0.000023452157598499062,
+    "atom_shared_priority_weight": 0.5,
+    "atom_location_auxiliary_weight": 0.25,
+    "atom_location_mean": -0.7657249678096855,
+    "atom_location_std": 2.1248890260251247,
+    "atom_location_smooth_l1_beta": 1.0,
+    "logit_epsilon": 0.0001,
+    "continuous_latent_scope": "sampled_interior_active_coordinates_only",
+    "common_parameter_topology_required": true,
+    "common_initial_tensor_bank_required": true
+  },
+  "candidates": {
+    "T0": {
+      "class": "T0MemorylessRectifiedFlow",
+      "feature_cell": "memoryless",
+      "source_cell": "memoryless",
+      "purpose": "parameter-matched no-added-recurrence control"
+    },
+    "T1_feature": {
+      "class": "T1FeatureRectifiedFlow",
+      "feature_cell": "chronological_recurrent",
+      "source_cell": "memoryless",
+      "purpose": "test recurrence as an NWP-derived conditioning feature"
+    },
+    "T1_source": {
+      "class": "T1SourceRectifiedFlow",
+      "feature_cell": "memoryless",
+      "source_cell": "chronological_recurrent",
+      "purpose": "test recurrence in the stochastic source law"
+    },
+    "T1_feature_shuffle": {
+      "class": "T1ShuffleRectifiedFlow",
+      "shuffle_target": "feature",
+      "purpose": "negative control for T1_feature"
+    },
+    "T1_source_shuffle": {
+      "class": "T1ShuffleRectifiedFlow",
+      "shuffle_target": "source",
+      "purpose": "negative control for T1_source"
+    }
+  },
+  "shuffle_control": {
+    "seed_used_once_to_freeze_permutation": 23001,
+    "hour_order_zero_based": [17, 2, 12, 0, 15, 18, 1, 11, 16, 20, 13, 7, 5, 4, 9, 23, 22, 10, 3, 8, 6, 21, 19, 14],
+    "semantics": "visit hours in frozen shuffled order and restore outputs to physical hour slots",
+    "no_test_or_validation_adaptation": true
+  },
+  "training": {
+    "model_seeds": [0, 1, 2],
+    "candidate_initialization": "within each seed all T0/T1 candidates load the same full initial tensor bank",
+    "flow_initialization_seed": "12000 + model_seed",
+    "common_epoch_shuffle_seed": 13000,
+    "common_flow_path_seed": 14000,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "betas": [0.9, 0.999],
+    "eps": 0.00000001,
+    "weight_decay": 0.0,
+    "gradient_clip": 5.0,
+    "batch_days": 16,
+    "maximum_epochs": 720,
+    "minimum_epochs_before_early_stop": 120,
+    "validate_every_epochs": 10,
+    "early_stopping_patience_validations": 12,
+    "early_stopping_minimum_delta": 0.00001,
+    "early_stopping_relative_delta": 0.001,
+    "validation_bank_noise_seeds": [15000, 15001, 15002, 15003],
+    "validation_bank_time_seeds": [16000, 16001, 16002, 16003],
+    "validation_bank_common_across_candidates_and_seeds": true
+  },
+  "evaluation": {
+    "members": 100,
+    "sampling_seeds": [21000, 21001, 21002],
+    "method": "heun",
+    "integration_steps": 16,
+    "per_path_flow_nfe": 31,
+    "member_chunks": [10, 20],
+    "chunk_audit_scope": {
+      "training_seeds": [0],
+      "sampling_seeds": [21000],
+      "candidates": ["T0", "T1_feature", "T1_source", "T1_feature_shuffle", "T1_source_shuffle"],
+      "all_other_evaluations_use_primary_chunk_only": true
+    },
+    "chunk_gate": {
+      "strict_exact_atom_and_state_semantics": true,
+      "continuous_value_global_max_abs_difference_max": 0.000002,
+      "proper_score_each_aggregate_abs_difference_max": 0.0000001,
+      "legacy_per_cell_allclose": "diagnostic_only"
+    },
+    "common_atom_allocation_and_iid_noise": true,
+    "inference_unit": "calendar_day",
+    "paired_calendar_day_bootstrap_repetitions": 5000,
+    "primary_endpoints": ["ramp_CRPS", "lagged_increment_variogram_score"],
+    "noninferiority_endpoints": ["level_CRPS", "normalized_joint_ES", "coverage90", "width90"],
+    "diagnostic_only": ["lag1_increment_correlation", "cross_lag_matrix", "NWP_regime_interactions"]
+  },
+  "go_no_go": {
+    "T1_vs_T0_primary": {
+      "ramp_CRPS_improvement_definition": "mean_daily_T0_minus_T1",
+      "ramp_CRPS_practical_improvement_min": 0.001,
+      "ramp_CRPS_bootstrap_CI_lower_must_exceed": 0.0,
+      "lagged_increment_variogram_relative_improvement_min": 0.05,
+      "lagged_increment_variogram_bootstrap_CI_lower_must_exceed": 0.0,
+      "both_primary_conditions_required": true
+    },
+    "noninferiority": {
+      "level_CRPS_T1_minus_T0_upper_margin": 0.0015,
+      "normalized_joint_ES_relative_T1_minus_T0_upper_margin": 0.02,
+      "coverage90_absolute_difference_max": 0.02,
+      "width90_relative_increase_max": 0.10,
+      "bootstrap_CI_upper_must_be_within_margin": true
+    },
+    "negative_control": {
+      "chronological_T1_must_beat_its_matched_shuffle_on_both_primary_endpoints": true,
+      "ramp_CRPS_practical_improvement_min": 0.0005,
+      "bootstrap_CI_lower_must_exceed": 0.0
+    },
+    "seed_stability": {
+      "level_CRPS_max_minus_min_max": 0.0025,
+      "ramp_CRPS_max_minus_min_max": 0.0012,
+      "normalized_joint_ES_relative_max_minus_min_max": 0.03
+    },
+    "decision": {
+      "if_neither_T1_passes": "do_not_expand_SSM; keep T0/RF and proceed to matched joint diffusion control",
+      "if_only_T1_feature_passes": "retain feature recurrence and reject recurrent source claim",
+      "if_T1_source_and_shuffle_gate_pass": "retain recurrent source as first SSM candidate",
+      "if_both_pass": "select the simpler candidate only after predeclared equivalence and efficiency comparison",
+      "selection_access_authorized": false
+    }
+  },
+  "smoke": {
+    "data": "deterministic_synthetic_only",
+    "real_target_roles_accessed": [],
+    "batch_days": 2,
+    "updates": 3,
+    "members": 4,
+    "integration_steps": 2,
+    "model_overrides": {
+      "encoder_dim": 16,
+      "encoder_depth": 1,
+      "flow_dim": 16,
+      "flow_depth": 1,
+      "heads": 4,
+      "ff_multiplier": 2,
+      "atom_hidden_dim": 16
+    },
+    "scientific_evidence": false
+  }
+}

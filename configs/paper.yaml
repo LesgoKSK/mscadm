@@ -1,0 +1,35 @@
+seed: 2026
+data:
+  data_dir: Data
+  validation_days: 70
+  zones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  target_scale: minus_one_one
+model:
+  condition_dim: 20
+  sequence_length: 24
+  patch_size: 1
+  model_dim: 128
+  condition_bottleneck: 64
+  depth: 4
+  heads: 4
+  ff_multiplier: 4
+  dropout: 0.0
+diffusion:
+  timesteps: 250
+  beta_schedule: cosine
+  learn_variance: true
+  vlb_weight: 0.001
+training:
+  batch_size: 256
+  steps: 26000
+  learning_rate: 0.0001
+  weight_decay: 0.0
+  num_workers: 0
+  log_every: 100
+  validate_every: 1000
+  checkpoint_every: 1000
+  output_dir: outputs/paper
+evaluation:
+  scenarios: 100
+  batch_size: 32
+

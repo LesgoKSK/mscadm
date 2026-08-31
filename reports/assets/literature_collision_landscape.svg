@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="730" viewBox="0 0 1320 730" role="img" aria-labelledby="title desc">
+  <title id="title">文献碰撞与剩余空位</title>
+  <desc id="desc">展示 proper score 后训练、混合测度、动态依赖、白化、极端评分等方向的碰撞强度与剩余研究空位。</desc>
+  <defs><filter id="shadow" x="-10%" y="-15%" width="120%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#17365d" flood-opacity="0.12"/></filter></defs>
+  <rect width="1320" height="730" rx="24" fill="#f5f8fb"/>
+  <g font-family="Microsoft YaHei, Noto Sans CJK SC, Arial, sans-serif">
+    <text x="60" y="62" font-size="31" font-weight="700" fill="#17365d">文献碰撞地图：哪些大标题已经不能再写</text>
+    <text x="60" y="97" font-size="17" fill="#647484">红色不是“技术无效”，而是“不能作为当前论文的宽泛首创主张”</text>
+
+    <text x="382" y="138" font-size="15" font-weight="700" fill="#647484">直接或高度相邻工作</text>
+    <text x="910" y="138" font-size="15" font-weight="700" fill="#647484">仍可能成立的窄空位</text>
+
+    <g filter="url(#shadow)">
+      <rect x="60" y="158" width="1200" height="88" rx="15" fill="#ffffff"/>
+      <rect x="60" y="158" width="250" height="88" rx="15" fill="#fceef0"/>
+    </g>
+    <text x="82" y="193" font-size="18" font-weight="700" fill="#b8384b">CRPS / proper 后训练</text>
+    <text x="82" y="220" font-size="13" fill="#6b4450">碰撞：高</text>
+    <text x="340" y="191" font-size="14" fill="#24313d">JMLR scoring · DRaFT · Swift · AIFS-CRPS · RMMD</text>
+    <text x="340" y="218" font-size="13" fill="#647484">生成预测、概率流和预训练 diffusion 的 CRPS 训练/微调均已有先例</text>
+    <text x="872" y="191" font-size="14" font-weight="700" fill="#217a48">多场站风电 + level/ramp + 成员依赖语义</text>
+    <text x="872" y="218" font-size="13" fill="#647484">须做稳定化、实际 sampler 对齐与联合校准</text>
+
+    <g filter="url(#shadow)"><rect x="60" y="264" width="1200" height="88" rx="15" fill="#ffffff"/><rect x="60" y="264" width="250" height="88" rx="15" fill="#fceef0"/></g>
+    <text x="82" y="299" font-size="18" font-weight="700" fill="#b8384b">边界原子 + 联合风电</text>
+    <text x="82" y="326" font-size="13" fill="#6b4450">碰撞：中高</text>
+    <text x="340" y="297" font-size="14" fill="#24313d">ZOIB + R-vine regional wind (2026) · ZIB-HMM (2026)</text>
+    <text x="340" y="324" font-size="13" fill="#647484">0/1 点质量、联合依赖与状态动态已有直接风电建模</text>
+    <text x="872" y="297" font-size="14" font-weight="700" fill="#217a48">低步数 mixed flow 的质量守恒与状态-振幅耦合</text>
+    <text x="872" y="324" font-size="13" fill="#647484">上边界事件过少，主实证应围绕 zero atom</text>
+
+    <g filter="url(#shadow)"><rect x="60" y="370" width="1200" height="88" rx="15" fill="#ffffff"/><rect x="60" y="370" width="250" height="88" rx="15" fill="#fff5e5"/></g>
+    <text x="82" y="405" font-size="18" font-weight="700" fill="#a96600">动态时空 diffusion</text>
+    <text x="82" y="432" font-size="13" fill="#765b2c">碰撞：高</text>
+    <text x="340" y="403" font-size="14" fill="#24313d">MOE-STD · PSTDT · physics-aware dynamic graph MoE</text>
+    <text x="340" y="430" font-size="13" fill="#647484">“动态图/时空专家提升风电概率预测”已拥挤</text>
+    <text x="872" y="403" font-size="14" font-weight="700" fill="#217a48">显式 PSD 的 NWP 条件 zone×lead source covariance</text>
+    <text x="872" y="430" font-size="13" fill="#647484">图只能是 covariance 参数化或 feature-only 对照</text>
+
+    <g filter="url(#shadow)"><rect x="60" y="476" width="1200" height="88" rx="15" fill="#ffffff"/><rect x="60" y="476" width="250" height="88" rx="15" fill="#fff5e5"/></g>
+    <text x="82" y="511" font-size="18" font-weight="700" fill="#a96600">conditional whitening</text>
+    <text x="82" y="538" font-size="13" fill="#765b2c">碰撞：极高</text>
+    <text x="340" y="509" font-size="14" fill="#24313d">TMDM · NsDiff · CW-Gen/CW-Flow · TSFlow · DSPD</text>
+    <text x="340" y="536" font-size="13" fill="#647484">均值、方差、逐时协方差、GP source、whitening 均已覆盖</text>
+    <text x="872" y="509" font-size="14" font-weight="700" fill="#217a48">完整 cross-lead、state-masked、低数据可估计结构</text>
+    <text x="872" y="536" font-size="13" fill="#647484">仅作 B 组件；Gaussian atom completion 不可识别</text>
+
+    <g filter="url(#shadow)"><rect x="60" y="582" width="1200" height="88" rx="15" fill="#ffffff"/><rect x="60" y="582" width="250" height="88" rx="15" fill="#eaf6ef"/></g>
+    <text x="82" y="617" font-size="18" font-weight="700" fill="#217a48">极端 / ramp proper score</text>
+    <text x="82" y="644" font-size="13" fill="#3f6250">可行但非首创</text>
+    <text x="340" y="615" font-size="14" fill="#24313d">weighted scores · extreme wind twCRPS · tail calibration</text>
+    <text x="340" y="642" font-size="13" fill="#647484">尾部改善与主体退化的 trade-off 已被实证</text>
+    <text x="872" y="615" font-size="14" font-weight="700" fill="#217a48">对所有日计算的 tw-ramp score + 全局锚</text>
+    <text x="872" y="642" font-size="13" fill="#647484">避免只在真实极端日评价造成 forecaster’s dilemma</text>
+
+    <text x="60" y="704" font-size="14" fill="#647484">检索截止：2026-08-13。部分 2026 工作目前仅有正式摘要/article preview，全文边界需在投稿前再次核验。</text>
+  </g>
+</svg>

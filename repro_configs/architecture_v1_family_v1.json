@@ -1,0 +1,321 @@
+{
+  "schema": "architecture_v1_family_v1",
+  "status": "frozen_before_family_v1_implementation_smoke_or_training",
+  "created_date": "2026-08-26",
+  "objective": "matched-capacity comparison of joint rectified flow and joint DDPM after temporal-recurrence No-Go",
+  "evidence_scope": "validation-informed model-family development; not independent confirmation; selection and calibration remain sealed",
+  "output_root": "outputs/architecture_v1_family_v1",
+  "lineage": {
+    "v3_2_result": "outputs/architecture_v1_temporal_mechanisms_v3_2/V3_2_RESULT.json",
+    "v3_2_result_sha256": "b159f8391bd67cd9820427794ccb4dfd15baf17e9762351ed3a98e344b606160",
+    "v3_2_freeze": "outputs/architecture_v1_temporal_mechanisms_v3_2/training.freeze.json",
+    "v3_2_freeze_sha256": "05a1a2e803558d73ce180a0c67a5dc89848e300bda4b873f7d5b0cccb7a0fbc4",
+    "v3_2_required_status": "V3_2_T1_NO_GO",
+    "v3_2_code_sha256": "629e7ea43d31ab207aad235465c0fc2e2267c5a5f94325e52861bdf1cda8472d",
+    "protocol_sha256": "c75338474aa6b4eb3517647be64ae90bf00da6919ad05683d3dc3bf279b1de79",
+    "fit_data_bundle_sha256": "1a36033ac4f921c460a10ad04ee011b2d41b458793f5a62f0093868efcecf4a6",
+    "shared_EA_checkpoint": "outputs/architecture_v1_formal_v2_2_1/runs/R0_seed0/atom/best.pt",
+    "shared_EA_checkpoint_sha256": "0cdde72fc8d3b89f19b9f0805ca85c5afca9c24346738e93f346d9538705eb46",
+    "shared_EA_state_sha256": "270d3ec01ed70954b33c4a44e4ff249121f64cd5081743ceea3b32c681c69ef6",
+    "classification": "v3_2_validation_informed_engineering_response_to_seed_instability"
+  },
+  "role_access": {
+    "p0_allowed_target_roles": ["train"],
+    "formal_allowed_target_roles": ["train", "validation"],
+    "forbidden_target_roles": ["calibration", "selection", "r_seen", "final"],
+    "selection_state": "sealed",
+    "calibration_state": "sealed",
+    "selection_access_authorized": false
+  },
+  "family_candidates": {
+    "F0": {
+      "family": "rectified_flow",
+      "model": "fresh_T0StableSourceRectifiedFlow",
+      "training_target": "velocity=clean_logit-iid_noise",
+      "primary_sampler": "16_step_Heun",
+      "primary_network_forward_evaluations": 31
+    },
+    "D0": {
+      "family": "DDPM",
+      "model": "same_trainable_tensor_topology_as_F0",
+      "training_target": "epsilon_prediction",
+      "forward_process": "masked_cosine_Gaussian_diffusion",
+      "primary_sampler": "deterministic_DDIM_eta_0",
+      "primary_network_forward_evaluations": 31
+    }
+  },
+  "excluded_candidates": {
+    "legacy_zonewise_DDPM": "not_joint_and_not_parameter_matched",
+    "T1_feature": "v3_2_formal_No_Go_despite_exploratory_primary_signal",
+    "T1_source": "v3_2_formal_No_Go_and_rho_saturation",
+    "feature_plus_source": "component_candidates_did_not_both_pass",
+    "learned_diffusion_variance": "would_change_output_head_and_parameter_count",
+    "classifier_free_guidance": "no_registered_null_condition_branch",
+    "self_conditioning": "would_change_architecture_and_compute",
+    "probabilistic_SSM": "reserved_for_family_v1_unresolved_or_both_unstable"
+  },
+  "common_model": {
+    "condition_dim": 20,
+    "zones": 10,
+    "hours": 24,
+    "encoder_dim": 64,
+    "encoder_depth": 2,
+    "transport_dim": 96,
+    "transport_depth": 4,
+    "heads": 4,
+    "ff_multiplier": 4,
+    "dropout": 0.0,
+    "atom_hidden_dim": 64,
+    "temporal_mode": "stable_memoryless",
+    "source_law": "iid_standard_Gaussian",
+    "logit_epsilon": 0.0001,
+    "joint_layout": "batch_member_zone_hour",
+    "total_parameters_expected": 796837,
+    "shared_EA_parameters_expected": 141763,
+    "flow_stage_trainable_parameters_expected": 655074,
+    "effective_active_parameters_expected": 642593,
+    "exact_parameter_keys_shapes_counts_and_initial_tensors_within_seed": true,
+    "common_network_interpretation": "the_same_JointTimeDomainVelocity_tensor_graph_predicts_velocity_for_F0_or_epsilon_for_D0",
+    "diffusion_adds_trainable_parameters": false
+  },
+  "shared_EA_and_atom_contract": {
+    "encoder_and_atom": "load_registered_checkpoint_and_freeze_exactly",
+    "training_states": "derive_only_from_observed_truth_cells",
+    "sampling_allocation": "common_balanced_shared_priority_allocation_for_F0_and_D0",
+    "zero_and_one_coordinates": "exact_reconstruction_with_continuous_latent_identically_zero",
+    "active_coordinates": "sampled_interior_only",
+    "missing_cells": "excluded_from_all_losses_and_adjacent_ramp_scores",
+    "atom_probability_or_allocation_change": "hard_failure"
+  },
+  "common_latent_contract": {
+    "clean_coordinate": "raw_clipped_logit_of_interior_power_shared_by_F0_and_D0",
+    "clean_coordinate_formula": "logit(clamp(y,0.0001,0.9999))",
+    "train_only_location_mean_is_not_a_transport_normalizer": -0.7657249678096855,
+    "train_only_location_std_is_not_a_transport_normalizer": 2.1248890260251247,
+    "extra_DDPM_standardization": false,
+    "internal_predicted_x0_clipping": false,
+    "final_decode": "sigmoid_continuous_latent_then_exact_atom_reconstruction",
+    "inactive_latent_after_every_network_or_sampler_step": 0.0,
+    "nonfinite_or_out_of_contract_latent": "hard_failure_with_bundle"
+  },
+  "D0_diffusion": {
+    "training_timesteps": 250,
+    "beta_schedule": "cosine",
+    "cosine_offset": 0.008,
+    "beta_clip": [0.00000001, 0.999],
+    "prediction_parameterization": "epsilon",
+    "variance": "fixed_posterior_not_learned",
+    "simple_loss": "mean_squared_epsilon_error_over_observed_interior_cells_only",
+    "vlb_weight": 0.0,
+    "timestep_sampling": "uniform_discrete_0_to_249_per_calendar_day",
+    "network_time_input": "timestep_divided_by_249_in_[0,1]",
+    "forward_noise": "iid_standard_Gaussian_masked_to_active_coordinates",
+    "primary_DDIM": {
+      "steps": 31,
+      "eta": 0.0,
+      "grid": "unique_rounded_linspace_including_0_and_249",
+      "intermediate_noise": false,
+      "predicted_x0_clip": false
+    },
+    "legacy_repro_diffusion_core_use": "schedule_formula_reference_and_cross_test_only_not_runtime_due_nonjoint_shape_clipping_and_missing_atom_semantics"
+  },
+  "F0_flow": {
+    "path": "linear_interpolation_from_masked_iid_Gaussian_to_clean_logit",
+    "time_sampling": "uniform_continuous_per_calendar_day",
+    "loss": "mean_squared_velocity_error_over_observed_interior_cells_only",
+    "primary_Heun_steps": 16,
+    "primary_network_forward_evaluations": 31
+  },
+  "fresh_seed_protocol": {
+    "model_seeds": [3, 4, 5],
+    "reason": "avoid presenting previously inspected_v3_2_seed0_1_2 transports_as_new_family_evidence",
+    "initialization_seed_formula": "12000+model_seed",
+    "within_seed_F0_D0_initial_tensor_sha256_must_match": true,
+    "across_family_training_day_permutation_common": true,
+    "common_epoch_shuffle_seed": 13000,
+    "common_path_noise_seed": 14000,
+    "common_validation_bank": true,
+    "common_sampling_atom_allocation_and_initial_noise": true,
+    "paired_member_index": "common_random_number_control_only_not_inference_unit"
+  },
+  "common_EMA_amendment": {
+    "classification": "validation_informed_common_stabilization_after_v3_2_seed_spread",
+    "applies_to": ["F0", "D0"],
+    "online_optimizer_weights_used_for_sampling": false,
+    "ema_initialization": "exact_copy_of_initial_online_transport_weights",
+    "decay": 0.999,
+    "update_frequency_optimizer_steps": 1,
+    "start_after_optimizer_update": 1,
+    "tracked_parameters": "all_flow_stage_trainable_parameters_including_dormant_matched_controls",
+    "shared_EA": "frozen_and_not_EMA_updated",
+    "validation_and_best_checkpoint": "EMA_weights_only",
+    "resume_must_restore_online_EMA_optimizer_and_RNG": true,
+    "ablation": "online_weights_reported_diagnostic_only_for_seed3_without_candidate_selection"
+  },
+  "training": {
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "betas": [0.9, 0.999],
+    "eps": 0.00000001,
+    "weight_decay": 0.0,
+    "gradient_clip": 5.0,
+    "batch_calendar_days": 16,
+    "updates_per_epoch_expected": 17,
+    "maximum_epochs": 720,
+    "maximum_updates": 12240,
+    "minimum_epochs_before_early_stop": 120,
+    "validate_every_epochs": 10,
+    "early_stopping_patience_validations": 12,
+    "early_stopping_minimum_delta": 0.00001,
+    "early_stopping_relative_delta": 0.001,
+    "validation_bank_replicates": 4,
+    "validation_bank_noise_seeds": [15000, 15001, 15002, 15003],
+    "validation_bank_time_or_timestep_seeds": [16000, 16001, 16002, 16003],
+    "precision": "FP32",
+    "AMP": false,
+    "deterministic_algorithms": true,
+    "workers": 0,
+    "gradient_audit_epoch_start_one_based": 31,
+    "gradient_clip_fraction_max": 0.5,
+    "preclip_gradient_norm_p99_to_median_max": 5.0,
+    "preclip_gradient_norm_max": 50.0
+  },
+  "P0_preflight": {
+    "retained_weights": false,
+    "allowed_targets": ["train"],
+    "synthetic_semantic_tests_required": true,
+    "discarded_train_updates_per_family": 50,
+    "pilot_seed": 3,
+    "checks": [
+      "exact_parameter_topology_and_initial_tensor_hash",
+      "masked_q_sample_closed_form",
+      "inactive_latent_zero_at_every_DDIM_step",
+      "exact_atom_reconstruction",
+      "fixed_validation_bank_determinism_without_loading_validation_targets",
+      "EMA_update_resume_and_checkpoint_identity",
+      "DDIM_same_seed_replay_exact",
+      "member_chunk_numeric_equivalence",
+      "finite_loss_grad_optimizer_and_sampler",
+      "one_update_uses_one_network_forward_for_both_families",
+      "GPU_peak_memory_below_4.5_GiB"
+    ],
+    "failure": "P0_No_Go_new_revision_required_no_formal_training"
+  },
+  "evaluation": {
+    "role": "validation",
+    "members": 100,
+    "sampling_seeds": [21000, 21001, 21002],
+    "primary_matched_NFE": 31,
+    "primary_F0": {"sampler": "Heun", "steps": 16, "NFE": 31},
+    "primary_D0": {"sampler": "DDIM", "steps": 31, "eta": 0.0, "NFE": 31},
+    "secondary_quality_efficiency_curve": [
+      {"NFE": 9, "F0_Heun_steps": 5, "D0_DDIM_steps": 9},
+      {"NFE": 17, "F0_Heun_steps": 9, "D0_DDIM_steps": 17},
+      {"NFE": 31, "F0_Heun_steps": 16, "D0_DDIM_steps": 31},
+      {"NFE": 65, "F0_Heun_steps": 33, "D0_DDIM_steps": 65}
+    ],
+    "secondary_curve_is_candidate_selecting": false,
+    "metrics": [
+      "level_CRPS",
+      "ramp_CRPS",
+      "normalized_joint_ES",
+      "lagged_increment_variogram_score",
+      "coverage90",
+      "width90",
+      "zero_Brier",
+      "atom_state_Brier"
+    ],
+    "diagnostics": [
+      "lag1_increment_correlation",
+      "cross_lag_matrix",
+      "NWP_regime_interactions",
+      "member_collapse",
+      "training_wall_seconds",
+      "sampling_wall_seconds_synchronized",
+      "peak_GPU_memory_bytes",
+      "actual_network_forward_evaluations"
+    ],
+    "inference_unit": "calendar_day",
+    "training_seed_aggregation": "average_metric_within_day_across_seeds_before_family_contrast",
+    "bootstrap_repetitions": 5000,
+    "common_random_numbers": true
+  },
+  "per_seed_hard_gates": {
+    "finite_training_sampling_and_metrics": true,
+    "gradient_clip_fraction_max": 0.5,
+    "coverage90_min": 0.75,
+    "coverage90_max": 0.98,
+    "width90_min": 0.25,
+    "width90_max": 0.80,
+    "level_CRPS_max": 0.13,
+    "ramp_CRPS_max": 0.07,
+    "normalized_joint_ES_max": 0.18,
+    "inactive_latent_max_abs": 0.0,
+    "atom_boundary_values_exact": true,
+    "shared_EA_unchanged": true
+  },
+  "three_seed_stability": {
+    "level_CRPS_max_minus_min_max": 0.0025,
+    "ramp_CRPS_max_minus_min_max": 0.0012,
+    "normalized_joint_ES_relative_max_minus_min_max": 0.03,
+    "coverage90_max_minus_min_max": 0.04,
+    "all_required": true
+  },
+  "family_comparison": {
+    "score_direction": "lower_is_better",
+    "practical_margins": {
+      "level_CRPS_absolute": 0.001,
+      "ramp_CRPS_absolute": 0.001,
+      "normalized_joint_ES_relative": 0.02,
+      "lagged_increment_variogram_score_relative": 0.05
+    },
+    "noninferiority_margins": {
+      "level_CRPS_absolute": 0.0015,
+      "ramp_CRPS_absolute": 0.001,
+      "normalized_joint_ES_relative": 0.02,
+      "lagged_increment_variogram_score_relative": 0.05,
+      "coverage90_absolute": 0.02,
+      "width90_relative_increase": 0.10
+    },
+    "superiority": "paired_calendar_day_CI_lower_above_zero_and_point_estimate_at_least_practical_margin",
+    "family_dominance": "eligible_and_noninferior_on_all_registered_endpoints_and_superior_on_at_least_one_of_four_proper_score_endpoints",
+    "equivalence": "both_eligible_and_two_sided_CIs_within_all_noninferiority_margins",
+    "efficiency_tiebreak": {
+      "only_after_equivalence": true,
+      "primary_NFE_equal": 31,
+      "sampling_wall_time_relative_improvement_min": 0.20,
+      "paired_day_wall_time_CI_required": true,
+      "otherwise": "family_unresolved"
+    }
+  },
+  "decision_tree": {
+    "both_families_ineligible": "family_v1_unresolved_escalate_to_probabilistic_SSM_or_common_training_stability_revision",
+    "only_one_family_eligible": "select_only_if_it_is_noninferior_to_the_ineligible_family_on_all_registered_endpoints_else_unresolved",
+    "D0_dominates": "retain_joint_DDPM",
+    "F0_dominates": "retain_joint_rectified_flow",
+    "equivalent_and_efficiency_gate_passes": "retain_faster_family",
+    "tradeoff_or_no_dominance": "family_v1_unresolved_no_selection_access",
+    "selection_access_authorized_by_family_v1_runner": false,
+    "after_clear_winner": "freeze_winner_and_create_separate_one_time_selection_state_machine"
+  },
+  "freeze_and_resume": {
+    "formal_training_requires_explicit_execute_flag": true,
+    "nonempty_output_without_resume": "reject",
+    "resume_boundary": "complete_epoch_only",
+    "resume_identity": "config_code_data_protocol_environment_model_online_EMA_optimizer_RNG",
+    "failure_bundle_on_any_nonfinite_or_contract_violation": true,
+    "training_freeze_after_6_of_6_complete_and_all_evaluations": true,
+    "threshold_or_sampler_change_after_P0_start": "forbidden_new_revision_required",
+    "selection_and_calibration": "remain_sealed"
+  },
+  "implementation_plan": {
+    "new_module": "architecture_v1/family_diffusion.py",
+    "new_training_support": "family-aware fixed-bank and common EMA without changing legacy formal runs",
+    "new_runner": "repro_scripts/run_architecture_v1_family_v1.py",
+    "new_tests": [
+      "tests/test_architecture_v1_family_diffusion.py",
+      "tests/test_architecture_v1_family_v1_runner.py"
+    ],
+    "legacy_DDPM_runtime_reuse": false
+  }
+}

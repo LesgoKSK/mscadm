@@ -1,0 +1,4 @@
+-r requirements-repro.txt
+cvxpy>=1.6,<2
+cvxpylayers>=0.1.9
+diffcp>=1.1

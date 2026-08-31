@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <marker id="arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0 0L11 5.5 0 11Z" fill="#7a96ad"/></marker>
+    <style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#17365d}.title{font-size:40px;font-weight:800}.sub{font-size:22px;fill:#66737f}.head{font-size:23px;font-weight:800}.body{font-size:18px;fill:#435b6d}.step{font-size:26px;font-weight:800;fill:#fff}</style>
+  </defs>
+  <rect width="1200" height="675" rx="30" fill="#f5f9fc"/>
+  <text class="title" x="600" y="62" text-anchor="middle">我们已经做了什么？</text>
+  <text class="sub" x="600" y="98" text-anchor="middle">一路不是在“盲目换模型”，而是在不断排除错误答案</text>
+  <path d="M120 200 H1080" stroke="#a7bdce" stroke-width="8" stroke-linecap="round"/>
+  <g transform="translate(45 145)">
+    <circle cx="95" cy="55" r="38" fill="#2e74b5"/><text class="step" x="95" y="65" text-anchor="middle">1</text>
+    <rect x="0" y="115" width="190" height="250" rx="20" fill="#fff" stroke="#b9cfdf" stroke-width="3"/>
+    <text class="head" x="95" y="157" text-anchor="middle">复现论文</text>
+    <text class="body" x="95" y="202" text-anchor="middle"><tspan x="95">把数据、训练、</tspan><tspan x="95" dy="28">采样、指标跑通</tspan></text>
+    <rect x="28" y="275" width="134" height="48" rx="14" fill="#fff0e4"/><text x="95" y="306" text-anchor="middle" font-size="20" font-weight="800" fill="#b35b18">数值没对上</text>
+  </g>
+  <path d="M238 200 H265" stroke="#7a96ad" stroke-width="4" marker-end="url(#arrow)"/>
+  <g transform="translate(250 145)">
+    <circle cx="95" cy="55" r="38" fill="#4f86ad"/><text class="step" x="95" y="65" text-anchor="middle">2</text>
+    <rect x="0" y="115" width="190" height="250" rx="20" fill="#fff" stroke="#b9cfdf" stroke-width="3"/>
+    <text class="head" x="95" y="157" text-anchor="middle">拆开诊断</text>
+    <text class="body" x="95" y="202" text-anchor="middle"><tspan x="95">不只看总分，</tspan><tspan x="95" dy="28">专查轨迹怎么走</tspan></text>
+    <rect x="28" y="275" width="134" height="48" rx="14" fill="#edf5fb"/><text x="95" y="306" text-anchor="middle" font-size="20" font-weight="800" fill="#2e74b5">找到时间短板</text>
+  </g>
+  <path d="M443 200 H470" stroke="#7a96ad" stroke-width="4" marker-end="url(#arrow)"/>
+  <g transform="translate(455 145)">
+    <circle cx="95" cy="55" r="38" fill="#5b927e"/><text class="step" x="95" y="65" text-anchor="middle">3</text>
+    <rect x="0" y="115" width="190" height="250" rx="20" fill="#fff" stroke="#b9cfdf" stroke-width="3"/>
+    <text class="head" x="95" y="157" text-anchor="middle">重建考场</text>
+    <text class="body" x="95" y="202" text-anchor="middle"><tspan x="95">锁住数据、随机数</tspan><tspan x="95" dy="28">和三种子规则</tspan></text>
+    <rect x="28" y="275" width="134" height="48" rx="14" fill="#e8f5ee"/><text x="95" y="306" text-anchor="middle" font-size="20" font-weight="800" fill="#28714f">稳定性过门</text>
+  </g>
+  <path d="M648 200 H675" stroke="#7a96ad" stroke-width="4" marker-end="url(#arrow)"/>
+  <g transform="translate(660 145)">
+    <circle cx="95" cy="55" r="38" fill="#c27c0e"/><text class="step" x="95" y="65" text-anchor="middle">4</text>
+    <rect x="0" y="115" width="190" height="250" rx="20" fill="#fff" stroke="#e3c88e" stroke-width="3"/>
+    <text class="head" x="95" y="157" text-anchor="middle">测试时间模块</text>
+    <text class="body" x="95" y="202" text-anchor="middle"><tspan x="95">正常顺序比</tspan><tspan x="95" dy="28">打乱顺序更好</tspan></text>
+    <rect x="28" y="275" width="134" height="48" rx="14" fill="#fff4dc"/><text x="95" y="306" text-anchor="middle" font-size="20" font-weight="800" fill="#a25f00">有用但不稳</text>
+  </g>
+  <path d="M853 200 H880" stroke="#7a96ad" stroke-width="4" marker-end="url(#arrow)"/>
+  <g transform="translate(865 145)">
+    <circle cx="95" cy="55" r="38" fill="#7d68a7"/><text class="step" x="95" y="65" text-anchor="middle">5</text>
+    <rect x="0" y="115" width="190" height="250" rx="20" fill="#fff" stroke="#c8bddc" stroke-width="3"/>
+    <text class="head" x="95" y="157" text-anchor="middle">比较生成路线</text>
+    <text class="body" x="95" y="202" text-anchor="middle"><tspan x="95">Flow 与 Diffusion</tspan><tspan x="95" dy="28">同考场对比</tspan></text>
+    <rect x="28" y="275" width="134" height="48" rx="14" fill="#f1edf7"/><text x="95" y="306" text-anchor="middle" font-size="20" font-weight="800" fill="#69518d">各有长处</text>
+  </g>
+  <path d="M1058 200 H1110" stroke="#7a96ad" stroke-width="4" marker-end="url(#arrow)"/>
+  <circle cx="1128" cy="200" r="22" fill="#17365d"/>
+  <text x="1128" y="208" text-anchor="middle" font-size="25" font-weight="800" style="fill:#fff">?</text>
+  <rect x="125" y="563" width="950" height="72" rx="20" fill="#17365d"/>
+  <text x="600" y="594" text-anchor="middle" font-size="22" style="fill:#cfe0ec">现在真正要回答的是</text>
+  <text x="600" y="623" text-anchor="middle" font-size="26" font-weight="800" style="fill:#fff">时间信息在“什么天气、生成的哪一步”最值得用？</text>
+</svg>

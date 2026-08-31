@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fbfd"/><stop offset="1" stop-color="#eef4f8"/></linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6 0 12Z" fill="#527f9f"/></marker>
+    <style>
+      text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#17365d}.title{font-size:38px;font-weight:800}.sub{font-size:21px;fill:#647789}
+      .head{font-size:24px;font-weight:800}.body{font-size:19px;fill:#40576a}.small{font-size:17px;fill:#627687}.white{fill:#fff}.blue{fill:#246b9b}.green{fill:#28714f}
+    </style>
+  </defs>
+  <rect width="1200" height="675" rx="28" fill="url(#bg)"/>
+  <text class="title" x="600" y="58" text-anchor="middle">研究任务：条件联合风电场景生成</text>
+  <text class="sub" x="600" y="92" text-anchor="middle">在给定数值天气预报（NWP）的条件下，生成能够表示未来不确定性的多区域、多时段联合样本</text>
+
+  <rect x="45" y="145" width="250" height="300" rx="22" fill="#fff" stroke="#b7ccda" stroke-width="3"/>
+  <rect x="45" y="145" width="250" height="55" rx="22" fill="#e3f0f8"/><rect x="45" y="178" width="250" height="22" fill="#e3f0f8"/>
+  <text class="head" x="170" y="181" text-anchor="middle">条件输入</text>
+  <circle cx="106" cy="264" r="29" fill="#f5c451"/><path d="M91 296C91 276 111 268 127 279C139 255 179 264 179 291C203 294 204 325 180 329H94C71 327 71 298 91 296Z" fill="#d8e8f3" stroke="#6e9ebf" stroke-width="3"/>
+  <path d="M85 354C119 335 157 371 197 344" fill="none" stroke="#2e74b5" stroke-width="6" stroke-linecap="round"/>
+  <text class="body" x="170" y="397" text-anchor="middle">风速、风向、区域特征</text>
+  <text class="small" x="170" y="426" text-anchor="middle">10 个区域 × 24 小时</text>
+
+  <path d="M310 296H375" stroke="#527f9f" stroke-width="6" marker-end="url(#arrow)"/>
+  <rect x="390" y="145" width="300" height="300" rx="22" fill="#17365d"/>
+  <text class="head white" x="540" y="188" text-anchor="middle">条件联合生成模型</text>
+  <rect x="453" y="231" width="174" height="115" rx="18" fill="#2a5278" stroke="#86b4d3" stroke-width="3"/>
+  <circle cx="490" cy="268" r="12" fill="#6fc2a2"/><circle cx="540" cy="268" r="12" fill="#f2bd4c"/><circle cx="590" cy="268" r="12" fill="#de7c83"/>
+  <path d="M490 281V315H540V281M540 315H590V281" stroke="#dceaf5" stroke-width="4" fill="none"/>
+  <text class="body white" x="540" y="387" text-anchor="middle">学习条件分布及其联合依赖</text>
+  <text class="small" x="540" y="418" text-anchor="middle" style="fill:#c8dce9">候选家族：Flow / Joint DDPM</text>
+
+  <path d="M705 296H770" stroke="#527f9f" stroke-width="6" marker-end="url(#arrow)"/>
+  <rect x="785" y="145" width="370" height="300" rx="22" fill="#fff" stroke="#b7ccda" stroke-width="3"/>
+  <rect x="785" y="145" width="370" height="55" rx="22" fill="#e9e2f1"/><rect x="785" y="178" width="370" height="22" fill="#e9e2f1"/>
+  <text class="head" x="970" y="181" text-anchor="middle">联合场景输出</text>
+  <rect x="825" y="230" width="290" height="130" rx="12" fill="#f8fbfd" stroke="#c1d3df" stroke-width="2"/>
+  <path d="M845 332L880 296L917 318L954 257L990 301L1028 241L1065 285L1096 250" fill="none" stroke="#2e74b5" stroke-width="5"/>
+  <path d="M845 343L880 320L917 281L954 315L990 272L1028 310L1065 258L1096 295" fill="none" stroke="#c47d0b" stroke-width="4" opacity=".85"/>
+  <path d="M845 319L880 336L917 302L954 338L990 315L1028 278L1065 316L1096 273" fill="none" stroke="#5b9b80" stroke-width="4" opacity=".85"/>
+  <text class="body" x="970" y="399" text-anchor="middle">100 个成员 × 10 区域 × 24 小时</text>
+  <text class="small" x="970" y="426" text-anchor="middle">同一成员保持一致的时空语义</text>
+
+  <rect x="65" y="500" width="1070" height="130" rx="22" fill="#fff" stroke="#c6d5df" stroke-width="2"/>
+  <text class="head" x="600" y="538" text-anchor="middle">评价目标不是单一总分，而是四类性质同时成立</text>
+  <g transform="translate(95 562)"><rect width="235" height="43" rx="13" fill="#e3f0f8"/><text x="118" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#246b9b">边际准确性与校准</text></g>
+  <g transform="translate(355 562)"><rect width="235" height="43" rx="13" fill="#fff0dc"/><text x="118" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#9b6100">相邻小时变化（ramp）</text></g>
+  <g transform="translate(615 562)"><rect width="235" height="43" rx="13" fill="#e9e2f1"/><text x="118" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#66508b">时空联合依赖</text></g>
+  <g transform="translate(875 562)"><rect width="235" height="43" rx="13" fill="#e6f3ea"/><text x="118" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#28714f">精确 0/1 边界状态</text></g>
+</svg>

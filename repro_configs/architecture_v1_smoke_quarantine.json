@@ -1,0 +1,35 @@
+{
+  "schema": "architecture_v1_smoke_quarantine_v1",
+  "reason": "These dates were materialized by the architecture-v1 CPU smoke runner. They are engineering-seen and may not enter formal-v2 fitting, validation, calibration, architecture selection, or final evaluation.",
+  "source_protocol_manifest": "outputs/architecture_v1/smoke_v1_seed0/architecture_v1.protocol.manifest.json",
+  "source_protocol_manifest_file_sha256": "4450f7786935f4a17d47cb6e3cb82bb5f6311caef05a8389f07dc8f464fc52a8",
+  "source_protocol_sha256": "7d1306ee0b89f73a4913875c5ae6b90596509157b195d42a6866e986bb34c3a3",
+  "source_completion": "outputs/architecture_v1/smoke_v1_seed0/completion.json",
+  "source_completion_file_sha256": "7992266ce6c1b24a33a62ae7379106025b3e4f856e1cb296fe19e8f3bb422c3e",
+  "dates_by_role": {
+    "train": [
+      "2012-01-01",
+      "2012-01-02",
+      "2012-01-05",
+      "2012-01-08",
+      "2012-01-15",
+      "2012-01-16",
+      "2012-01-17",
+      "2012-01-19"
+    ],
+    "validation": [
+      "2012-01-21",
+      "2012-02-02"
+    ],
+    "calibration": [
+      "2012-03-01",
+      "2012-03-06"
+    ],
+    "selection": [
+      "2012-01-09",
+      "2012-01-18"
+    ]
+  },
+  "all_dates_count": 14,
+  "all_dates_sha256": "ce4bf40a06584a0f86a38341e93dd23fba9775cd2918cc23e15c079b8feaa4e4"
+}

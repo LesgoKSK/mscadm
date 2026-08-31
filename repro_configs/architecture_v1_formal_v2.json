@@ -1,0 +1,253 @@
+{
+  "schema": "architecture_v1_protocol_v1",
+  "experiment_name": "Architecture-v1 formal-v2 blinded common-basis R0 study",
+  "protocol_revision": "architecture_v1_formal_v2_20260815",
+  "data_dir": "Data",
+  "output_root": "outputs/architecture_v1_formal_v2",
+  "evidence_label": "formal architecture development; calibration and selection sealed during R0 fitting; local final unavailable",
+  "layout": {
+    "sample": "calendar_day",
+    "zones": 10,
+    "hours": 24,
+    "condition_dim": 20
+  },
+  "data_protocol": {
+    "allocation_seed": 20260816,
+    "allocation_algorithm": "numpy.default_rng(PCG64).permutation",
+    "allocation_order": ["selection", "calibration", "validation", "train"],
+    "expected_available_count": 731,
+    "expected_available_sha256": "fafe12c288e32d1f3e0cc5a81b46151059133f38dc5eb18ea32b7d1a47a56b77",
+    "expected_remaining_count": 417,
+    "expected_remaining_sha256": "1176f40bb44991aadc840cd1d143e9f73c7880161de1b2f9d1d88c6f0dbe158c",
+    "role_counts": {
+      "train": 267,
+      "validation": 50,
+      "calibration": 50,
+      "selection": 50
+    },
+    "expected_role_sha256": {
+      "train": "f67eb5fd4382b2d69d2d22d23488ec618cd3b3b9547a9bbcc71bdd39587c8cf5",
+      "validation": "d7161152e72233859ad94964c46b44be3dbd0785f5627942e1b4d7d07c4145d3",
+      "calibration": "4d3886279162ad58aae6c713c6957b290a37e72af1f6c7306e955173a61bfd3b",
+      "selection": "4ad592da0726bb813dfb5aa237889a5ceda2e6d93bfc06386e4ffa009ab60d56",
+      "r_seen": "0b80d23249f671b90e48673efdc9bf52a9b751c5711448169813f70ed7b48e93"
+    },
+    "r_seen_policy": "diagnosis_only_quarantine",
+    "r_seen": {
+      "label": "R-SEEN / diagnosis plus engineering exposure quarantine",
+      "expected_count": 314,
+      "expected_union_sha256": "0b80d23249f671b90e48673efdc9bf52a9b751c5711448169813f70ed7b48e93",
+      "sources": [
+        {
+          "label": "MM-JDWind versus DDPM primary diagnostic panel",
+          "path": "repro_configs/mm_jdwind_confirmation_splits.json",
+          "schema": "mm_jdwind_confirmation_splits_v1",
+          "date_blocks_field": "outer_test_dates",
+          "expected_count": 150,
+          "expected_union_sha256": "645f24c2aed6ad7c4d3110ea3fb5047e8f9efbbc28b6ba59b134967e1f160788"
+        },
+        {
+          "label": "STGF/Time-domain/DDPM secondary diagnostic panel",
+          "path": "repro_configs/stgf_confirmation_splits.json",
+          "schema": "stgf_confirmation_splits_v1",
+          "date_blocks_field": "outer_test_dates",
+          "expected_count": 150,
+          "expected_union_sha256": "28bce20c3ec13287d50c3f4bddb827041d054c54a3b9de91a856f47acf62e314"
+        },
+        {
+          "label": "architecture-v1 smoke engineering exposure",
+          "path": "repro_configs/architecture_v1_smoke_quarantine.json",
+          "schema": "architecture_v1_smoke_quarantine_v1",
+          "date_blocks_field": "dates_by_role",
+          "declared_union_sha_field": "all_dates_sha256",
+          "expected_count": 14,
+          "expected_union_sha256": "ce4bf40a06584a0f86a38341e93dd23fba9775cd2918cc23e15c079b8feaa4e4"
+        }
+      ]
+    },
+    "formal_fit_target_access": {
+      "materialized_roles": ["train", "validation"],
+      "hard_forbidden_roles": ["calibration", "selection", "r_seen", "final"],
+      "required_loader": "architecture_v1.data.build_architecture_v1_fit_data"
+    },
+    "external_final": {
+      "status": "reserved_unregistered",
+      "local_date_count": 0,
+      "policy": "A separately frozen external wind dataset registry is required before target access. No local GEFCom2014 date may be relabeled final."
+    }
+  },
+  "preprocessing": {
+    "nwp_loader": "predictor_columns_only",
+    "nwp_features": ["U10", "V10", "U100", "V100", "WS10", "WS100", "WE10", "WE100", "WD10", "WD100"],
+    "target_missing": {
+      "order": "assign_role_before_any_target_imputation",
+      "raw_missing_mask": "preserved",
+      "fill_scope": ["role", "zone", "calendar_day"],
+      "fill_method": "forward_then_backward_within_same_zone_day",
+      "cross_role_fill": "forbidden",
+      "supervision": "raw_observed_cells_only",
+      "ramp_supervision": "both_adjacent_raw_cells_observed"
+    },
+    "standardizers": "fit_on_raw_observed_train_cells_only"
+  },
+  "model_common_basis": {
+    "condition_dim": 20,
+    "zones": 10,
+    "hours": 24,
+    "encoder_dim": 64,
+    "encoder_depth": 2,
+    "flow_dim": 96,
+    "flow_depth": 4,
+    "heads": 4,
+    "ff_multiplier": 4,
+    "dropout": 0.0,
+    "atom_hidden_dim": 64,
+    "atom_shared_priority_weight": 0.5,
+    "logit_epsilon": 0.0001,
+    "state_codes": {"zero": 0, "interior": 1, "one": 2},
+    "active_candidate": "R0",
+    "future_candidate_roster": ["T0", "T1_feature", "T1_source", "T1_shuffle", "T2_joint_ddpm", "T3_probabilistic_ssm"]
+  },
+  "shared_ea": {
+    "primary_policy": "architecture_neutral_atom_plus_interior_location",
+    "joint_r0_pretraining": false,
+    "atom_loss": {
+      "type": "observed_only_categorical_nll",
+      "weight": 1.0,
+      "class_weighting": "none",
+      "focal_loss": false
+    },
+    "interior_auxiliary": {
+      "head": "LayerNorm(encoder_dim)+Linear(encoder_dim,1)",
+      "target": "standardized_train_interior_logit_power",
+      "logit_clip_epsilon": 0.0001,
+      "normalizer_fit_role": "train_observed_interior_only",
+      "mask": "observed_mask AND state==interior",
+      "loss": "SmoothL1",
+      "smooth_l1_beta": 1.0,
+      "weight": 0.25,
+      "head_use_after_ea": "discard"
+    },
+    "upper_atom": {
+      "parameterization": "p1=q1; p0=(1-q1)*q0_cond; p_interior=(1-q1)*(1-q0_cond)",
+      "train_prior": "q1=(n_train_one+0.5)/(n_train_observed+1.0)",
+      "train_positive_minimum_for_learning": 20,
+      "validation_positive_minimum_for_learning": 5,
+      "insufficient_support_action": "fix_q1_to_train_jeffreys_prior",
+      "sufficient_support_action": "bounded_contextual_logit_deviation",
+      "maximum_absolute_logit_deviation": 2.0,
+      "claim_gate": "if either support minimum fails upper-atom calibration and duration cannot be success endpoints"
+    },
+    "after_best_checkpoint": ["reload_best", "discard_auxiliary_head", "hash_encoder_and_atom", "freeze_encoder_and_atom"]
+  },
+  "formal_training": {
+    "model_seeds": [0, 1, 2],
+    "seed_offsets": {
+      "ea_init": 10000,
+      "ea_shuffle": 11000,
+      "flow_init": 12000,
+      "flow_shuffle": 13000,
+      "flow_training_path": 14000
+    },
+    "dtype": "float32",
+    "amp": false,
+    "tf32": false,
+    "deterministic_algorithms": true,
+    "cudnn_benchmark": false,
+    "workers": 0,
+    "batch_size_preflight_branch": {
+      "primary": 16,
+      "fallback": 8,
+      "criterion": "use fallback iff synchronized CUDA 50-update peak allocated memory exceeds 4.5 GiB or primary OOMs",
+      "decision_must_be_frozen_before_any_retained_weight_training": true
+    },
+    "epoch_shuffle": "numpy.default_rng(SHA256(stage,model_seed,epoch,shuffle_offset)).permutation",
+    "drop_last": false,
+    "ea_stage": {
+      "optimizer": "AdamW",
+      "learning_rate": 0.0003,
+      "betas": [0.9, 0.999],
+      "eps": 1e-8,
+      "weight_decay": 0.0001,
+      "gradient_clip": 1.0,
+      "maximum_updates": 4080,
+      "minimum_updates_before_early_stop": 1360,
+      "validate_every_updates": 170,
+      "early_stopping_patience_validations": 12,
+      "early_stopping_improvement": "new < best - max(1e-5,1e-3*best)"
+    },
+    "flow_stage": {
+      "optimizer": "AdamW",
+      "learning_rate": 0.0001,
+      "betas": [0.9, 0.999],
+      "eps": 1e-8,
+      "weight_decay": 0.0,
+      "gradient_clip": 1.0,
+      "maximum_updates": 12240,
+      "minimum_updates_before_early_stop": 2040,
+      "validate_every_updates": 170,
+      "early_stopping_patience_validations": 12,
+      "early_stopping_improvement": "new < best - max(1e-5,1e-3*best)"
+    },
+    "validation_flow_bank": {
+      "replications": 4,
+      "day_order": "ascending_calendar_day",
+      "noise_seeds": [15000, 15001, 15002, 15003],
+      "time_seeds": [16000, 16001, 16002, 16003],
+      "reuse": "same tensors for every checkpoint seed and candidate",
+      "aggregation": "mean_over_replications_weighted_by_observed_interior_cells",
+      "persist_and_hash": true
+    },
+    "resume": {
+      "boundary": "completed_epoch_only",
+      "save": ["model", "optimizer", "next_epoch", "best_state", "early_stop_state", "history", "python_rng", "numpy_rng", "torch_cpu_rng", "torch_cuda_rng", "identity_hashes"],
+      "partial_epoch_action": "discard_and_deterministically_replay",
+      "identity_drift": "hard_fail",
+      "nonfinite_action": "fail_seed_no_retry_no_seed_replacement"
+    }
+  },
+  "preflight": {
+    "scientific_status": "discard_all_weights",
+    "device": "cuda",
+    "updates": 50,
+    "require_cuda": true,
+    "cuda_synchronize_timing": true,
+    "record_peak_allocated_memory": true,
+    "record_environment_and_code_hashes": true
+  },
+  "formal_sampling": {
+    "members": 100,
+    "sampling_seeds": [21000, 21001, 21002],
+    "method": "heun",
+    "integration_steps": 16,
+    "per_path_flow_nfe": 31,
+    "member_chunk": 10,
+    "estimand": "finite_dependent_scenario_set",
+    "score_semantics": "empirical_v_stat"
+  },
+  "gate_registry": {
+    "path": "repro_configs/architecture_v1_go_no_go_v1.json",
+    "schema": "architecture_v1_go_no_go_v1",
+    "file_sha256": "0c1cb8b87fd6d673dbb1a0fa352a3aa7de47c351cfc9d9ca9f436b220629fc4a"
+  },
+  "selection_lock": {
+    "state": "sealed",
+    "authorized_transition": "only_after_all_candidate_code_config_metrics_calibration_rules_and_gate_hashes_are_frozen",
+    "state_machine": ["sealed", "authorized", "in_progress", "consumed"],
+    "current_fit_process_may_import_selection_loader": false
+  },
+  "experiment_contract": {
+    "status": "formal_v2_preregistered_R0_not_started",
+    "R0_definition": "clean common-shell joint time-domain rectified-flow baseline; not a numerical reproduction of legacy STGF",
+    "R0_gate": "validation_only_G0_and_G1",
+    "calibration_status": "sealed",
+    "selection_status": "sealed",
+    "final_status": "external_only_unregistered",
+    "next_step_if_R0_passes": "implement and validate T0 then T1_feature T1_source T1_shuffle before any selection access"
+  },
+  "smoke": {
+    "enabled": false,
+    "formal_config_policy": "smoke_forbidden",
+    "max_days_per_role": {"train": 1, "validation": 1, "calibration": 1, "selection": 1, "r_seen": 1}
+  }
+}

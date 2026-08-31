@@ -1,0 +1,97 @@
+{
+  "experiment": "RAHC-CR-MS-CADM",
+  "protocol_version": "2.0-frozen-before-new-test-scoring",
+  "frozen_at": "2026-07-18",
+  "scientific_status": "exploratory reused-test extension because the hypothesis was motivated by earlier diagnostics on this test split",
+  "inputs": {
+    "validation": "outputs/cr_mscadm/scenarios/full_seed{0,1,2}_validation_raw.npz",
+    "test": "outputs/cr_mscadm/scenarios/full_seed{0,1,2}_test_raw.npz",
+    "legacy_comparator": "outputs/cr_mscadm/scenarios/full_seed{0,1,2}_test_calibrated.npz",
+    "ensemble_members": 100,
+    "model_seeds": [0, 1, 2]
+  },
+  "rank_model": {
+    "latent_model": "P|x~Beta(alpha(x),beta(x)); R|P~Binomial(M,P)",
+    "tie_handling": "inclusive interval-censored Beta-Binomial likelihood using R_lower=#(member<y), R_upper=#(member<=y)",
+    "parameterization": "m=sigmoid(eta_bias), kappa=2*exp(eta_disp), alpha=m*kappa, beta=(1-m)*kappa; zero parameters are identity",
+    "feature_schema": [
+      "raw_ensemble_mean",
+      "log_raw_ensemble_sd",
+      "absolute_mean_ramp",
+      "distance_to_physical_boundary"
+    ],
+    "zone_spread_interaction": "centered zone-specific slope on standardized log raw spread",
+    "tail_rule_primary": "bounded physical-boundary pseudo-knots (0,0) and (1,1)",
+    "tail_sensitivity": ["linear", "clamp"]
+  },
+  "validation": {
+    "folds": 5,
+    "group": "calendar day; all 10 zones and all three model-seed archives from a date stay in one fold",
+    "fold_seed": 20260718,
+    "pooled_fit": "one fold calibrator is fitted to the aligned forecasts from all three seeds; each seed remains separately scored",
+    "epochs": 160,
+    "learning_rate": 0.03,
+    "regularization_default": 0.03,
+    "full_regularization_candidates": [0.003, 0.01, 0.03, 0.1],
+    "full_no_shrink_regularization": 0.0,
+    "strength_candidates": [0.0, 0.25, 0.5, 0.75, 1.0],
+    "shared_selection": "one variant configuration selected by the mean objective across three separately scored seeds",
+    "selection_objective": "mean_seed_CRPS + 0.10*mean_seed_global_ACE_50_80_90 + 0.05*mean_seed_family_equal_conditional_ACE90",
+    "tie_break": "lowest objective, then lower strength, then stronger regularization"
+  },
+  "ablations": {
+    "raw": "uncalibrated CR-MS-CADM",
+    "legacy_G0": "previous hour-wise empirical PIT calibration, preserved exactly",
+    "C0": "hour-wise empirical PIT, grouped CV and primary bounded tail",
+    "C1": "global Beta-Binomial",
+    "C2": "global + cyclic-smoothed hour",
+    "C3": "global + hour + centered zone",
+    "C4": "global + hour + linear regime",
+    "C5": "global + hour + zone + linear regime",
+    "C6_RAHC": "C5 + shrunk zone-specific log-spread slope",
+    "C7": "C6 without shrinkage"
+  },
+  "conditional_groups": {
+    "fit_source": "validation raw forecasts only, averaged across the three aligned seed forecasts",
+    "families": ["zone", "hour", "within-zone wind quintile", "within-zone raw-spread quintile", "zone x within-zone raw-spread quintile"],
+    "threshold_application": "frozen for test; calibrated forecasts never define their own groups"
+  },
+  "primary_metrics": [
+    "CRPS",
+    "coverage and width at 50/80/90 percent",
+    "Winkler interval score",
+    "family-equal conditional ACE90",
+    "worst undercoverage",
+    "MAE",
+    "VS",
+    "ramp_CRPS",
+    "temporal_rank_RMSE"
+  ],
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20260718,
+    "cluster": "50 unique test calendar dates; resample a date with all 10 zones",
+    "paired": true,
+    "seed_aggregation": "compute paired deltas per seed under identical resampled dates, then average seed deltas",
+    "wording": "bootstrap support fraction, not posterior probability"
+  },
+  "copula_claim_limit": "only the stable-tie-break temporal member-rank template within each zone-day is audited; no spatial-copula claim",
+  "success_gates": {
+    "CRPS_vs_legacy": "at least 2 percent improvement with 95 percent calendar-day cluster bootstrap CI excluding zero",
+    "coverage_90": [0.88, 0.92],
+    "conditional_ACE_reduction": 0.3,
+    "worst_zone_coverage_minimum": 0.85,
+    "worst_zone_x_spread_coverage_minimum": 0.8,
+    "MAE_relative_degradation_max": 0.01,
+    "VS_relative_degradation_max": 0.01,
+    "ramp_CRPS_relative_degradation_max": 0.01,
+    "strict_rank_reversals": 0,
+    "stable_ordinal_rank_fraction": 1.0
+  },
+  "limitations_declared_before_scoring": [
+    "The existing test split is not confirmatory for RAHC because it helped motivate the hypothesis.",
+    "Validation was previously used for base-model early stopping, so OOF calibration scores are not a fully independent base-model generalization estimate.",
+    "Three model seeds share the same realized observations and are robustness replicates, not independent datasets.",
+    "The existing seven-case SUC protocol contains five unique dates and is descriptive only."
+  ]
+}
