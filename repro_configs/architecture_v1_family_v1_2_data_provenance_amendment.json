@@ -1,0 +1,60 @@
+{
+  "schema": "architecture_v1_family_v1_2_data_provenance_amendment_v1",
+  "status": "frozen_after_protocol_fail_closed_before_any_P0_optimizer_update",
+  "created_date": "2026-08-31",
+  "scope": "permit execution only after proving that the current protocol differs from the D0-v lineage solely through one audit-only R-SEEN source-file hash while all derived protocol dates and model-facing arrays remain identical",
+  "base_probe_config": "repro_configs/architecture_v1_family_v1_2_probe.json",
+  "base_probe_config_sha256": "b9c2f8db286805f0b2e96d7721df50f5d75d297d3a8ff5dd0ef15a732cfdb4e5",
+  "trigger": {
+    "attempt": "family-v1.2 P0 attempt 1",
+    "failure": "current train-only protocol SHA256 did not equal the frozen D0-v lineage protocol SHA256",
+    "failure_boundary": "after train-only data materialization and before NWP-registry writing, checkpoint loading, adapter construction, or any optimizer update",
+    "weights_created_or_retained": false,
+    "forbidden_target_roles_accessed": false
+  },
+  "legacy_D0_v_lineage": {
+    "protocol_sha256": "c75338474aa6b4eb3517647be64ae90bf00da6919ad05683d3dc3bf279b1de79",
+    "train_only_data_bundle_sha256": "77c056e4f71c2f570c6524a2d80f93de7ddc10f3ffc9024c0494c937ce1be659",
+    "fit_data_bundle_sha256": "1a36033ac4f921c460a10ad04ee011b2d41b458793f5a62f0093868efcecf4a6",
+    "train_split_array_sha256": "ec756d175edc4b265311e7a3b642a58d84aebd4e266392932ee0a6bb3dd56e3a",
+    "validation_split_array_sha256": "c481c065c9c3d3c5a9654b480cbb3546dcbf21445eb45a3f3f269831af8857a4",
+    "family_v1_1_P0_identity": "outputs/architecture_v1_family_v1_1/P0_preflight/identity.json",
+    "family_v1_1_P0_identity_sha256": "e3c9f21e1af102e711a87dae3d9c652b21de81cc855901aab0cfecbeee58d79a",
+    "family_v1_1_training_identity": "outputs/architecture_v1_family_v1_1/formal_training/identity.json",
+    "family_v1_1_training_identity_sha256": "be4ad7fa84e2a7c7585b0dfadb3caa24036987eaf9bb3adbf7d35b20e9723cce"
+  },
+  "audit_source_drift": {
+    "path": "repro_configs/stgf_confirmation_splits.json",
+    "schema": "stgf_confirmation_splits_v1",
+    "date_blocks_field": "outer_test_dates",
+    "legacy_file_sha256": "2726de8055cc332f798b30d0d1eb873dd0bdf8c3ee754b8715781d06371ce0da",
+    "current_repository_file_sha256": "8e2f3e0b6fe4fd754772c09a50551036cb780bd9b3d62298813f5e014a3353a2",
+    "extracted_date_count": 150,
+    "extracted_date_sha256": "28bce20c3ec13287d50c3f4bddb827041d054c54a3b9de91a856f47acf62e314",
+    "legacy_hash_evidence": "outputs/architecture_v1/smoke_v1_seed0/architecture_v1.protocol.manifest.json",
+    "legacy_hash_evidence_sha256": "4450f7786935f4a17d47cb6e3cb82bb5f6311caef05a8389f07dc8f464fc52a8",
+    "experimental_semantics": "the protocol consumes only the registered schema and extracted outer_test_dates union from this source; that union is unchanged"
+  },
+  "current_repository_identity": {
+    "protocol_sha256": "ec3a3a473fb86aea4687f99eb5b8bcaa1a54ee40b6eb41755e9de312c2d89a9f",
+    "train_only_data_bundle_sha256": "953ffccc9f0241c19757d0aeaf9de98cda2a268efef89b7cf977957ef5c0d7aa",
+    "fit_data_bundle_sha256": "ba9cf085608c35e44c258aa2c29ba19e743505b46e9e6c0ab521849baab3ea46",
+    "train_split_array_sha256": "ec756d175edc4b265311e7a3b642a58d84aebd4e266392932ee0a6bb3dd56e3a",
+    "validation_split_array_sha256": "c481c065c9c3d3c5a9654b480cbb3546dcbf21445eb45a3f3f269831af8857a4"
+  },
+  "equivalence_projection": {
+    "operation": "in an in-memory copy of the current manifests, replace only audit_source_drift.current_repository_file_sha256 with audit_source_drift.legacy_file_sha256, recompute protocol_sha256, then recompute the enclosing data-bundle SHA256; never alter a date, array, standardizer, or on-disk source",
+    "projected_protocol_sha256": "c75338474aa6b4eb3517647be64ae90bf00da6919ad05683d3dc3bf279b1de79",
+    "projected_train_only_data_bundle_sha256": "77c056e4f71c2f570c6524a2d80f93de7ddc10f3ffc9024c0494c937ce1be659",
+    "projected_fit_data_bundle_sha256": "1a36033ac4f921c460a10ad04ee011b2d41b458793f5a62f0093868efcecf4a6",
+    "array_mutations": 0
+  },
+  "authorization": {
+    "P0_and_adapter_training_may_use_current_repository_protocol_after_all_bridge_checks_pass": true,
+    "validation_access_authorized": false,
+    "selection_access_authorized": false,
+    "calibration_access_authorized": false,
+    "external_final_access_authorized": false,
+    "failure_policy": "fail_closed_and_require_a_new_hashed_amendment"
+  }
+}

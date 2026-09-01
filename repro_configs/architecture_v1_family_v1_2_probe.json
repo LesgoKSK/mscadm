@@ -1,0 +1,304 @@
+{
+  "schema": "architecture_v1_family_v1_2_temporal_utility_probe",
+  "status": "frozen_before_family_v1_2_implementation_P0_or_retained_adapter_training",
+  "created_date": "2026-08-31",
+  "objective": "test whether the incremental value of correctly ordered temporal propagation depends on the registered DDIM denoising stage and train-NWP-defined meteorological dynamicity",
+  "evidence_scope": "validation-informed mechanism discovery; not an independent family comparison or final test",
+  "output_root": "outputs/architecture_v1_family_v1_2_probe",
+  "lineage": {
+    "base_family_v1_1_config": "repro_configs/architecture_v1_family_v1_1.json",
+    "base_family_v1_1_config_sha256": "a3850ac18082b6e5e430e3a63d0371622338e59496dca41be6e51515a83328d4",
+    "family_v1_1_training_freeze": "outputs/architecture_v1_family_v1_1/formal_training/training.freeze.json",
+    "family_v1_1_training_freeze_sha256": "0c6b28fd917deca16cfd2bcd8e77e0c09f0ce1a61fd9906965611e202b852c17",
+    "family_v1_1_comparison": "outputs/architecture_v1_family_v1_1/formal_evaluation/FAMILY_COMPARISON.json",
+    "family_v1_1_comparison_sha256": "4e33c2d3ad16daa84392cd48dcec420efeef0b20f59d4774cbd61d24f509f090",
+    "required_family_v1_1_status": "FAMILY_V1_1_UNRESOLVED_TRADEOFF_OR_NO_DOMINANCE",
+    "data_protocol_config": "repro_configs/architecture_v1_formal_v2_2_1.json",
+    "data_protocol_config_sha256": "1813f4f4aebeafee7b7c41d7688d149a09d07b78d7b244f0efc26c957f34b716",
+    "protocol_sha256": "c75338474aa6b4eb3517647be64ae90bf00da6919ad05683d3dc3bf279b1de79",
+    "fit_data_bundle_sha256": "1a36033ac4f921c460a10ad04ee011b2d41b458793f5a62f0093868efcecf4a6"
+  },
+  "role_access": {
+    "P0_allowed_target_roles": ["train"],
+    "adapter_training_allowed_target_roles": ["train"],
+    "formal_probe_evaluation_allowed_target_roles": ["validation"],
+    "forbidden_target_roles_during_P0_or_training": ["validation", "calibration", "selection", "r_seen", "final"],
+    "selection_state": "sealed",
+    "calibration_state": "sealed",
+    "final_state": "external_unavailable",
+    "selection_access_authorized": false,
+    "calibration_access_authorized": false
+  },
+  "scientific_estimand": {
+    "primary_question": "incremental utility of correctly ordered temporal propagation on top of a D0-v backbone that already contains hour embeddings and global temporal attention",
+    "not_claimed": [
+      "D0-v is globally better than Flow",
+      "the backbone contains no temporal information",
+      "a stage-block effect is an additive local contribution",
+      "utility transfers beyond the registered 31-step deterministic DDIM sampler",
+      "validation-stage mechanism discovery is final external confirmation"
+    ],
+    "stage_effect_interpretation": "final-scenario effect of intervening in one registered reverse-process stage block; downstream path dependence is retained and block effects must not be summed"
+  },
+  "frozen_D0_v_backbones": {
+    "model_class": "T0StableSourceRectifiedFlow",
+    "prediction_parameterization": "v",
+    "source": "family-v1.1 validation-selected best EMA",
+    "parameters_and_buffers_require_exact_hash_stability": true,
+    "autograd_through_frozen_flow_input_context_required": true,
+    "torch_no_grad_around_frozen_flow_for_adapter_training_forbidden": true,
+    "seed3": {
+      "path": "outputs/architecture_v1_family_v1_1/formal_training/runs/D0/seed3/best.pt",
+      "sha256": "9be812f35562bf01ced66220f28b3e97fe79088940868a3d09950fa4e0ba3c6e"
+    },
+    "seed4": {
+      "path": "outputs/architecture_v1_family_v1_1/formal_training/runs/D0/seed4/best.pt",
+      "sha256": "b65ad95f0ce5bcb24963b8a2b321a9cc8453af1849c58eb5624cbf0cf7f26685"
+    },
+    "seed5": {
+      "path": "outputs/architecture_v1_family_v1_1/formal_training/runs/D0/seed5/best.pt",
+      "sha256": "ec471bdb0bce4b2e77152db5ed5401fedb244666c866f9a40ee9978d61848420"
+    }
+  },
+  "diffusion_contract": {
+    "training_timesteps": 250,
+    "beta_schedule": "cosine",
+    "cosine_offset": 0.008,
+    "beta_clip": [0.00000001, 0.999],
+    "prediction_parameterization": "v",
+    "latent_normalization": false,
+    "SNR_weighting": false,
+    "predicted_x0_clipping": false,
+    "sampler": "deterministic_DDIM",
+    "DDIM_steps": 31,
+    "DDIM_eta": 0.0,
+    "reverse_grid": [249, 241, 232, 224, 216, 208, 199, 191, 183, 174, 166, 158, 149, 141, 133, 124, 116, 108, 100, 91, 83, 75, 66, 58, 50, 42, 33, 25, 17, 8, 0]
+  },
+  "DDIM_stage_blocks": [
+    {
+      "index": 0,
+      "label": "B1_noisy_start",
+      "timesteps_reverse_order": [249, 241, 232, 224],
+      "logSNR": [-17.063318252563477, -5.994995594024658, -4.481603145599365, -3.701500415802002]
+    },
+    {
+      "index": 1,
+      "label": "B2_noisy",
+      "timesteps_reverse_order": [216, 208, 199, 191],
+      "logSNR": [-3.1340255737304688, -2.684164047241211, -2.265209197998047, -1.944732904434204]
+    },
+    {
+      "index": 2,
+      "label": "B3_low_mid",
+      "timesteps_reverse_order": [183, 174, 166, 158],
+      "logSNR": [-1.6586860418319702, -1.3668984174728394, -1.1273022890090942, -0.9015323519706726]
+    },
+    {
+      "index": 3,
+      "label": "B4_middle_negative",
+      "timesteps_reverse_order": [149, 141, 133, 124],
+      "logSNR": [-0.6596887111663818, -0.45235979557037354, -0.2497052550315857, -0.024627506732940674]
+    },
+    {
+      "index": 4,
+      "label": "B5_middle_positive",
+      "timesteps_reverse_order": [116, 108, 100, 91],
+      "logSNR": [0.17509472370147705, 0.37657928466796875, 0.5819214582443237, 0.8204184770584106]
+    },
+    {
+      "index": 5,
+      "label": "B6_cleaning",
+      "timesteps_reverse_order": [83, 75, 66, 58],
+      "logSNR": [1.0420310497283936, 1.2760781049728394, 1.5594336986541748, 1.8352994918823242]
+    },
+    {
+      "index": 6,
+      "label": "B7_clean",
+      "timesteps_reverse_order": [50, 42, 33, 25],
+      "logSNR": [2.141913414001465, 2.490959405899048, 2.957829236984253, 3.475999355316162]
+    },
+    {
+      "index": 7,
+      "label": "B8_final_clean",
+      "timesteps_reverse_order": [17, 8, 0],
+      "logSNR": [4.163936138153076, 5.390456676483154, 8.546161651611328]
+    }
+  ],
+  "adapter": {
+    "class": "TemporalContextResidualAdapter",
+    "input": "frozen D0-v baseline condition context c0",
+    "context_dimension": 64,
+    "hidden_dimension": 32,
+    "hours": 24,
+    "zones": 10,
+    "topology": "LayerNorm64_then_GRUCell64to32_then_LayerNorm32_then_Linear32to64_then_tanh",
+    "trainable_parameters_expected": 11712,
+    "output_projection_zero_initialization": true,
+    "learned_gate": false,
+    "residual_scale": 1.0,
+    "residual_formula": "c_prime=c0+I_block(t)*scale*tanh(W_out*h_ordered)",
+    "adapter_computed_once_per_scenario_call": true,
+    "context_switched_inside_each_DDIM_step": true,
+    "inactive_DDIM_steps_use_exact_c0": true,
+    "atom_branch_reads_frozen_encoder_output_before_adapter": true,
+    "adapter_must_not_change_atom_probabilities_or_allocations": true
+  },
+  "shuffle_control": {
+    "semantics": "change recurrent visitation adjacency only and scatter outputs back to physical hour labels",
+    "bank_seed": 27001,
+    "true_or_reverse_adjacent_edges_allowed_per_permutation": 0,
+    "fixed_hour_positions_allowed_per_permutation": 0,
+    "training_permutation_indices": [0, 1, 2, 3, 4, 5],
+    "same_checkpoint_inference_only_indices": [6, 7],
+    "selection_rule_during_training": "deterministic_hash_of_backbone_seed_block_index_and_optimizer_update_modulo_six",
+    "permutation_bank": [
+      [3, 12, 20, 6, 8, 10, 19, 9, 16, 22, 11, 23, 1, 15, 5, 2, 7, 18, 14, 0, 4, 13, 21, 17],
+      [5, 8, 11, 18, 2, 12, 14, 9, 6, 1, 15, 4, 16, 10, 13, 3, 20, 23, 0, 7, 21, 19, 17, 22],
+      [19, 15, 22, 6, 14, 3, 13, 16, 7, 4, 18, 23, 0, 9, 21, 17, 8, 10, 12, 2, 11, 1, 5, 20],
+      [22, 19, 13, 0, 21, 16, 2, 4, 14, 23, 15, 10, 8, 18, 1, 17, 3, 20, 11, 6, 9, 5, 7, 12],
+      [12, 6, 8, 14, 19, 16, 20, 3, 18, 2, 13, 22, 17, 0, 10, 4, 11, 7, 15, 21, 23, 5, 1, 9],
+      [21, 3, 19, 13, 5, 14, 22, 20, 11, 23, 0, 12, 18, 2, 4, 10, 1, 6, 16, 8, 15, 7, 9, 17],
+      [23, 18, 20, 8, 2, 14, 4, 22, 0, 11, 5, 21, 9, 1, 6, 13, 3, 10, 12, 15, 19, 17, 7, 16],
+      [19, 6, 13, 21, 5, 0, 15, 3, 10, 1, 17, 14, 2, 22, 9, 20, 12, 4, 8, 16, 11, 7, 23, 18]
+    ]
+  },
+  "retained_adapter_training": {
+    "backbone_seeds": [3, 4, 5],
+    "stage_block_indices": [0, 1, 2, 3, 4, 5, 6, 7],
+    "order_modes": ["chronological", "shuffle"],
+    "total_runs": 48,
+    "only_adapter_trainable": true,
+    "adapter_initialization_seed_formula": "271000 + 100*backbone_seed + block_index; identical within chronological/shuffle pair",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "betas": [0.9, 0.999],
+    "eps": 0.00000001,
+    "weight_decay": 0.0,
+    "gradient_clip": 5.0,
+    "gradient_clip_fraction_max": 0.5,
+    "preclip_gradient_norm_max": 50.0,
+    "EMA_decay": 0.999,
+    "batch_calendar_days": 16,
+    "fixed_optimizer_updates": 2040,
+    "budget_rationale": "120 architecture-v1 epochs times 17 updates per epoch; 2040 is divisible by both three-point and four-point blocks",
+    "checkpoint_every_updates": 85,
+    "checkpoint_selection": "none",
+    "retained_checkpoint": "final_adapter_EMA_after_exactly_2040_updates",
+    "timestep_sampling": "deterministic_balanced_cycle_over_the_registered_DDIM_points_after_common_epoch_shuffle_with_one_timestep_per_calendar_day",
+    "calendar_day_timestep_exposures_expected": 32040,
+    "same_effective_adapter_updates_for_every_run": true,
+    "common_calendar_day_order_seed": 13000,
+    "common_timestep_and_noise_seed_root": 272000,
+    "common_within_pair": [
+      "D0-v checkpoint",
+      "adapter initial tensors",
+      "calendar-day minibatches",
+      "per-day registered timestep",
+      "Gaussian forward noise",
+      "optimizer hyperparameters",
+      "update count"
+    ],
+    "validation_targets_used_for_training_or_checkpoint_selection": false,
+    "formal_training_authorized_only_after_P0_GO": true
+  },
+  "NWP_dynamicity_registry": {
+    "fit_role": "train_NWP_only",
+    "target_power_used": false,
+    "features": ["rms_dws100", "weighted_turn100", "spatial_dispersion"],
+    "standardization": "train_mean_and_population_std_per_feature",
+    "score": "equal_weight_mean_of_three_train_standardized_features",
+    "cutpoints": "train_score_tertiles",
+    "labels": ["stable", "moderate", "dynamic"],
+    "numeric_registry_written_and_hash_frozen_by_P0": true,
+    "validation_assignment_allowed_only_after_adapter_training_freeze": true
+  },
+  "formal_probe_evaluation": {
+    "baseline": "reused D0-v scenarios under exactly common atom allocation and initial noise",
+    "members": 100,
+    "sampling_seeds": [21000, 21001, 21002],
+    "primary_sampler": "31-step deterministic DDIM",
+    "primary_metrics": ["ramp_CRPS", "lagged_increment_variogram_score"],
+    "distribution_safety_metrics": ["level_CRPS", "normalized_joint_ES", "coverage90", "width90"],
+    "atom_invariance_metrics": ["zero_Brier", "one_Brier", "atom_state_Brier"],
+    "primary_contrasts": {
+      "chronological_minus_shuffle": "ordered-adjacency mechanism effect",
+      "chronological_minus_D0_v": "net intervention effect",
+      "shuffle_minus_D0_v": "added-capacity_or_condition-perturbation control"
+    },
+    "same_checkpoint_control": "each chronological adapter is additionally evaluated with the two inference-only registered shuffle permutations",
+    "inference_unit": "calendar_day",
+    "training_seed_aggregation": "average within calendar day across three backbone seeds before formal contrast",
+    "multiple_comparison_control": "paired calendar-day joint bootstrap with max-T simultaneous bands across eight blocks for the two primary metrics",
+    "stage_omnibus_null": "chronological-minus-shuffle utility is homogeneous across all eight DDIM-stage blocks",
+    "NWP_omnibus_null": "temporal utility is homogeneous across train-NWP-defined dynamicity regimes",
+    "interaction_null": "no DDIM-stage-block by NWP-dynamicity interaction",
+    "individual_cell_inference_without_omnibus_and_simultaneous_control": "forbidden"
+  },
+  "practical_gates": {
+    "ramp_CRPS_improvement_min": 0.001,
+    "lagged_variogram_relative_improvement_min": 0.05,
+    "level_CRPS_noninferiority_margin": 0.0015,
+    "normalized_joint_ES_relative_noninferiority_margin": 0.02,
+    "coverage90_absolute_difference_max": 0.02,
+    "width90_relative_increase_max": 0.10,
+    "ordered_mechanism_requires_chronological_better_than_shuffle_on_both_primary_metrics": true,
+    "stage_structure_requires_at_least_two_adjacent_supported_blocks": true
+  },
+  "decision_tree": {
+    "chronological_equivalent_to_shuffle": "ordered_recurrence_hypothesis_No_Go",
+    "no_stage_or_NWP_heterogeneity": "temporal_gating_route_No_Go",
+    "stage_only": "family_v1_3_SNR_stage_gate",
+    "NWP_only": "family_v1_3_NWP_gate",
+    "both_main_effects_but_weak_interaction": "additive_controls_without_strong_dual_gate_claim",
+    "supported_stage_by_NWP_interaction": "family_v1_3_dual_gated_temporal_context_residual",
+    "temporal_gain_with_persistent_distribution_damage": "No_Go_or_new_revision_of_fixed_intervention_scale",
+    "selection_access_authorized": false,
+    "calibration_access_authorized": false
+  },
+  "P0_preflight": {
+    "retained_weights": false,
+    "allowed_target_roles": ["train"],
+    "pilot_backbone_seed": 3,
+    "pilot_stage_block_index": 3,
+    "discarded_adapter_updates_per_order_mode": 50,
+    "member_chunk_equivalence": true,
+    "maximum_peak_GPU_memory_GiB": 4.5,
+    "hard_checks": [
+      "zero_initialized_probe_matches_original_D0_v_full_31_step_scenario",
+      "all_three_D0_v_checkpoint_file_hashes_and_best_EMA_payloads_validate",
+      "backbone_tensor_hash_unchanged_before_and_after_adapter_training",
+      "optimizer_and_EMA_contain_adapter_parameters_only",
+      "frozen_flow_has_no_parameter_gradients_but_preserves_context_to_adapter_autograd",
+      "intervention_context_used_only_at_registered_block_timesteps",
+      "atom_probabilities_allocations_and_exact_boundary_semantics_unchanged",
+      "chronological_and_shuffle_pairs_share_all_registered_random variables",
+      "permutation_bank_hash_and_adjacency_destruction_validate",
+      "effective_adapter_update_counts_match",
+      "stage_timesteps_and_logSNR_match_the_frozen_registry",
+      "same_checkpoint_chronological_to_shuffle_inference_switch_works",
+      "checkpoint_resume_restores_adapter_optimizer_EMA_and_RNG_exactly",
+      "no_validation_calibration_selection_r_seen_or_final_targets_materialized"
+    ],
+    "failure": "P0_No_Go_new_family_v1_2_revision_required_no_retained_adapter_training"
+  },
+  "freeze_and_resume": {
+    "formal_training_requires_explicit_execute_flag": true,
+    "nonempty_output_without_resume": "reject",
+    "resume_boundary": "registered_checkpoint_update_only",
+    "resume_identity": "config_code_data_protocol_P0_backbone_stage_order_adapter_optimizer_RNG",
+    "P0_weights_must_be_discarded": true,
+    "training_freeze_required_after_48_of_48_complete": true,
+    "formal_validation_scenarios_forbidden_before_training_freeze": true,
+    "threshold_adapter_stage_or_shuffle_change_after_P0_start": "forbidden_new_revision_required",
+    "selection_and_calibration": "remain_sealed"
+  },
+  "implementation_files": {
+    "module": "architecture_v1/family_v1_2_probe.py",
+    "runner": "repro_scripts/run_architecture_v1_family_v1_2_probe.py",
+    "tests": [
+      "tests/test_architecture_v1_family_v1_2_probe.py",
+      "tests/test_architecture_v1_family_v1_2_protocol.py"
+    ],
+    "protocol_report": "reports/ARCHITECTURE_V1_FAMILY_V1_2_PROBE_PROTOCOL.md"
+  }
+}

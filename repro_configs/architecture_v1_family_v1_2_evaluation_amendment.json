@@ -1,0 +1,200 @@
+{
+  "schema": "architecture_v1_family_v1_2_evaluation_amendment_v1",
+  "status": "frozen_after_48_run_training_freeze_before_family_v1_2_validation_materialization",
+  "created_date": "2026-09-01",
+  "scope": "complete the numerical validation, randomization, multiplicity-control, falsification-control, and decision details left qualitative in the base family-v1.2 protocol; this amendment changes no model, adapter, training run, checkpoint, validation calendar, metric definition, or practical margin",
+  "freeze_boundary": {
+    "family_v1_2_validation_scenarios_generated_before_this_amendment": false,
+    "family_v1_2_validation_metrics_inspected_before_this_amendment": false,
+    "pre_existing_D0_v_validation_archives": "created and frozen by family-v1.1; reused here only under the exact hashes below",
+    "selection_target_accessed": false,
+    "calibration_target_accessed": false,
+    "external_final_target_available": false
+  },
+  "lineage": {
+    "base_probe_config": "repro_configs/architecture_v1_family_v1_2_probe.json",
+    "base_probe_config_sha256": "b9c2f8db286805f0b2e96d7721df50f5d75d297d3a8ff5dd0ef15a732cfdb4e5",
+    "data_provenance_amendment": "repro_configs/architecture_v1_family_v1_2_data_provenance_amendment.json",
+    "data_provenance_amendment_sha256": "073f434359c6dc2cf38e9d362727b4822c24772e7c11504b93b52b562b62976d",
+    "P0_result": "outputs/architecture_v1_family_v1_2_probe/P0_preflight/P0_RESULT.json",
+    "P0_result_sha256": "c8b5ab0684e4303328186fe9a0b65f73fcd2e18923d6cc395bdd222dc24e12d2",
+    "NWP_dynamicity_registry": "outputs/architecture_v1_family_v1_2_probe/P0_preflight/NWP_DYNAMICITY_REGISTRY.json",
+    "NWP_dynamicity_registry_file_sha256": "2a09286b3d4c9d0ef402a0b66fd939e3ceaa888fc485834019fb7dc487e7f9b9",
+    "NWP_dynamicity_registry_payload_sha256": "f410e9e2cd1a87b811064113955e31f5f6a5105474a92ba13a8edb0fe15a264c",
+    "formal_training_result": "outputs/architecture_v1_family_v1_2_probe/formal_training/TRAINING_RESULT.json",
+    "formal_training_result_sha256": "6946e65ecc0bbd9f6bbe4ddc59a7a1d33f82c2eb798831f9dc01c9e43d779f55",
+    "formal_training_freeze": "outputs/architecture_v1_family_v1_2_probe/formal_training/training.freeze.json",
+    "formal_training_freeze_sha256": "ca3f501a1b6242aeca61b74b63f407afb95b11171a0992018cae1e78e7c17c8b",
+    "formal_training_identity": "outputs/architecture_v1_family_v1_2_probe/formal_training/identity.json",
+    "formal_training_identity_sha256": "0530c50e13b4c127cc42e91b513200f7da1089cfbcbb13ca7f8aa09f5be9b1be",
+    "required_training_status": "FORTY_EIGHT_OF_FORTY_EIGHT_ADAPTER_RUNS_COMPLETE",
+    "required_completed_runs": 48,
+    "family_v1_1_comparison": "outputs/architecture_v1_family_v1_1/formal_evaluation/FAMILY_COMPARISON.json",
+    "family_v1_1_comparison_sha256": "4e33c2d3ad16daa84392cd48dcec420efeef0b20f59d4774cbd61d24f509f090",
+    "family_v1_1_evaluation_identity": "outputs/architecture_v1_family_v1_1/formal_evaluation/identity.json",
+    "family_v1_1_evaluation_identity_sha256": "3bc240316757f8656efab382b5db20b0233ef7572000bde596d4d7c2bd7a01c1"
+  },
+  "validation_data_bridge": {
+    "current_repository_protocol_sha256": "ec3a3a473fb86aea4687f99eb5b8bcaa1a54ee40b6eb41755e9de312c2d89a9f",
+    "current_repository_fit_data_bundle_sha256": "ba9cf085608c35e44c258aa2c29ba19e743505b46e9e6c0ab521849baab3ea46",
+    "legacy_D0_v_protocol_sha256": "c75338474aa6b4eb3517647be64ae90bf00da6919ad05683d3dc3bf279b1de79",
+    "projected_legacy_fit_data_bundle_sha256": "1a36033ac4f921c460a10ad04ee011b2d41b458793f5a62f0093868efcecf4a6",
+    "train_split_array_sha256": "ec756d175edc4b265311e7a3b642a58d84aebd4e266392932ee0a6bb3dd56e3a",
+    "validation_split_array_sha256": "c481c065c9c3d3c5a9654b480cbb3546dcbf21445eb45a3f3f269831af8857a4",
+    "allowed_model_facing_array_changes": 0,
+    "required_materialized_target_roles": ["train", "validation"],
+    "forbidden_materialized_target_roles": ["calibration", "selection", "r_seen", "final"]
+  },
+  "reused_D0_v_baseline": {
+    "archive_schema": "architecture_v1_family_v1_1_validation_scenarios_v1",
+    "scenario_shape": [50, 100, 10, 24],
+    "code_sha256_recorded_in_archives": "c2c67adef5c447163b7eafb0d6a26cdc7d699e0443bd75a80395d14f1497868d",
+    "archives": {
+      "seed3_sampling21000": {"path": "outputs/architecture_v1_family_v1_1/formal_evaluation/archives/D0_seed3_sampling21000.npz", "sha256": "49908cb1d3827db7ca3b2d09dc5b9ce058515c5ed6a3219cbf4e8b57ec28dac2"},
+      "seed3_sampling21001": {"path": "outputs/architecture_v1_family_v1_1/formal_evaluation/archives/D0_seed3_sampling21001.npz", "sha256": "1dc0c2881d1b25e0c44f3b9e64f2176e59343b92cd1074a732b25462814cb76b"},
+      "seed3_sampling21002": {"path": "outputs/architecture_v1_family_v1_1/formal_evaluation/archives/D0_seed3_sampling21002.npz", "sha256": "5ee67b721971a70f8da98904d60c4b22e7b31d49a7e5a9b2f58ec992f550e94f"},
+      "seed4_sampling21000": {"path": "outputs/architecture_v1_family_v1_1/formal_evaluation/archives/D0_seed4_sampling21000.npz", "sha256": "059ebe91a87fe126244567c3d7d3bc0c70741e5b5c85c215d5366d142020a333"},
+      "seed4_sampling21001": {"path": "outputs/architecture_v1_family_v1_1/formal_evaluation/archives/D0_seed4_sampling21001.npz", "sha256": "ab00faf997987a92caacafb9506b7d0e4721c8214273f1536f8a15a5de471b44"},
+      "seed4_sampling21002": {"path": "outputs/architecture_v1_family_v1_1/formal_evaluation/archives/D0_seed4_sampling21002.npz", "sha256": "2128c964a9e1b7f3030e8d330cbaed27fea4e2f7daf5526e0e3faef0c177758a"},
+      "seed5_sampling21000": {"path": "outputs/architecture_v1_family_v1_1/formal_evaluation/archives/D0_seed5_sampling21000.npz", "sha256": "bc80eac86703e37890ec172a2bebb93d83995847ada987f4ca4b828e3cdf4054"},
+      "seed5_sampling21001": {"path": "outputs/architecture_v1_family_v1_1/formal_evaluation/archives/D0_seed5_sampling21001.npz", "sha256": "5f4ed3f3af827b9c5def4d5217cd9c36ba253d485312b5ecd4e94497e3457b64"},
+      "seed5_sampling21002": {"path": "outputs/architecture_v1_family_v1_1/formal_evaluation/archives/D0_seed5_sampling21002.npz", "sha256": "b4e15585ccd256dd4bdf32a29a79ea9e909dac210ad6bd5115968a5cb85c1a64"}
+    },
+    "required_resume_audits": [
+      "file SHA256 and archive metadata match",
+      "validation day, truth, observed mask, and raw-missing mask equal the current validation bundle",
+      "atom probabilities and allocated states are exactly common for every backbone seed and sampling seed",
+      "D0-v checkpoint SHA256 equals the backbone bound by the probe run"
+    ]
+  },
+  "scenario_contract": {
+    "output_root": "outputs/architecture_v1_family_v1_2_probe/formal_evaluation",
+    "members": 100,
+    "sampling_seeds": [21000, 21001, 21002],
+    "sampling_seed_positions": {"21000": 0, "21001": 1, "21002": 2},
+    "per_day_common_seed_formula": "sampling_seed + zero_based_validation_day_index*1009",
+    "atom_allocation_seed_offset": 1,
+    "initial_noise_seed_offset": 2,
+    "sampler": "31-step deterministic DDIM",
+    "DDIM_steps": 31,
+    "DDIM_eta": 0.0,
+    "dtype": "float32",
+    "member_chunk": 10,
+    "validation_day_batch_size": 5,
+    "deterministic_algorithms": true,
+    "chronological_hour_order": "0,1,...,23",
+    "shuffle_trained_adapter_inference_rule": {
+      "eligible_bank_indices": [0, 1, 2, 3, 4, 5],
+      "formula": "bank_index = eligible_bank_indices[(3*zero_based_validation_day_index + sampling_seed_position) mod 6]",
+      "properties": "target-free, shared across backbone seeds and stage blocks, and exactly balanced at 25 uses per bank entry over 50 days times three sampling seeds"
+    },
+    "same_checkpoint_falsification": {
+      "source_checkpoint": "chronological adapter final EMA",
+      "held_out_bank_indices": [6, 7],
+      "each_index_used_for_every_validation_day_and_all_three_sampling_seeds": true,
+      "checkpoint_retraining_or_selection": false
+    },
+    "new_primary_archives": 144,
+    "new_same_checkpoint_archives": 144,
+    "reused_baseline_archives": 9,
+    "resume_rule": "reuse only an archive with a verified sidecar, complete array schema, exact metadata identity, and successful numerical/atom audit; otherwise fail closed rather than overwrite",
+    "archive_retention": "retain scenarios, states, atom probabilities, truth, masks, dates, runtime, and metadata for every new archive"
+  },
+  "metric_contract": {
+    "implementation": "architecture_v1.formal_evaluation.validation_per_day_metrics",
+    "primary_lower_is_better": ["ramp_CRPS", "lagged_increment_variogram_score"],
+    "distribution_safety": ["level_CRPS", "normalized_joint_ES", "coverage90", "width90"],
+    "atom_invariance": ["zero_Brier", "one_Brier", "atom_state_Brier"],
+    "aggregation_order": [
+      "compute every metric separately for each calendar day and scenario archive",
+      "average the three sampling replicates within day and checkpoint",
+      "average the three backbone-training seeds within day",
+      "perform every formal contrast and resample on the resulting 50 paired calendar-day vectors"
+    ],
+    "ensemble_members_are_inferential_replicates": false,
+    "sampling_replicates_are_inferential_replicates": false,
+    "training_seeds_are_inferential_replicates": false,
+    "relative_daily_contribution": "(reference_day_score-candidate_day_score)/mean(reference_day_score over all 50 validation days); the denominator is fixed before resampling so the mean contribution equals the registered full-validation relative improvement",
+    "absolute_daily_contribution": "reference_day_score-candidate_day_score",
+    "positive_primary_contribution_means": "candidate is better because all primary scores are lower-is-better"
+  },
+  "formal_contrasts": {
+    "ordered_mechanism": {"reference": "shuffle-trained adapter under the balanced training-bank inference rule", "candidate": "chronological-trained adapter under chronological inference"},
+    "net_intervention": {"reference": "reused D0-v", "candidate": "chronological-trained adapter"},
+    "capacity_control": {"reference": "reused D0-v", "candidate": "shuffle-trained adapter"},
+    "same_checkpoint_falsification": {"reference": "mean of held-out inference orders 6 and 7 applied to each chronological checkpoint", "candidate": "the same chronological checkpoint under chronological inference"}
+  },
+  "resampling_and_multiplicity": {
+    "repetitions": 5000,
+    "confidence_level": 0.95,
+    "root_seed": 291000,
+    "resampling_unit": "paired calendar day",
+    "primary_max_T": {
+      "seed": 291001,
+      "joint_endpoints": "eight DDIM blocks times two primary metrics = 16",
+      "studentization": "endpoint standard deviation across paired day-bootstrap mean draws; zero-SE endpoints are handled exactly",
+      "critical_value": "0.95 quantile of the maximum absolute centered studentized bootstrap statistic over all 16 endpoints",
+      "bands": "estimate plus-or-minus critical_value times endpoint bootstrap standard error"
+    },
+    "same_checkpoint_max_T": {
+      "seed": 291002,
+      "joint_endpoints": "eight DDIM blocks times two primary metrics after averaging held-out orders 6 and 7 = 16",
+      "interpretation": "falsification family separate from the primary trained-control family"
+    },
+    "safety_max_T": {
+      "seed": 291003,
+      "joint_endpoints": "eight blocks times level CRPS, relative joint ES, absolute coverage difference, and relative width increase versus D0-v = 32",
+      "bands": "two-sided simultaneous bands; upper bounds are used for one-sided deterioration gates and maximum absolute bands for coverage"
+    },
+    "stage_omnibus": {
+      "seed": 291004,
+      "null": "ordered-mechanism daily benefit has the same mean in all eight DDIM blocks for both primary metrics",
+      "test": "joint centered paired-day bootstrap quadratic statistic over block deviations for both metrics",
+      "alpha": 0.05
+    },
+    "NWP_regime_omnibus": {
+      "seed": 291005,
+      "null": "block-averaged ordered-mechanism benefit is homogeneous across stable, moderate, and dynamic train-NWP-defined regimes for both primary metrics",
+      "test": "joint target-free permutation of the frozen regime labels across complete calendar-day block vectors",
+      "alpha": 0.05
+    },
+    "block_by_NWP_interaction_omnibus": {
+      "seed": 291006,
+      "null": "an additive DDIM-block plus NWP-regime model is sufficient for both primary benefit metrics",
+      "test": "joint residual-permutation test that permutes complete paired-day residual block vectors under the fitted additive null",
+      "alpha": 0.05
+    },
+    "individual_block_by_regime_significance_claims": false
+  },
+  "support_and_safety_rules": {
+    "primary_block_support": "both primary ordered-mechanism max-T lower bands exceed zero and point estimates meet ramp >= 0.001 absolute and lagged variogram >= 0.05 relative",
+    "same_checkpoint_block_support": "both same-checkpoint falsification max-T lower bands exceed zero",
+    "distribution_safety_block_support": "versus D0-v, simultaneous upper deterioration bands satisfy level CRPS <= 0.0015, relative joint ES <= 0.02, absolute coverage difference <= 0.02, and relative width increase <= 0.10",
+    "full_block_support": "primary_block_support AND same_checkpoint_block_support AND distribution_safety_block_support",
+    "stage_structure": "at least two numerically adjacent DDIM blocks have full_block_support",
+    "atom_invariance": "for a fixed backbone seed and sampling seed, states and zero/one probabilities must be bitwise identical across D0-v, every stage block, both trained order modes, and both held-out controls; all atom metric day vectors must consequently be bitwise identical",
+    "persistent_distribution_damage": "at least two adjacent blocks pass primary and same-checkpoint support but no adjacent pair passes full support because one or more safety margins fail"
+  },
+  "decision_tree": {
+    "ordered_or_same_checkpoint_support_absent": "FAMILY_V1_2_ORDERED_RECURRENCE_NO_GO",
+    "persistent_distribution_damage": "FAMILY_V1_2_NO_GO_REVISE_INTERVENTION_SCALE",
+    "stage_not_significant_and_NWP_not_significant": "FAMILY_V1_2_TEMPORAL_GATING_NO_GO",
+    "stage_significant_and_NWP_not_significant": "FAMILY_V1_3_SNR_STAGE_GATE",
+    "stage_not_significant_and_NWP_significant": "FAMILY_V1_3_NWP_GATE",
+    "stage_significant_and_NWP_significant_and_interaction_not_significant": "FAMILY_V1_3_ADDITIVE_STAGE_AND_NWP_CONTROLS",
+    "interaction_significant_with_full_stage_structure": "FAMILY_V1_3_DUAL_GATED_TEMPORAL_CONTEXT_RESIDUAL",
+    "validation_only_claim": true,
+    "selection_access_authorized": false,
+    "calibration_access_authorized": false,
+    "external_confirmation_required_before_final_claim": true
+  },
+  "authorization": {
+    "formal_family_v1_2_validation_scenario_generation_authorized_after_all_lineage_checks_pass": true,
+    "allowed_target_roles": ["train", "validation"],
+    "selection_access_authorized": false,
+    "calibration_access_authorized": false,
+    "r_seen_target_access_authorized": false,
+    "external_final_access_authorized": false,
+    "failure_policy": "write a failure record, preserve complete hashed archives, and resume only from verified archive boundaries"
+  }
+}
