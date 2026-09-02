@@ -1,6 +1,6 @@
 # 《MS-CADM 后续研究路线决策与实验蓝图》十分详细复审
 
-**复审对象**：`reports/FUTURE_RESEARCH_ROADMAP_STANDALONE.html` 及其 Markdown 源文件  
+**复审对象**：`reports/FUTURE_RESEARCH_ROADMAP.md`；由其生成的旧 HTML 展示文件已在仓库文档清理时移除。
 **复审日期**：2026-08-13  
 **复审性质**：内容红队审计、代码—报告交叉核验、定向文献调研、研究路线重排  
 **检索边界**：以 2023–2026 年原始论文为主；遇到会直接否定“首次”主张的更早工作时向前追溯  
@@ -295,7 +295,7 @@ MM-JDWind 的 target-state absorbing mask 不是 classifier-free guidance 所需
 - 另一个风电数据域也会有同样的 95.99%；
 - 只要优化 increment-CRPS 就必然修好依赖。
 
-因此 marked state-duration 路线仍保留，但降为外部数据/细分诊断触发的备用线。完整数值与方法边界保存在 [`ramp_transition_attribution.json`](qa/ramp_transition_attribution.json)。
+因此 marked state-duration 路线仍保留，但降为外部数据/细分诊断触发的备用线。完整数值与方法边界保存在 [`ramp_transition_attribution.json`](evidence/ramp_transition_attribution.json)。
 
 ---
 
@@ -1654,7 +1654,7 @@ A/B 都失败
 ## 19. 仓库证据索引
 
 - 原路线图：[`FUTURE_RESEARCH_ROADMAP.md`](FUTURE_RESEARCH_ROADMAP.md)；
-- 原独立 HTML：[`FUTURE_RESEARCH_ROADMAP_STANDALONE.html`](FUTURE_RESEARCH_ROADMAP_STANDALONE.html)；
+- 原独立 HTML 为 Markdown 路线图的生成展示文件，已在仓库文档清理时移除；
 - 综合证据报告：[`COMPREHENSIVE_RESEARCH_REPORT.md`](COMPREHENSIVE_RESEARCH_REPORT.md)；
 - MM 研究报告：[`MM_JDWIND_RESEARCH_REPORT.md`](../MM_JDWIND_RESEARCH_REPORT.md)；
 - 旧 proper failure：[`proper_failure.json`](../outputs/mm_jdwind_development/outer1/runs/seed0/proper_failure.json)；
@@ -1662,7 +1662,7 @@ A/B 都失败
 - proper loss：[`training.py`](../mm_jdwind/training.py)；
 - sampler/NFE/state allocation：[`sampling.py`](../mm_jdwind/sampling.py)；
 - mixed residual/reconstruct：[`model.py`](../mm_jdwind/model.py)；
-- 本次 ramp transition attribution：[`ramp_transition_attribution.json`](qa/ramp_transition_attribution.json)；
+- 本次 ramp transition attribution：[`ramp_transition_attribution.json`](evidence/ramp_transition_attribution.json)；
 - STGF 报告：[`STGF_FLOW_RESEARCH_REPORT.md`](../STGF_FLOW_RESEARCH_REPORT.md)；
 - CR-MS-CADM 报告：[`CR_MSCADM_EXPERIMENT_REPORT.md`](../CR_MSCADM_EXPERIMENT_REPORT.md)。
 

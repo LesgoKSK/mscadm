@@ -1,0 +1,74 @@
+{
+  "schema": "mm_jdwind_ramp_transition_attribution_v1",
+  "status": "seen_evidence_mechanism_audit",
+  "created_on": "2026-08-13",
+  "question": "Which observed transition classes account for the positive MM-JDWind minus DDPM ramp-CRPS gap?",
+  "inputs": {
+    "mm": "outputs/mm_jdwind_confirmation_v1/outer{1,2,3}/scenarios/flow_mass_preserving_seed{0,1,2}_test.npz",
+    "ddpm": "outputs/ddpm_confirmation_v1/outer{1,2,3}/scenarios/ddpm_seed0_test.npz",
+    "days_per_outer": 50,
+    "zones": 10,
+    "lead_hours": 24,
+    "members": 100,
+    "comparisons": 9
+  },
+  "method": {
+    "transition_label": "Determined from the observed truth at adjacent lead hours; 0=exact zero, I=(0,1), 1=exact one.",
+    "score": "Empirical-distribution (V-statistic) CRPS of adjacent-hour increments, matching the repository metric semantics.",
+    "pooling": "The outer-specific DDPM seed0 ensemble is paired with each of the three MM model seeds; DDPM observations are therefore repeated across MM-seed comparisons.",
+    "inferential_boundary": "Descriptive mechanism attribution on the already-seen 150-day confirmation set. It is not a new confirmatory test and no conditional-subset superiority claim is made."
+  },
+  "overall": {
+    "comparisons_count": 103500,
+    "mm_minus_ddpm_ramp_crps": 0.002526658586698678,
+    "all_nine_outer_seed_gaps_positive": true,
+    "per_comparison_gaps": [
+      {"outer": 1, "mm_seed": 0, "gap": 0.00225153},
+      {"outer": 1, "mm_seed": 1, "gap": 0.00254199},
+      {"outer": 1, "mm_seed": 2, "gap": 0.00248729},
+      {"outer": 2, "mm_seed": 0, "gap": 0.00254877},
+      {"outer": 2, "mm_seed": 1, "gap": 0.00275651},
+      {"outer": 2, "mm_seed": 2, "gap": 0.00250029},
+      {"outer": 3, "mm_seed": 0, "gap": 0.00232145},
+      {"outer": 3, "mm_seed": 1, "gap": 0.00285456},
+      {"outer": 3, "mm_seed": 2, "gap": 0.00247753}
+    ]
+  },
+  "broad_transition_classes": [
+    {
+      "class": "I_to_I",
+      "count": 94032,
+      "frequency": 0.9085217391304348,
+      "mean_mm_minus_ddpm_gap": 0.00266962,
+      "contribution_to_overall_gap": 0.00242541,
+      "share_of_overall_positive_gap": 0.9599,
+      "mm_crps": 0.05464939,
+      "ddpm_crps": 0.05197977
+    },
+    {
+      "class": "atom_to_or_from_I",
+      "count": 3798,
+      "frequency": 0.036695652173913046,
+      "mean_mm_minus_ddpm_gap": 0.00257410,
+      "contribution_to_overall_gap": 0.00009446,
+      "share_of_overall_positive_gap": 0.0374,
+      "mm_crps": 0.02895527,
+      "ddpm_crps": 0.02638117
+    },
+    {
+      "class": "atom_to_atom",
+      "count": 5670,
+      "frequency": 0.05478260869565217,
+      "mean_mm_minus_ddpm_gap": 0.00012403,
+      "contribution_to_overall_gap": 0.00000679,
+      "share_of_overall_positive_gap": 0.0027,
+      "mm_crps": 0.00842092,
+      "ddpm_crps": 0.00829689
+    }
+  ],
+  "interpretation": [
+    "On this seen data, the average ramp gap is overwhelmingly an interior-to-interior issue, so an atom-frozen continuous-flow adaptation is mechanistically coherent as the first pilot.",
+    "The result does not prove that the jump model is fully calibrated, that cross-state tail ramps are solved, or that the same decomposition holds in another wind dataset.",
+    "A state-duration/amplitude coupled model remains a conditional backup route, especially for external datasets where cross-state transitions explain a larger share of the gap."
+  ]
+}

@@ -40,3 +40,11 @@ tmp/
 
 # Generated report QA previews
 reports/qa/
+
+# Generated report exports superseded by maintained Markdown sources
+reports/*.docx
+reports/CURRENT_RESEARCH_PROGRESS_GROUP_MEETING_STANDALONE.html
+reports/FUTURE_RESEARCH_ROADMAP_STANDALONE.html
+reports/FUTURE_RESEARCH_ROADMAP_CRITICAL_REVIEW_STANDALONE.html
+reports/assets/progress_clear/
+reports/assets/progress_zero/

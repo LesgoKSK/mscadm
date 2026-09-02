@@ -38,11 +38,14 @@ The repository records both positive and negative results.
    dependence, while Flow is better on marginal/joint quality and coverage.
    Neither family satisfies the preregistered dominance rule; the formal winner
    remains unresolved.
+6. **Family-v1.2 Temporal Utility Probe:** correctly ordered recurrence has a
+   detectable but practically small effect. None of the eight registered DDIM
+   stage blocks reaches the preregistered ramp and lagged-effect thresholds, so
+   the GRU/SNR/NWP-gating branch is formally **No-Go**.
 
-The next planned experiment is a **Temporal Utility Probe**: 8 log-SNR bins ×
-chronological/shuffled ordering × 3 training seeds. It will determine whether
-temporal intervention should depend on NWP dynamicity, diffusion stage, both,
-or neither.
+The next model intervention has not been frozen. The single maintained source
+for current status, interpretation, and the pending route decision is
+[Current research progress](reports/CURRENT_RESEARCH_PROGRESS.md).
 
 > All current architecture conclusions are validation-stage findings. Sealed
 > selection/calibration roles and final external testing are not treated as
@@ -123,12 +126,17 @@ matching `reports/ARCHITECTURE_V1_*_PROTOCOL.md` files.
 
 ## Main reports
 
-- [Current research progress — standalone HTML](reports/CURRENT_RESEARCH_PROGRESS_GROUP_MEETING_STANDALONE.html)
-- [Current research progress — clear narrative DOCX](reports/CURRENT_RESEARCH_PROGRESS_CLEAR_NARRATIVE.docx)
+- [Current research progress — maintained canonical record](reports/CURRENT_RESEARCH_PROGRESS.md)
+- [Family-v1.2 Temporal Utility Probe formal result](reports/ARCHITECTURE_V1_FAMILY_V1_2_FORMAL_EVALUATION_RESULT.md)
 - [MS-CADM reproduction report](reports/MSCADM_PAPER_REPRODUCTION_REPORT.md)
 - [Cross-model architecture diagnostic](reports/CROSS_MODEL_ARCHITECTURE_DIAGNOSTIC.md)
 - [Temporal mechanism v3.2 result](reports/ARCHITECTURE_V1_TEMPORAL_MECHANISM_V3_2_RESULT.md)
 - [Flow versus Joint DDPM formal comparison](reports/ARCHITECTURE_V1_FAMILY_V1_1_FORMAL_COMPARISON_RESULT.md)
+
+Generated progress DOCX/HTML exports and generated roadmap HTML files are not
+kept in the repository. Historical roadmap Markdown and formal protocol/result
+records remain for provenance, but they are not the authoritative statement of
+the current next step.
 
 ## Reproducibility and interpretation
 
