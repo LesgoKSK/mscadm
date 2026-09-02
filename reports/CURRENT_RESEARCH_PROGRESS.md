@@ -39,7 +39,15 @@ family-v1.2 Temporal Utility Probe
 正确顺序有微小效应，但 0/8 blocks 达到实质门槛
                 │
                 ▼
-当前状态：停止 GRU/SNR/NWP gate 分支，下一种干预尚未冻结
+文献碰撞与等价性复审
+固定条件协方差、通用多维条件 schedule 均不能作为首创
+                │
+                ▼
+G0-A NWP 模式不确定性审计
+6/6 folds、6/6 mode groups 改善，全部冻结门通过
+                │
+                ▼
+当前状态：G0-A Go；只获准设计 G0-B，尚未形成新模型
 ```
 
 ## 3. 已完成实验与正式结论
@@ -52,6 +60,7 @@ family-v1.2 Temporal Utility Probe
 | Temporal v3.2 | 直接加入 recurrence 是否有效 | Chronological 优于 Shuffle，但候选因非劣或稳定性失败，No-Go |
 | Family-v1.1 | Flow 与 Joint DDPM 谁更好 | Flow 的 level/joint/coverage 更好；D0-v 的 lagged dependence 更好；无全面胜者 |
 | Family-v1.2 | D0-v 的哪些去噪阶段真正需要顺序传播 | 顺序效应可检测但过小，ordered recurrence 正式 No-Go |
+| G0-A | NWP 能否预测 mask-aware 六类时空 residual 的条件不确定性 | 全部预注册门通过；必要前提 Go，但不是 diffusion 收益证据 |
 
 Family-v1.1 之后采用 D0-v 做 family-v1.2，只是因为它具有明确的 DDIM 阶段坐标，便于做机制干预；这不等于已经把 Diffusion 选为最终模型家族。
 
@@ -71,45 +80,74 @@ Family-v1.1 之后采用 D0-v 做 family-v1.2，只是因为它具有明确的 D
 
 详细证据见 [`ARCHITECTURE_V1_FAMILY_V1_2_FORMAL_EVALUATION_RESULT.md`](ARCHITECTURE_V1_FAMILY_V1_2_FORMAL_EVALUATION_RESULT.md)。
 
-## 5. `transition-aware diffusion` 是什么
+## 5. 当前冻结的研究问题
 
-这是 **未冻结的候选方向**，不是正在执行的实验。
+经过 CW-Diff、MuLAN、MA-TSD 等近邻复审，以下表述已经放弃：
 
-现有生成模型主要学习每个时刻的功率轨迹 `x`。所谓 transition-aware，是让模型还直接关注相邻小时变化：
+- “NWP 条件协方差是一种新的 forward process”；
+- “由条件决定不同 mode 的 diffusion clock 是通用方法首创”；
+- “标准 iid diffusion 在表达能力上无法学习时间依赖”。
+
+当前只冻结一个可证伪的风电问题：
+
+> 在总 corruption budget 匹配的条件下，利用 NWP 可预测的模式级条件不确定性来分配 diffusion SNR，是否能比标准 IID、条件白化、固定非各向同性日程和通用 learned adaptive schedule 更有效地降低风电联合条件分布的有限样本去噪复杂度？
+
+这里的候选贡献不是发明 conditional multidimensional schedule，而是检验：
 
 ```text
-功率水平：       x[t]
-相邻小时变化：   Δx[t] = x[t] - x[t-1]
+NWP
+  ↓
+模式级条件可预测性 / 不确定性
+  ↓
+显式、受约束的 corruption allocation 原则
 ```
 
-直观上，它要求生成结果同时做到：
+完整问题目前仍只是候选论文假说。G0-A 只为其中第一个必要前提提供了数据支持，尚未验证改变 diffusion path 是否有效。
 
-1. 每个小时的功率值合理；
-2. 从一个小时跳到下一个小时的幅度也合理。
+## 6. 当前执行边界：G0-A
 
-它与刚刚失败的 GRU residual 不同：
+完整问题被拆成两个先后门：
 
-- GRU residual 是在 NWP context 上再传播一次时间信息；
-- transition-aware 方法会直接修改 diffusion 的训练目标、输出表示或 sampler-level 评分，使 ramp/increment 本身进入学习目标。
+```text
+G0-A：NWP 能否预测六类时空成分的条件不确定性？
+  ├─ No-Go：结束整条 predictability-aligned diffusion 假说
+  └─ Go：只允许另行设计并冻结 G0-B
 
-可能实现包括 increment-aware denoising loss、level–increment 一致性参数化或 sampler-level proper-score adaptation。三者目前都只是候选，尚未选择，也没有配置、代码或训练任务。
+G0-B：这种信息是否值得控制 diffusion path？
+  ├─ 尚未冻结
+  └─ 未来至少比较 IID / CW / Fixed / MuLAN-lite / 候选方法 / Shuffle
+```
 
-## 6. 当前真正未解决的路线选择
+G0-A 已于 2026-09-02 冻结并完成。它具有以下边界：
 
-Temporal Utility Probe 已经先做完，因此不再需要讨论“Temporal Probe 与 proper-score adaptation 谁先做”。现在剩下的是两个新的候选：
+- 只使用 267 个 train calendar days；
+- 不读取 validation、calibration、selection、R-SEEN 或 final targets；
+- 只审计条件不确定性，不训练 diffusion；
+- 使用固定的 `3 temporal bands × 2 spatial groups`，不估计 240 条 schedule；
+- 精确 0/1 atom 与缺失坐标不进入 continuous residual；
+- 条件均值和条件方差均采用嵌套 out-of-fold 估计；
+- 主要比较 static、mask-only、NWP 和 inference-only Shuffled-NWP；
+- 全部 Go/No-Go 条件必须同时通过。
 
-| 候选 | 核心做法 | 主要优点 | 主要风险 |
-|---|---|---|---|
-| Transition-aware D0-v | 在 Diffusion 中直接约束 level 与 increment/ramp | 与已稳定的 D0-v 和现有公平协议衔接紧 | 需要证明不是普通辅助损失，且必须改善 ramp 而不伤 level/joint |
-| Sampler-matched Flow adaptation | 在混合测度 Flow 上对最终场景做 level–ramp proper-score 后训练 | 直接针对最终概率评价，Flow 已有较好的 level/joint 表现 | sampler 反传、有限 ensemble 估计和数值稳定风险较高 |
+正式结果为 `G0_A_NWP_MODE_UNCERTAINTY_GO`：
 
-**目前没有冻结下一模型，也没有启动新训练。** 下一项正式动作应是在本文档内完成一次二选一判定，然后只为胜出的方向建立一份不可改写的实验协议。
+- NWP 相对 mask-only 的 macro log-score 改善为 0.04512；
+- calendar-month cluster bootstrap 95% CI 为 `[0.03237, 0.06055]`；
+- 可约 deviance explained 为 22.00%；
+- 6/6 outer folds 与 6/6 mode groups 均为正；
+- 正确 NWP 改善为正，而 32 个 wrong-day NWP 对照全部为负。
+
+这说明 NWP 确实包含模式级条件不确定性信息，但尚未说明用它控制 diffusion 会改善最终场景。冻结协议见 [`ARCHITECTURE_V1_G0_A_PREDICTABILITY_PROTOCOL.md`](ARCHITECTURE_V1_G0_A_PREDICTABILITY_PROTOCOL.md)，完整结果见 [`ARCHITECTURE_V1_G0_A_PREDICTABILITY_RESULT.md`](ARCHITECTURE_V1_G0_A_PREDICTABILITY_RESULT.md)。
 
 ## 7. 当前不会做什么
 
 - 不继续 family-v1.3 SNR/NWP recurrence gate；
 - 不把 family-v1.2 的统计显著小效应包装成模型创新；
 - 不因为 D0-v 被用作 Probe 平台就宣布 Diffusion 已经战胜 Flow；
+- 不把固定 `Σ_NWP`、条件白化或通用条件多维 schedule 包装成方法首创；
+- 不把 G0-A Go 解释成 G0-B 或完整 diffusion 已经有效；
+- 不在新的 G0-B 协议冻结前实现完整 diffusion；
+- 不同时恢复 transition-aware loss、Flow proper-score adapter 等备用工程线；
 - 不访问仍封存的 selection、calibration 或最终外部测试；
 - 不同时启动两个重型方向。
 
@@ -133,6 +171,8 @@ Temporal Utility Probe 已经先做完，因此不再需要讨论“Temporal Pro
 
 ## 10. 关键证据入口
 
+- [`ARCHITECTURE_V1_G0_A_PREDICTABILITY_RESULT.md`](ARCHITECTURE_V1_G0_A_PREDICTABILITY_RESULT.md)
+- [`ARCHITECTURE_V1_G0_A_PREDICTABILITY_PROTOCOL.md`](ARCHITECTURE_V1_G0_A_PREDICTABILITY_PROTOCOL.md)
 - [`ARCHITECTURE_V1_FAMILY_V1_2_FORMAL_EVALUATION_RESULT.md`](ARCHITECTURE_V1_FAMILY_V1_2_FORMAL_EVALUATION_RESULT.md)
 - [`ARCHITECTURE_V1_FAMILY_V1_2_PROBE_PROTOCOL.md`](ARCHITECTURE_V1_FAMILY_V1_2_PROBE_PROTOCOL.md)
 - [`ARCHITECTURE_V1_FAMILY_V1_1_FORMAL_COMPARISON_RESULT.md`](ARCHITECTURE_V1_FAMILY_V1_1_FORMAL_COMPARISON_RESULT.md)

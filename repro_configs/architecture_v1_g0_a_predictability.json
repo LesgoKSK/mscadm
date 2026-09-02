@@ -1,0 +1,262 @@
+{
+  "schema": "architecture_v1_g0_a_predictability_audit_v1",
+  "status": "frozen_before_any_G0_A_target_aware_execution",
+  "created_date": "2026-09-02",
+  "objective": "test whether train-NWP predicts mask-aware mode-group conditional uncertainty beyond a static and atom-mask-only reference",
+  "research_question": "Does NWP-predictable mode-group uncertainty exist strongly and stably enough to justify a later predictability-aligned diffusion-path audit?",
+  "not_authorized": [
+    "G0-B diffusion-path implementation or training",
+    "validation target access",
+    "calibration target access",
+    "selection target access",
+    "R-SEEN target access",
+    "external-final target access",
+    "a claim that conditional multidimensional schedules are methodologically novel"
+  ],
+  "output_root": "outputs/architecture_v1_g0_a_predictability",
+  "lineage": {
+    "data_protocol_config": "repro_configs/architecture_v1_formal_v2_2_1.json",
+    "data_protocol_config_sha256": "1813f4f4aebeafee7b7c41d7688d149a09d07b78d7b244f0efc26c957f34b716",
+    "repository_start_commit": "20653f2add6e5d52b8032d12279947fdaf000b96",
+    "expected_train_days": 267,
+    "expected_train_date_sha256": "f67eb5fd4382b2d69d2d22d23488ec618cd3b3b9547a9bbcc71bdd39587c8cf5",
+    "expected_train_split_array_sha256": "ec756d175edc4b265311e7a3b642a58d84aebd4e266392932ee0a6bb3dd56e3a",
+    "expected_train_only_data_bundle_sha256": "953ffccc9f0241c19757d0aeaf9de98cda2a268efef89b7cf977957ef5c0d7aa"
+  },
+  "role_access": {
+    "allowed_target_roles": [
+      "train"
+    ],
+    "required_loader": "architecture_v1.data.build_architecture_v1_train_data",
+    "forbidden_target_roles": [
+      "validation",
+      "calibration",
+      "selection",
+      "r_seen",
+      "final"
+    ],
+    "validation_bank_constructed": false,
+    "checkpoint_selection": "none"
+  },
+  "continuous_target": {
+    "domain": "observed interior cells only",
+    "state_code": 1,
+    "transform": "logit",
+    "logit_epsilon": 0.0001,
+    "atom_and_missing_coordinates": "excluded from every fitted loss and set to exact zero before band projection"
+  },
+  "mode_registry": {
+    "spatial": {
+      "common": "orthogonal projector 11^T/10; rank 1",
+      "local": "orthogonal complement I-11^T/10; rank 9"
+    },
+    "temporal": {
+      "basis": "orthonormal DCT-II over 24 physical hours",
+      "low": {
+        "indices_half_open": [
+          0,
+          4
+        ],
+        "rank": 4,
+        "interpretation": "daily level and structures of approximately 16 hours or longer"
+      },
+      "mid": {
+        "indices_half_open": [
+          4,
+          12
+        ],
+        "rank": 8,
+        "interpretation": "structures of approximately 4 to 12 hours"
+      },
+      "high": {
+        "indices_half_open": [
+          12,
+          24
+        ],
+        "rank": 12,
+        "interpretation": "structures shorter than approximately 4 hours"
+      }
+    },
+    "ordered_groups": [
+      "low_common",
+      "low_local",
+      "mid_common",
+      "mid_local",
+      "high_common",
+      "high_local"
+    ],
+    "target_derived_PCA_or_learned_basis": false,
+    "masked_energy": "e_db=||P_spatial,b (M_d r_d) P_temporal,b||_F^2 / trace(P_b M_d)",
+    "minimum_effective_rank": 1.5,
+    "energy_floor": 1e-8
+  },
+  "cross_fitting": {
+    "outer_folds": 6,
+    "outer_assignment": "six contiguous blocks after sorting the 267 frozen train dates",
+    "inner_folds": 4,
+    "inner_assignment": "four contiguous blocks within each outer-training date set",
+    "target_leakage_across_held_out_fold": false,
+    "outer_test_days_used_for_any_transform_fit_or_hyperparameter_selection": false
+  },
+  "conditional_mean": {
+    "model": "cellwise linear ridge with intercept",
+    "models_per_fit": 240,
+    "predictors": [
+      "U10",
+      "V10",
+      "U100",
+      "V100",
+      "WS10",
+      "WS100",
+      "WE10",
+      "WE100",
+      "WD10",
+      "WD100"
+    ],
+    "feature_standardization": "fit independently for each zone-hour using the current fit fold only",
+    "shared_ridge_alpha_grid": [
+      0.001,
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "alpha_selection": "inner-fold aggregate observed-interior logit MSE",
+    "minimum_fit_observations_per_cell": 40,
+    "outer_training_band_targets": "constructed only from inner-out-of-fold conditional-mean residuals",
+    "outer_test_band_targets": "constructed from predictions fitted on the complete outer-training set"
+  },
+  "uncertainty_features": {
+    "mask_nuisance_features": [
+      "active_fraction",
+      "effective_rank_fraction_low_common",
+      "effective_rank_fraction_low_local",
+      "effective_rank_fraction_mid_common",
+      "effective_rank_fraction_mid_local",
+      "effective_rank_fraction_high_common",
+      "effective_rank_fraction_high_local"
+    ],
+    "nwp_global_moments": {
+      "channels": [
+        "U10",
+        "V10",
+        "U100",
+        "V100",
+        "WS10",
+        "WS100",
+        "WE10",
+        "WE100"
+      ],
+      "statistics": [
+        "mean",
+        "population_std"
+      ]
+    },
+    "nwp_band_rms": {
+      "channels": [
+        "U100",
+        "V100",
+        "WS100"
+      ],
+      "groups": [
+        "low_common",
+        "low_local",
+        "mid_common",
+        "mid_local",
+        "high_common",
+        "high_local"
+      ]
+    },
+    "nwp_feature_count": 34,
+    "mask_feature_count": 7,
+    "feature_standardization": "fit on the current uncertainty-model fit fold only"
+  },
+  "uncertainty_models": {
+    "S0_static": "one train-fold intercept per mode group",
+    "M0_mask_only": "regularized log-variance GLM using the seven mask nuisance features",
+    "N1_nwp": "the same GLM using mask nuisance plus the 34 frozen NWP features",
+    "variance_link": "log",
+    "fit_objective": "Gaussian variance quasi-score sum effective_rank*(eta+energy*exp(-eta)) with ridge penalty on non-intercept coefficients",
+    "ridge_alpha_grid": [
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "alpha_selection": "inner-fold macro mean Gaussian variance log score; selected independently for M0 and N1",
+    "prediction_variance_clip": [
+      1e-6,
+      1000000.0
+    ],
+    "maximum_newton_iterations": 100,
+    "newton_tolerance": 1e-8
+  },
+  "shuffle_control": {
+    "semantics": "keep the fitted N1 model and the correct target/mask/day fixed; derange only held-out NWP feature rows before inference",
+    "permutations": 32,
+    "seed_root": 28100,
+    "generator": "numpy.default_rng(PCG64)",
+    "fixed_points_allowed": 0,
+    "mean_model_NWP": "never shuffled; the intervention isolates uncertainty geometry rather than conditional-mean forecasting"
+  },
+  "evaluation": {
+    "inference_unit": "calendar_day",
+    "primary_score": "macro mean over six groups of log(predicted_variance)+observed_normalized_band_energy/predicted_variance; lower is better",
+    "primary_contrast": "M0_mask_only score minus N1_nwp score; positive favors NWP",
+    "static_safety_contrast": "S0_static score minus N1_nwp score; positive favors NWP",
+    "deviance_explained": "(M0_score-N1_score)/(M0_score-saturated_score), with saturated_score=log(observed_energy)+1",
+    "outer_fold_consistency": "sign of the primary contrast in each of six outer folds",
+    "band_support": "sign of the primary contrast separately for all six groups",
+    "calibration_diagnostics": [
+      "predicted-versus-observed energy by predicted-variance quintile",
+      "log-energy calibration slope",
+      "Spearman rank association"
+    ],
+    "raw_training_loss_used_as_cross-path_evidence": false
+  },
+  "inference": {
+    "paired_cluster_bootstrap": "resample calendar-month clusters with replacement",
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 28200,
+    "confidence_level": 0.95,
+    "shuffle_reference_quantile": 0.95
+  },
+  "go_no_go": {
+    "all_required_for_GO": true,
+    "primary_cluster_bootstrap_lower_bound_strictly_positive": true,
+    "minimum_deviance_explained": 0.05,
+    "minimum_positive_outer_folds": 5,
+    "minimum_positive_mode_groups": 4,
+    "required_spatial_coverage": [
+      "common",
+      "local"
+    ],
+    "minimum_supported_temporal_bands": 2,
+    "N1_must_beat_S0_on_macro_score": true,
+    "correct_NWP_improvement_must_exceed_shuffle_quantile": 0.95,
+    "nonfinite_fit_or_prediction": "NO_GO",
+    "insufficient_effective_rank": "NO_GO",
+    "GO_status": "G0_A_NWP_MODE_UNCERTAINTY_GO",
+    "NO_GO_status": "G0_A_NWP_MODE_UNCERTAINTY_NO_GO",
+    "GO_authorizes": "design and separately freeze G0-B only; it does not authorize a full diffusion model"
+  },
+  "retention": {
+    "learned_weights_retained": false,
+    "result_artifacts": [
+      "G0_A_RESULT.json",
+      "G0_A_RESULT.json.sha256"
+    ],
+    "result_must_record": [
+      "config SHA256",
+      "train-only data hashes",
+      "outer and inner fold date hashes",
+      "selected nuisance-model hyperparameters",
+      "per-day and per-band out-of-fold scores",
+      "all shuffle aggregate scores",
+      "every individual gate",
+      "final GO or NO_GO status"
+    ]
+  }
+}

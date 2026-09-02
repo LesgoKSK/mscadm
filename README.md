@@ -42,9 +42,14 @@ The repository records both positive and negative results.
    detectable but practically small effect. None of the eight registered DDIM
    stage blocks reaches the preregistered ramp and lagged-effect thresholds, so
    the GRU/SNR/NWP-gating branch is formally **No-Go**.
+7. **G0-A NWP predictability audit:** after conditional-mean cross-fitting and
+   exact atom masking, NWP improves held-out uncertainty scores in all six date
+   folds and all six fixed spatio-temporal groups. All prerequisite gates pass,
+   so a separate G0-B diffusion-path audit may now be designed; no new model
+   has yet been validated.
 
 The next model intervention has not been frozen. The single maintained source
-for current status, interpretation, and the pending route decision is
+for current status, interpretation, and the pending G0-B design is
 [Current research progress](reports/CURRENT_RESEARCH_PROGRESS.md).
 
 > All current architecture conclusions are validation-stage findings. Sealed
@@ -128,6 +133,8 @@ matching `reports/ARCHITECTURE_V1_*_PROTOCOL.md` files.
 
 - [Current research progress — maintained canonical record](reports/CURRENT_RESEARCH_PROGRESS.md)
 - [Family-v1.2 Temporal Utility Probe formal result](reports/ARCHITECTURE_V1_FAMILY_V1_2_FORMAL_EVALUATION_RESULT.md)
+- [G0-A NWP predictability audit result](reports/ARCHITECTURE_V1_G0_A_PREDICTABILITY_RESULT.md)
+- [G0-A frozen protocol](reports/ARCHITECTURE_V1_G0_A_PREDICTABILITY_PROTOCOL.md)
 - [MS-CADM reproduction report](reports/MSCADM_PAPER_REPRODUCTION_REPORT.md)
 - [Cross-model architecture diagnostic](reports/CROSS_MODEL_ARCHITECTURE_DIAGNOSTIC.md)
 - [Temporal mechanism v3.2 result](reports/ARCHITECTURE_V1_TEMPORAL_MECHANISM_V3_2_RESULT.md)
