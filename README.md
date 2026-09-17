@@ -45,11 +45,25 @@ The repository records both positive and negative results.
 7. **G0-A NWP predictability audit:** after conditional-mean cross-fitting and
    exact atom masking, NWP improves held-out uncertainty scores in all six date
    folds and all six fixed spatio-temporal groups. All prerequisite gates pass,
-   so a separate G0-B diffusion-path audit may now be designed; no new model
-   has yet been validated.
+   but this result by itself is not evidence that a changed diffusion path is
+   useful; G0-B below performs that separate test.
+8. **G0-B0 schedule feasibility audit:** fixed `eta=0.5`
+   reserve-then-water-fill exactly matches the registered Gaussian information
+   budget, avoids hard mode cutoffs, and passes every numerical gate. This is
+   schedule engineering evidence only; no denoiser or new model has been
+   validated.
+9. **G0-B tiny-denoiser utility:** all 324 retained runs and the common
+   267-day outer-fold evaluation are complete. PA-RWF improves balanced
+   reconstruction risk over IID by only 0.64% (below the frozen 2% gate), is
+   slightly worse than Fixed-band and wrong-day Shuffle, worsens increment MSE
+   and oracle efficiency, and is formally recorded as
+   **`G0_B_STRUCTURED_SCHEDULE_NO_GO`**. A full predictability-aligned
+   diffusion model is therefore not authorized.
 
-The next model intervention has not been frozen. The single maintained source
-for current status, interpretation, and the pending G0-B design is
+The current recommended next question is whether an exactly consistent
+anchor-plus-transition generative representation can address ramp dynamics;
+that new Probe has not yet been frozen or trained.
+The single maintained source for current status and interpretation is
 [Current research progress](reports/CURRENT_RESEARCH_PROGRESS.md).
 
 > All current architecture conclusions are validation-stage findings. Sealed
@@ -129,9 +143,30 @@ corresponding frozen configuration and report before running them; entry points
 are documented in `reports/ARCHITECTURE_V1_IMPLEMENTATION_RUNBOOK.md` and the
 matching `reports/ARCHITECTURE_V1_*_PROTOCOL.md` files.
 
+Inspect the G0-B retained-training matrix without loading targets or writing
+files:
+
+```bash
+python repro_scripts/run_architecture_v1_g0_b_tiny_denoiser_formal.py
+```
+
+Its mutating mode requires the explicit `--execute-training` flag. CPU formal
+execution additionally requires `--allow-cpu` to prevent accidentally starting
+the 324-run matrix without CUDA.
+
+Verify the completed training freeze and formal evaluation plan without
+materializing outer-held-out targets:
+
+```bash
+python repro_scripts/run_architecture_v1_g0_b_tiny_denoiser_evaluation.py
+```
+
 ## Main reports
 
 - [Current research progress — maintained canonical record](reports/CURRENT_RESEARCH_PROGRESS.md)
+- [G0-B frozen tiny-denoiser utility protocol](reports/ARCHITECTURE_V1_G0_B_TINY_DENOISER_PROTOCOL.md)
+- [G0-B0 schedule feasibility result](reports/ARCHITECTURE_V1_G0_B0_SCHEDULE_RESULT.md)
+- [G0-B0 frozen schedule protocol](reports/ARCHITECTURE_V1_G0_B0_SCHEDULE_PROTOCOL.md)
 - [Family-v1.2 Temporal Utility Probe formal result](reports/ARCHITECTURE_V1_FAMILY_V1_2_FORMAL_EVALUATION_RESULT.md)
 - [G0-A NWP predictability audit result](reports/ARCHITECTURE_V1_G0_A_PREDICTABILITY_RESULT.md)
 - [G0-A frozen protocol](reports/ARCHITECTURE_V1_G0_A_PREDICTABILITY_PROTOCOL.md)

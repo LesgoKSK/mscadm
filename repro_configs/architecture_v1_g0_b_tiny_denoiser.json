@@ -1,0 +1,571 @@
+{
+  "schema": "architecture_v1_g0_b_tiny_denoiser_utility_v1",
+  "status": "frozen_before_any_G0_B_target_aware_P0_or_tiny_denoiser_training",
+  "created_date": "2026-09-15",
+  "objective": "test whether the frozen predictability-aligned information allocation lowers real out-of-fold wind-residual denoising difficulty for a fixed-capacity tiny joint denoiser",
+  "evidence_class": "prospective_train_only_nested_cross_fitted_mechanism_probe_not_validation_or_generation",
+  "prior_information_disclosure": {
+    "already_observed": [
+      "G0-A established that NWP predicts six-group conditional residual uncertainty",
+      "G0-B0 established numerical feasibility of eta=0.5 reserve-then-water-fill",
+      "G0-B0 exposed the analytic Gaussian proxy-risk advantage and eta sensitivity"
+    ],
+    "not_observed": [
+      "any G0-B tiny-denoiser training loss",
+      "any G0-B held-out reconstruction metric",
+      "any G0-B path comparison"
+    ],
+    "consequence": "this protocol is prospective for denoiser utility but not an independent preregistration of the already-inspected allocation formula"
+  },
+  "not_authorized": [
+    "validation, calibration, selection, R-SEEN, or final target access",
+    "full D0-v training or scenario generation",
+    "retained tiny-denoiser training before P0_GO",
+    "changing paths, data fractions, metrics, margins, or seeds after P0 starts",
+    "choosing eta from any reconstruction outcome",
+    "claiming Diffusion has defeated Flow",
+    "claiming conditional multidimensional schedules, whitening, or reverse water-filling are new"
+  ],
+  "output_root": "outputs/architecture_v1_g0_b_tiny_denoiser",
+  "lineage": {
+    "repository_base_commit": "d3f831311081d3e14e4c5bb142a9e719a36d346e",
+    "data_protocol_config": "repro_configs/architecture_v1_formal_v2_2_1.json",
+    "data_protocol_config_sha256": "1813f4f4aebeafee7b7c41d7688d149a09d07b78d7b244f0efc26c957f34b716",
+    "g0_a_config": "repro_configs/architecture_v1_g0_a_predictability.json",
+    "g0_a_config_sha256": "5d1d5b7942cbb42f1b5a1af70f09e0bfdc99f2d29d9935b9b9c68968e20c5ead",
+    "g0_a_result": "outputs/architecture_v1_g0_a_predictability/G0_A_RESULT.json",
+    "g0_a_result_sha256": "37a55921016bd701ffb2f5a66f56b6abbaa28d027cfdb9b46e0b3f01f8d9b7e7",
+    "g0_a_required_status": "G0_A_NWP_MODE_UNCERTAINTY_GO",
+    "g0_b0_config": "repro_configs/architecture_v1_g0_b0_schedule.json",
+    "g0_b0_config_sha256": "1e67af3389c55aa6e7127f4ea8f0a0dc6fc7b2fc4d1c38c3b066320f597a6ab8",
+    "g0_b0_result": "outputs/architecture_v1_g0_b0_schedule/G0_B0_SCHEDULE_RESULT.json",
+    "g0_b0_result_sha256": "a352e46431b2594b123c2e2479b305c59e85a9c47f4614b69bd38552fe5cdf64",
+    "g0_b0_required_status": "G0_B0_SCHEDULE_FEASIBILITY_GO",
+    "g0_predictability_module_sha256": "e03656c99a787171de359b8e93511bb7ebcb56d17a4911c27589b12c9a0e7797",
+    "g0_b0_allocation_module_sha256": "bf875b884f2b4bc68982fc4fda85c30f9589385a9edb9be005ff364abbc884ab",
+    "expected_train_days": 267,
+    "expected_train_date_sha256": "f67eb5fd4382b2d69d2d22d23488ec618cd3b3b9547a9bbcc71bdd39587c8cf5",
+    "expected_train_split_array_sha256": "ec756d175edc4b265311e7a3b642a58d84aebd4e266392932ee0a6bb3dd56e3a",
+    "expected_train_only_data_bundle_sha256": "953ffccc9f0241c19757d0aeaf9de98cda2a268efef89b7cf977957ef5c0d7aa"
+  },
+  "role_access": {
+    "dry_run_allowed_target_roles": [],
+    "P0_allowed_target_roles": [
+      "train"
+    ],
+    "retained_training_allowed_target_roles": [
+      "train"
+    ],
+    "formal_evaluation_allowed_target_roles": [
+      "train_outer_held_out"
+    ],
+    "forbidden_target_roles": [
+      "validation",
+      "calibration",
+      "selection",
+      "r_seen",
+      "final"
+    ],
+    "required_loader": "architecture_v1.data.build_architecture_v1_train_data",
+    "validation_bank_constructed": false,
+    "checkpoint_selection": "none_final_EMA_only",
+    "selection_state": "sealed",
+    "calibration_state": "sealed"
+  },
+  "scientific_estimand": {
+    "primary_question": "conditional on the same outer-train-fitted nuisance mean and variance information, does correct NWP-predictability-aligned allocation reduce finite-capacity held-out denoising risk under the same update budget?",
+    "sample_efficiency_scope": "tiny-denoiser sample efficiency conditional on nuisance estimators fitted on the complete outer-training fold; not end-to-end sample efficiency of nuisance estimation plus diffusion",
+    "path_difference": "only the corruption coordinate system or allocation of the matched Gaussian information budget",
+    "not_claimed": [
+      "a tiny reconstruction Probe is a full generative model",
+      "held-out train folds are external validation",
+      "analytic Gaussian reference risk is observed model utility",
+      "G0-B can select Flow versus Diffusion",
+      "MuLAN-lite or CW-group exactly reproduces the full cited method"
+    ]
+  },
+  "continuous_residual": {
+    "domain": "observed interior cells only",
+    "power_to_latent": "logit(clip(y,1e-4,1-1e-4))",
+    "conditional_mean": "the exact G0-A outer-fold cellwise NWP ridge contract",
+    "residual": "r=active_mask*(logit_y-mu_hat_outer_fold)",
+    "atom_and_missing_target_values": "exact zero before every projector",
+    "atom_and_missing_loss": "excluded",
+    "noisy_inactive_input": "may be nonzero after orthogonal group corruption; the explicit active mask is always an input and inactive targets never enter loss or metrics",
+    "atom_model_or_scenario_reconstruction": false
+  },
+  "mode_registry": {
+    "ordered_groups": [
+      "low_common",
+      "low_local",
+      "mid_common",
+      "mid_local",
+      "high_common",
+      "high_local"
+    ],
+    "nominal_ranks": [
+      4,
+      36,
+      8,
+      72,
+      12,
+      108
+    ],
+    "temporal_basis": "orthonormal DCT-II over 24 physical hours with bands [0,4), [4,12), [12,24)",
+    "spatial_basis": "orthogonal common projector 11^T/10 and local complement I-11^T/10",
+    "projector_application": "Q_k(X)=P_spatial_k X P_temporal_k",
+    "orthogonal_partition_identity_required": true,
+    "daily_weights": "G0-A effective_rank divided by its six-group daily sum"
+  },
+  "outer_cross_fitting": {
+    "outer_folds": 6,
+    "assignment": "reuse the exact six chronological G0-A outer folds",
+    "nuisance_fit_scope": "complete outer-training fold only",
+    "outer_training_residuals": "reuse the G0-A four-fold nested out-of-fold conditional-mean construction inside the outer-training fold",
+    "outer_test_residuals": "conditional mean fitted on the complete outer-training fold and applied to the outer-test fold",
+    "variance_fit": "reuse G0-A inner selection and fit N1 on nested outer-training residual energies only",
+    "outer_training_variance_for_schedule": "the outer-fold N1 fitted on all outer-training residual energies predicts those outer-training conditions; no outer-test target is used",
+    "outer_test_variance_for_schedule": "the same fitted N1 predicts outer-test conditions",
+    "nuisance_fixed_across_data_fractions_paths_and_denoiser_seeds": true,
+    "required_replay": "outer-test residual energy, effective rank, selected nuisance hyperparameters, and N1 variance must match the frozen G0-A result within 1e-10 before P0",
+    "outer_test_date_sha256": {
+      "0": "74c4b1c950fc4fcbeed1fa48bf8f95777602589da3f978df0e1a11da640804fd",
+      "1": "a9568a9136683f731dbc4b7228a71a3ea00ab6a8dfa9794567491d81b1e8905e",
+      "2": "64d993a4db3b1600076f9513f41c7dac77ca9978d0f06332db55c4bd18618482",
+      "3": "e3ab45b7dfc08b83c2cd6c1630bc76b6a94f71ea8d5ad833f5388f2cf0983b4f",
+      "4": "4de27e05e3c297f96ed6d25f7d483bad902be655e889f78aa05a6751e1ffd605",
+      "5": "4983efb6958ed1b66cb095c12c1bc7e4be4fe0e5773ad192f34553f859f88ab4"
+    }
+  },
+  "learning_curve": {
+    "fractions": [
+      0.25,
+      0.5,
+      1.0
+    ],
+    "primary_fraction": 0.5,
+    "subset_rule": "sort outer-training dates by SHA256('architecture_v1_g0_b_tiny_v1|'+str(34100+outer_fold)+'|'+ISO_date), take ceil(fraction*N) prefix, then restore chronological order",
+    "date_sha256_convention": "SHA256 of chronologically sorted ISO dates joined by LF with no trailing LF",
+    "subset_seed_root": 34100,
+    "nested_subsets_required": true,
+    "minimum_calendar_month_clusters_in_each_25pct_subset": 19,
+    "nuisance_models_refit_per_fraction": false,
+    "fixed_optimizer_updates_across_fractions": true,
+    "interpretation": "same-compute denoiser learning curve with 25%, 50%, and 100% of outer-training residual days",
+    "subset_registry": {
+      "0": {
+        "outer_train_days": 222,
+        "outer_test_days": 45,
+        "fraction_0.25": {
+          "days": 56,
+          "date_sha256": "1ed9d0eec192cbb6da8f4461c620613ed574620888a8aa8092156774dcd6f52c"
+        },
+        "fraction_0.5": {
+          "days": 111,
+          "date_sha256": "2f3af8965cbf430fcebc3c06e43cafed4a6c0a72d7519b8bb5928959686346ca"
+        },
+        "fraction_1.0": {
+          "days": 222,
+          "date_sha256": "b5ff9e92716824ddb0ce3ce29bca6c9ee23f4938971326d5935d9a3c95500858"
+        }
+      },
+      "1": {
+        "outer_train_days": 222,
+        "outer_test_days": 45,
+        "fraction_0.25": {
+          "days": 56,
+          "date_sha256": "66d92ff9ec5d66122770e9e377ae849ffc4723bd3a6aecf6f0893ab866ea2bf6"
+        },
+        "fraction_0.5": {
+          "days": 111,
+          "date_sha256": "974f89db04dce56be6cf7c2bb50aa67c05c30851c3ded54a482af12d5dc885b1"
+        },
+        "fraction_1.0": {
+          "days": 222,
+          "date_sha256": "612e090c98147e97dc30c95faad46dde792e9289a5618626ff6a1d4136a63ab7"
+        }
+      },
+      "2": {
+        "outer_train_days": 222,
+        "outer_test_days": 45,
+        "fraction_0.25": {
+          "days": 56,
+          "date_sha256": "757deaf8ac8a6781a43e903d93f4e10fa80e6154f9c963ba7eabc848c8aae6e8"
+        },
+        "fraction_0.5": {
+          "days": 111,
+          "date_sha256": "861fea85b36e9427af93930c4041e3741debdc50fe1594980e76f26c02109f4e"
+        },
+        "fraction_1.0": {
+          "days": 222,
+          "date_sha256": "a1b78f60759d2e90b0eed514d365a84178bf611a6ae4fea6dbbddec7ad7555ba"
+        }
+      },
+      "3": {
+        "outer_train_days": 223,
+        "outer_test_days": 44,
+        "fraction_0.25": {
+          "days": 56,
+          "date_sha256": "7da987accf7f2e6ad671a741bea1eb862e77261098d7dd1f203c4138cbe96155"
+        },
+        "fraction_0.5": {
+          "days": 112,
+          "date_sha256": "9e2f5ea49483521f1749c3e38f5728f7694a9cb6c8fbf2813348d9e1720265da"
+        },
+        "fraction_1.0": {
+          "days": 223,
+          "date_sha256": "8c9f1a07127a5ec3dacdebca6c526768e601438987cdf90db3ba75460c6a1acd"
+        }
+      },
+      "4": {
+        "outer_train_days": 223,
+        "outer_test_days": 44,
+        "fraction_0.25": {
+          "days": 56,
+          "date_sha256": "94b25eb595c60f4bfcca242edc11b3199f44dae3a30e4216f3c0fddf7ce0a953"
+        },
+        "fraction_0.5": {
+          "days": 112,
+          "date_sha256": "262e775ac87ebfd466859dc64cdb4a4168537eba95c16e2d8ed2a7465abfcb50"
+        },
+        "fraction_1.0": {
+          "days": 223,
+          "date_sha256": "3e1df27dfe64bbad88e2ca8dde64e7f21164448f28e31e6d2205bb78c12272e5"
+        }
+      },
+      "5": {
+        "outer_train_days": 223,
+        "outer_test_days": 44,
+        "fraction_0.25": {
+          "days": 56,
+          "date_sha256": "786baab069c62a4288ceb3314e7b9f3a63f30b182b114bd4e3e9f418b799c112"
+        },
+        "fraction_0.5": {
+          "days": 112,
+          "date_sha256": "10d81c4f15ac73ed4d3d6fefe0a630027a2c9c908412843acf05c362c8126b2e"
+        },
+        "fraction_1.0": {
+          "days": 223,
+          "date_sha256": "62ea43af0674655013b519f5ea269a6b2f729acdc0620dd8312c8d5dedc4fc8c"
+        }
+      }
+    }
+  },
+  "baseline_information_contract": {
+    "timesteps": 250,
+    "cosine_offset": 0.008,
+    "beta_min": 1e-8,
+    "beta_max": 0.999,
+    "alpha_bar_float32_sha256": "ab4df3b8c173b936e8b3a6fb4ecddbcd96d5652fbd1a893c4ab8871b4d6a81dc",
+    "rho_0": "alpha_bar_0/(1-alpha_bar_0)",
+    "I_IID_dtk": "0.5*log(1+v_true_dk*rho_0_t)",
+    "B_dt": "sum_k w_dk*I_IID_dtk",
+    "all_paths_budget": "sum_k w_dk*I_path_dtk=B_dt for every day and timestep",
+    "budget_absolute_tolerance": 1e-12,
+    "schedule_monotonicity_tolerance": 1e-10,
+    "all_allocated_snr_must_be_finite_and_strictly_positive": true,
+    "clean_endpoint_minimum_alpha_bar": 0.999,
+    "noisy_endpoint_maximum_alpha_bar": 1e-6
+  },
+  "shared_proxy_allocation": {
+    "eta": 0.5,
+    "eta_tunable": false,
+    "true_reserve": "I_res_dtk=eta*I_IID_dtk",
+    "remaining_budget": "C_dt=(1-eta)*B_dt",
+    "proxy_information": "I_proxy_dtk=0.5*log(1+v_proxy_dk*rho_0_t)",
+    "proxy_priority": "a_proxy_dtk=v_proxy_dk*exp(-2*eta*I_proxy_dtk)",
+    "remaining_allocation": "J_path_dt=reverse_water_fill(a_proxy_dt,w_true_d,C_dt)",
+    "final_information": "I_path_dt=I_res_dt+J_path_dt",
+    "final_snr": "rho_path_dtk=expm1(2*I_path_dtk)/v_true_dk",
+    "purpose": "Fixed-band, MuLAN-lite, Predictability-aligned, and Shuffle share one safety and budget scaffold; only v_proxy changes"
+  },
+  "paths": [
+    {
+      "id": "IID",
+      "role": "standard nominal cosine reference",
+      "definition": "I_path=I_IID and alpha_bar_path=alpha_bar_0 for all six groups",
+      "learned_schedule_parameters": 0
+    },
+    {
+      "id": "CW_GROUP",
+      "role": "six-group conditional-whitening control",
+      "definition": "u=sum_k Q_k(r)/sqrt(v_true_k); assign every whitened group I_k=B_dt, use scalar whitened SNR expm1(2*B_dt), predict whitened clean u, then unwhiten before the common raw-residual loss",
+      "budget_matched_time_reparameterization": true,
+      "full_CW_Gen_replication": false,
+      "learned_schedule_parameters": 0
+    },
+    {
+      "id": "FIXED_BAND",
+      "role": "static non-isotropic control",
+      "v_proxy": "outer-fold effective-rank-weighted arithmetic mean of N1 variance over outer-training days, fixed across days and data fractions",
+      "uses_shared_proxy_allocation": true,
+      "learned_schedule_parameters": 0
+    },
+    {
+      "id": "MULAN_LITE",
+      "role": "generic learned input-conditional six-group schedule control",
+      "condition": "the same standardized 47 correct condition features seen by every denoiser",
+      "scheduler": "Linear(47,16)-SiLU-Linear(16,6)",
+      "scheduler_parameters": 870,
+      "initialization": "last layer exactly zero, so v_proxy starts at FIXED_BAND",
+      "v_proxy": "v_fixed_k*exp(log(4)*tanh(g_phi(condition)_k))",
+      "v_proxy_bounds": "[v_fixed_k/4,4*v_fixed_k]",
+      "timestep_dependence": "induced by the shared proxy allocation; the scheduler itself is condition-only, hence lite rather than a full MuLAN reproduction",
+      "training": "scheduler and common tiny denoiser are optimized jointly by the same raw-residual reconstruction objective",
+      "uses_shared_proxy_allocation": true
+    },
+    {
+      "id": "PA_RWF",
+      "role": "primary predictability-aligned candidate",
+      "v_proxy": "correct outer-fold N1 variance for the same day",
+      "uses_shared_proxy_allocation": true,
+      "must_numerically_equal_G0_B0_eta_0.5_on_frozen_G0_A_rows": true,
+      "learned_schedule_parameters": 0
+    },
+    {
+      "id": "PA_SHUFFLE",
+      "role": "wrong-day NWP-to-schedule causal control",
+      "denoiser_condition": "always the correct same-day condition, mask, and N1 variance",
+      "budget_and_reserve": "always computed from correct same-day v_true and w_true",
+      "v_proxy": "wrong-day N1 variance selected by a registered within-partition derangement; effective-rank weights are never shuffled",
+      "training_derangements": 4,
+      "evaluation_derangements": 4,
+      "derangement_seed_root": 34500,
+      "training_scope": "within the current denoiser training subset",
+      "evaluation_scope": "within the current outer-test fold",
+      "fixed_points_allowed": 0,
+      "training_permutation_selection": "optimizer_update modulo 4",
+      "evaluation_aggregation": "average all four registered wrong-day schedules before a day-level contrast",
+      "uses_shared_proxy_allocation": true,
+      "learned_schedule_parameters": 0
+    }
+  ],
+  "common_corruption": {
+    "raw_path_formula": "x_t=sum_k Q_k(sqrt(alpha_bar_dtk)*r+sqrt(1-alpha_bar_dtk)*epsilon)",
+    "epsilon": "one IID N(0,I_240) physical-space draw shared across paths before orthogonal projection",
+    "CW_input": "the corresponding scalar-VP corruption is applied after six-group whitening",
+    "network_target": "clean residual in the path's internal coordinates",
+    "network_decoder": "identity for raw paths; fixed same-day group unwhitening for CW_GROUP",
+    "optimization_loss": "mean squared reconstructed raw residual error over active cells only",
+    "prediction_parameterization": "direct clean residual x0 prediction",
+    "schedule_descriptor_input": "six allocated log-SNR values clipped to [-20,12] for network input only; clipping never changes the corruption schedule"
+  },
+  "tiny_denoiser": {
+    "purpose": "capacity-limited joint 10x24 regression Probe, not a scenario model",
+    "condition_features": "7 G0-A mask nuisance features + 34 G0-A NWP summaries + log of 6 correct N1 variances",
+    "condition_feature_count": 47,
+    "condition_standardization": "fit on the complete outer-training fold only and freeze across fractions and paths",
+    "input": "240 noisy values + 240 active-mask bits + 47 condition features + 6 allocated log-SNR values + 16 Fourier timestep values",
+    "input_dimension": 549,
+    "time_fourier_features": "for frequencies 2^0 through 2^7, concatenate sin(2*pi*frequency*t/249) and cos(2*pi*frequency*t/249) in increasing-frequency order",
+    "topology": "LayerNorm(549)-Linear(549,64)-SiLU-Linear(64,64)-SiLU-Linear(64,240)",
+    "output_dimension": 240,
+    "output_layer_zero_initialization": true,
+    "initialization": "LayerNorm weight one/bias zero; hidden Linear weights Xavier-uniform/bias zero; output Linear weight and bias exact zero using the registered model-seed torch.Generator",
+    "dropout": 0.0,
+    "batch_normalization": false,
+    "expected_trainable_parameters_without_scheduler": 56058,
+    "same_tensor_initialization_across_paths_within_fold_fraction_seed": true,
+    "MULAN_LITE_parameter_overhead_fraction": 0.01551964037247137,
+    "maximum_allowed_schedule_parameter_overhead_fraction": 0.02
+  },
+  "training": {
+    "outer_folds": 6,
+    "data_fractions": 3,
+    "paths": 6,
+    "model_seeds": [
+      3,
+      4,
+      5
+    ],
+    "expected_retained_runs": 324,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "batch_calendar_days": 16,
+    "sampling_with_replacement": true,
+    "optimizer_updates_per_run": 1024,
+    "calendar_day_corruption_exposures_per_run": 16384,
+    "diffusion_timestep_sampling": "discrete uniform over 0..249",
+    "gradient_clip_norm": 1.0,
+    "EMA_decay": 0.999,
+    "retained_checkpoint": "final EMA after update 1024 only",
+    "validation_early_stopping": false,
+    "learning_rate_schedule": false,
+    "automatic_mixed_precision": false,
+    "model_and_corruption_dtype": "torch.float32",
+    "allocation_and_budget_audit_dtype": "numpy.float64",
+    "deterministic_algorithms": true,
+    "learned_schedule_audit": "MULAN_LITE must pass the full fold schedule budget, endpoint, positivity, finite-value, and monotonicity checks at every 128-update checkpoint and at final EMA",
+    "common_randomness": "within each fold/fraction/model-seed, all paths share initial tiny-denoiser tensors, minibatch day indices, timesteps, Gaussian noise, and update count",
+    "training_random_seed_root": 34200,
+    "checkpoint_every_updates": 128
+  },
+  "evaluation_bank": {
+    "allowed_targets": "the current outer-test subset of the train role only",
+    "timesteps": [
+      0,
+      17,
+      33,
+      50,
+      66,
+      83,
+      100,
+      116,
+      133,
+      149,
+      166,
+      183,
+      199,
+      216,
+      232,
+      249
+    ],
+    "timestep_weighting": "equal over the 16 registered points",
+    "gaussian_noise_replicates_per_day_timestep": 4,
+    "evaluation_noise_seed_root": 34300,
+    "same_noise_tensor_across_all_paths_fractions_and_model_seeds": true,
+    "EMA_only": true,
+    "constructed_only_after_all_324_training_runs_are_frozen": true
+  },
+  "metrics": {
+    "inference_unit": "calendar day",
+    "cell_MSE": "active-cell squared raw-residual reconstruction error, averaged over registered timesteps and noise replicates",
+    "increment_MSE": "squared error of adjacent-hour residual increments where both cells are active",
+    "joint_day_normalized_SSE": "per-day active SSE divided by active_count times the outer-training active-residual second moment, then averaged over corruption bank",
+    "six_group_MSE": "projected reconstruction-error energy divided by the same daily effective rank used by G0-A",
+    "gaussian_reference_risk": "sum_k w_dk*v_true_dk*exp(-2*I_path_dtk), averaged over the same registered bank",
+    "oracle_efficiency_ratio": "dimension-weighted six-group model reconstruction MSE divided by Gaussian reference risk; descriptive even when below one because the Gaussian reference is not asserted to be the true law",
+    "balanced_reconstruction_risk": "equal mean of cell_MSE, increment_MSE, and joint_day_normalized_SSE after each endpoint is divided by its frozen all-day IID mean at the same data fraction",
+    "learning_curve_AULC": "trapezoidal mean balanced reconstruction risk over log data fractions 0.25, 0.5, and 1.0",
+    "gradient_conflict": "secondary-only cosine similarity of per-group gradients on a fixed train-only diagnostic bank",
+    "raw_training_loss_used_as_formal_evidence": false
+  },
+  "inference": {
+    "within_day_aggregation": "average evaluation noise replicates and registered timesteps; PA_SHUFFLE additionally averages its four evaluation derangements",
+    "model_seed_aggregation": "average the three model seeds within each outer-held-out calendar day before formal contrasts",
+    "fold_aggregation": "concatenate 267 out-of-fold day records; never treat fold, timestep, noise, cell, or mode as an independent replicate",
+    "paired_cluster_bootstrap": "resample calendar-month clusters with replacement",
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 34400,
+    "confidence_level": 0.95,
+    "superiority_sign": "positive relative improvement favors PA_RWF",
+    "simultaneous_method": "paired calendar-month max-T bootstrap over every registered confirmatory contrast",
+    "confirmatory_contrasts": [
+      "PA_RWF_vs_IID_balanced_risk_at_fraction_0.5",
+      "PA_RWF_vs_FIXED_BAND_balanced_risk_at_fraction_0.5",
+      "PA_RWF_vs_CW_GROUP_balanced_risk_at_fraction_0.5",
+      "PA_RWF_vs_PA_SHUFFLE_balanced_risk_at_fraction_0.5",
+      "PA_RWF_vs_MULAN_LITE_balanced_risk_noninferiority_at_fraction_0.5",
+      "PA_RWF_vs_MULAN_LITE_learning_curve_AULC",
+      "PA_RWF_vs_IID_oracle_efficiency_at_fraction_0.5",
+      "PA_RWF_vs_IID_cell_MSE_noninferiority_at_fraction_0.5",
+      "PA_RWF_vs_IID_increment_MSE_noninferiority_at_fraction_0.5",
+      "PA_RWF_vs_IID_joint_day_normalized_SSE_noninferiority_at_fraction_0.5",
+      "FIXED_BAND_vs_IID_balanced_risk_at_fraction_0.5",
+      "CW_GROUP_vs_IID_balanced_risk_at_fraction_0.5",
+      "MULAN_LITE_vs_IID_balanced_risk_at_fraction_0.5"
+    ]
+  },
+  "go_no_go": {
+    "all_required_for_GO": true,
+    "technical_eligibility": [
+      "all lineage, target-role, fold, subset, nuisance-replay, finite-value, budget, monotonicity, positivity, paired-randomness, resume, and run-count checks pass",
+      "all 324 final EMA runs complete without validation-based selection",
+      "MULAN_LITE schedule-parameter overhead is at most 2 percent",
+      "PA_RWF is numerically identical to frozen G0-B0 on the frozen G0-A daily rows"
+    ],
+    "PA_vs_IID_balanced_risk_min_relative_improvement_at_50pct": 0.02,
+    "PA_vs_FIXED_balanced_risk_min_relative_improvement_at_50pct": 0.01,
+    "PA_vs_CW_balanced_risk_min_relative_improvement_at_50pct": 0.01,
+    "PA_vs_SHUFFLE_balanced_risk_min_relative_improvement_at_50pct": 0.01,
+    "superiority_simultaneous_lower_bound_strictly_positive": true,
+    "PA_vs_MULAN_balanced_risk_noninferiority_margin_at_50pct": 0.01,
+    "PA_vs_MULAN_AULC_min_relative_improvement": 0.02,
+    "PA_vs_IID_oracle_efficiency_min_relative_improvement_at_50pct": 0.01,
+    "PA_vs_IID_each_endpoint_noninferiority_margin_at_50pct": 0.01,
+    "PA_vs_IID_minimum_endpoints_with_point_improvement_at_least_2pct": 2,
+    "minimum_positive_outer_folds_for_PA_vs_IID_balanced_risk": 5,
+    "minimum_positive_model_seeds_for_PA_vs_IID_balanced_risk": 2,
+    "control_path_vs_IID_material_relative_improvement_at_50pct": 0.02,
+    "optional_data_equivalence_milestone": "PA_RWF at 50 percent data is noninferior to IID at 100 percent data within 1 percent; report but do not require for GO",
+    "GO_status": "G0_B_PREDICTABILITY_ALLOCATION_UTILITY_GO",
+    "GO_authorizes": "design a separate full-model predictability-aligned diffusion protocol only; it does not authorize selection access or declare Diffusion the final family",
+    "NO_GO_statuses": [
+      "G0_B_TECHNICAL_NO_GO",
+      "G0_B_STRUCTURED_SCHEDULE_NO_GO",
+      "G0_B_NWP_ALIGNMENT_NO_GO",
+      "G0_B_FIXED_BAND_SUFFICIENT",
+      "G0_B_WHITENING_SUFFICIENT",
+      "G0_B_GENERIC_ADAPTIVITY_SUFFICIENT",
+      "G0_B_ORACLE_ONLY_NO_LEARNING_GAIN",
+      "G0_B_UNRESOLVED"
+    ],
+    "any_non_GO_status_authorizes_full_model": false
+  },
+  "decision_order": [
+    "technical failure -> G0_B_TECHNICAL_NO_GO",
+    "if PA_RWF fails its IID gate: classify G0_B_GENERIC_ADAPTIVITY_SUFFICIENT when MULAN_LITE materially beats IID, else G0_B_WHITENING_SUFFICIENT when CW_GROUP materially beats IID, else G0_B_FIXED_BAND_SUFFICIENT when FIXED_BAND materially beats IID, else G0_B_STRUCTURED_SCHEDULE_NO_GO",
+    "PA_RWF does not beat PA_SHUFFLE -> G0_B_NWP_ALIGNMENT_NO_GO",
+    "PA_RWF does not beat FIXED_BAND -> G0_B_FIXED_BAND_SUFFICIENT",
+    "PA_RWF does not beat CW_GROUP -> G0_B_WHITENING_SUFFICIENT",
+    "PA_RWF fails MuLAN-lite noninferiority or AULC superiority -> G0_B_GENERIC_ADAPTIVITY_SUFFICIENT when MULAN_LITE materially beats IID, otherwise G0_B_UNRESOLVED",
+    "raw PA_RWF gains pass but oracle-efficiency gain fails -> G0_B_ORACLE_ONLY_NO_LEARNING_GAIN",
+    "all registered gates pass -> G0_B_PREDICTABILITY_ALLOCATION_UTILITY_GO"
+  ],
+  "P0_preflight": {
+    "dry_run_before_target_access": true,
+    "allowed_target_roles": [
+      "train"
+    ],
+    "pilot_outer_fold": 0,
+    "pilot_fraction": 0.25,
+    "pilot_model_seed": 3,
+    "paths": 6,
+    "discarded_updates_per_path": 50,
+    "retained_weights": false,
+    "maximum_peak_GPU_memory_GiB": 2.0,
+    "hard_checks": [
+      "all artifact and code hashes match",
+      "only train targets are materialized",
+      "all six outer folds and all nested subset hashes match",
+      "G0-A nuisance replay matches outer-test energy, effective rank, hyperparameters, and N1 variance",
+      "six projectors are symmetric orthogonal and sum to identity",
+      "all six paths match every daily information budget",
+      "all fixed and learned schedules are finite, strictly positive, and monotone after every P0 update",
+      "PA_RWF exactly replays G0-B0 eta=0.5",
+      "CW whitening and inverse-whitening reconstruct the active residual within 1e-10",
+      "base tiny-denoiser initialization and every common random tensor are paired across paths",
+      "MULAN_LITE starts exactly at FIXED_BAND and only its registered 870 scheduler parameters are additional",
+      "PA_SHUFFLE has no fixed points and changes only the schedule proxy variance",
+      "loss, gradients, optimizer state, EMA, and one train-subset diagnostic batch are finite",
+      "checkpoint resume exactly reproduces the next update",
+      "P0 output contains no .pt or .pth weight"
+    ],
+    "P0_GO_status": "G0_B_TINY_DENOISER_P0_GO",
+    "failure": "G0_B_TINY_DENOISER_P0_NO_GO_new_revision_required"
+  },
+  "freeze_and_resume": {
+    "protocol_freeze_authorizes": "implementation, synthetic tests, dry-run, and P0 only",
+    "formal_training_requires_P0_GO": true,
+    "formal_training_requires_explicit_execute_flag": true,
+    "nonempty_output_without_resume": "reject",
+    "resume_boundary": "registered 128-update checkpoint only",
+    "resume_identity": "config, code, data, fold, subset, nuisance, path, model, optimizer, EMA, and RNG hashes",
+    "P0_weights_must_be_discarded": true,
+    "training_freeze_required_after_324_of_324_complete": true,
+    "formal_outer_test_evaluation_forbidden_before_training_freeze": true,
+    "threshold_path_fraction_seed_or_metric_change_after_P0_start": "forbidden_new_revision_required",
+    "selection_calibration_and_final": "remain sealed"
+  },
+  "planned_implementation_files": {
+    "module": "architecture_v1/g0b_tiny_denoiser.py",
+    "runner": "repro_scripts/run_architecture_v1_g0_b_tiny_denoiser.py",
+    "protocol_test": "tests/test_architecture_v1_g0_b_protocol.py",
+    "implementation_test": "tests/test_architecture_v1_g0_b_tiny_denoiser.py",
+    "protocol_report": "reports/ARCHITECTURE_V1_G0_B_TINY_DENOISER_PROTOCOL.md",
+    "P0_result": "G0_B_TINY_P0_RESULT.json",
+    "training_freeze": "training.freeze.json",
+    "formal_result": "G0_B_TINY_DENOISER_RESULT.json"
+  }
+}
