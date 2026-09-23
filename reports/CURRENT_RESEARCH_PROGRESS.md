@@ -1,6 +1,6 @@
 # 当前研究进度（唯一维护入口）
 
-最后更新：2026-09-17
+最后更新：2026-09-23
 
 本文档是仓库中“目前做到哪里、已经得到什么结论、下一步尚待决定什么”的唯一持续维护入口。
 
@@ -71,7 +71,26 @@ G0-B common outer-test evaluation
 PA-RWF 相对 IID 的 BRR 仅改善 0.64%，不胜 Fixed/Shuffle，oracle efficiency 更差
                 │
                 ▼
-当前状态：G0_B_STRUCTURED_SCHEDULE_NO_GO；不授权完整 PA diffusion
+G0_B_STRUCTURED_SCHEDULE_NO_GO；不授权完整 PA diffusion
+                │
+                ▼
+TGO-v1 transition-object attribution protocol
+七路径、六 outer folds、两种子、物理尺度采样指标和解释规则已冻结
+                │
+                ▼
+TGO-v1 P0
+7 paths × 50 updates 在 CUDA 上通过全部工程门，权重全部丢弃
+                │
+                ▼
+TGO-v1 retained training
+6/6 shared atom + 84/84 denoiser final EMA 完成，0 failure
+                │
+                ▼
+TGO-v1 v1.3 物理尺度评估
+336/336 场景归档；266 个共同推断日；28 个端点
+                │
+                ▼
+当前状态：TGO_V1_NO_GO；真实邻接表示未改善 ramp 与 lagged dependence
 ```
 
 ## 3. 已完成实验与正式结论
@@ -88,6 +107,9 @@ PA-RWF 相对 IID 的 BRR 仅改善 0.64%，不胜 Fixed/Shuffle，oracle effici
 | G0-B0 | G0-A 方差能否变成预算匹配、无硬 cutoff 的 mode-wise schedule | `eta=0.5` 全部工程门通过；只证明 schedule 可执行，不证明 denoiser utility |
 | G0-B P0 | 六条路径能否在严格配对、可恢复且不留权重的条件下执行 | 6×50 updates 与全部 hard gates 通过；只授权正式训练，不是路径优劣证据 |
 | G0-B formal | NWP predictability-aligned schedule 是否实质降低 held-out denoising 难度 | 324/324 训练与共同评估完成；PA 对 IID 只有 0.64% BRR 改善、未过 2% 门，且不胜 Fixed/Shuffle，正式 `G0_B_STRUCTURED_SCHEDULE_NO_GO` |
+| TGO-v1 P0 | 七条 transition/control 路径能否按冻结合同在 GPU 上配对训练、恢复和采样 | 23 项无数据测试通过；7×50 train-only updates、checkpoint 精确续跑、全部 hard gates 通过，正式 `TGO_V1_P0_GO`；不提供路径排名 |
+| TGO-v1 retained training | 六折、两种子、七路径能否在共同随机库和共享 atom 下完整冻结 | 6/6 shared atom 与 84/84 denoiser final EMA 完成；共 110,496 updates、0 failure、12/12 配对组通过 |
+| TGO-v1 formal v1.3 | 真实邻接 transition 表示能否改善最终物理功率 ramp 与 lagged dependence，且不损伤分布 | 336/336 共同场景归档、266 个共同推断日、28 项 simultaneous 端点完成；两个主指标均变差，正式 `TGO_V1_NO_GO` |
 
 Family-v1.1 之后采用 D0-v 做 family-v1.2，只是因为它具有明确的 DDIM 阶段坐标，便于做机制干预；这不等于已经把 Diffusion 选为最终模型家族。
 
@@ -368,11 +390,11 @@ P0 只说明 runner 可以按合同稳定运行。50-step train-subset loss 不�
 | PA-RWF vs MuLAN-lite，AULC | -0.087% | [-0.111%, -0.063%] | 点改善 ≥2%，下界 >0 | **失败** |
 | PA-RWF vs IID，oracle efficiency | -3.739% | [-3.953%, -3.525%] | 点改善 ≥1%，下界 >0 | **失败** |
 
-PA 相对 IID 的单项结果进一步说明它没有修复核心 transition 缺口：
+PA 相对 IID 的单项结果进一步说明它没有改善本 Probe 中的 residual-transition 重构端点：
 
 - cell MSE 改善 1.039%；
 - joint-day normalized SSE 改善 1.039%；
-- increment MSE **恶化 0.159%**；
+- logit residual 的相邻差分重构 MSE **恶化 0.159%**；
 - 三个端点中达到 2% 实质改善的数量为 0/3；
 - 方向在 6/6 outer folds 和 3/3 model seeds 上均为正，但幅度始终只有约 0.5%–0.8%。
 
@@ -390,29 +412,116 @@ G0_B_STRUCTURED_SCHEDULE_NO_GO
 
 协议中的可选“PA-50% vs IID-100% data equivalence”不作为结论解释：BRR 的三个分母按各自数据 fraction 的 IID 均值分别归一化，因此跨 fraction 直接比较 BRR 会机械地令每档 IID 均值等于 1，不能单独证明 50% 数据等价于 100% 数据。该缺陷不影响任何必需 Go/No-Go 门。
 
-## 9. 下一阶段建议：改变生成对象，而不是继续调 schedule
+## 9. 已完成：TGO-v1 transition-object attribution Probe
 
-G0-B 给出了很明确的机制线索。PA-RWF 相对 IID 的六组 reconstruction MSE 改善主要集中在 `low_common`（约 5.06%）和 `low_local`（约 1.26%）；mid 两组略有恶化，high 两组几乎不变。它能够略微改善平滑的 level/joint 指标，却没有改善相邻小时 increment。这与项目最早发现的 ramp/lagged 缺口一致：问题更可能在“模型把什么对象当作基本随机变量”，而不是各频带在 forward corruption 中分到多少 SNR。
+### 9.1 先纠正因果口径
 
-因此下一条建议主线不是继续调 `eta`、增加 schedule head 或扩大 tiny denoiser，而是先建立一个独立的 **transition-generative-object Probe**：
+现有证据足以停止当前 GRU residual 和 NWP-aligned schedule 两条低收益路线，但不能推出“直接生成完整功率曲线就是根因”。还存在有限容量、条件利用、优化目标、连续部分与边界 atom 的耦合以及采样误差等替代解释。
+
+G0-B 的 `increment_MSE` 也不是物理功率 ramp 场景质量。它评估的是 observed-interior logit residual 的相邻差分重构；`joint_day_normalized_SSE` 同样只是向量重构误差，不是联合概率评分。因此 G0-B 的 No-Go 保持不变，但其结论边界仅限于所测试的 denoising mechanism。
+
+本阶段冻结的问题是：
+
+> 在数据、NWP 条件、active-state law、模型容量、训练预算、scalar diffusion schedule 和随机库一致时，按真实时间邻接组织的可逆 transition 表示，能否改善最终物理尺度场景的动态分布；若改善，收益是否超出误差重加权、噪声几何变化、一般正交换基和错误邻接？
+
+这是有限数据与有限模型下的归纳偏置假说。anchor 加 difference 是可逆变换，不增加理想模型能够表达的分布集合，也不预设结果一定成功。
+
+### 9.2 冻结的连续对象与边界处理
+
+第一轮统一从 G0-A 的 train-only outer-fold residual 出发：
+
+\[
+x=\operatorname{logit}(\operatorname{clip}(y,10^{-4},1-10^{-4})),
+\qquad
+r=M(x-\hat\mu_{\mathrm{NWP}}).
+\]
+
+每个 zone 内，只对 maximal contiguous active segment 做变换：segment 第一个 residual 是 anchor，后续位置是物理相邻一阶差分；逆变换用 segmentwise cumulative sum。缺失点和 atom 不得先置零再全序列差分，也不得跨越它们构造“真实邻接”。
+
+重构诊断可以使用 held-out truth 定义 active mask，但正式场景采样必须先由 outer-train 拟合的共同 atom law 采样状态，再根据 sampled interior mask 生成连续部分；禁止把 outer-test 的真实 0/1 状态作为条件。连续 residual 逆变换后加回 NWP mean，经 sigmoid 回到物理功率，最后恢复精确 0/1 atom；不允许按应用尺度 clip 修复越界，只有有限 logit 的 FP64 sigmoid 舍入到边界时才使用相邻可表示内部值。
+
+### 9.3 七条路径用于区分收益来源
+
+令 `B_M` 表示按 active segment 构造且只用 outer-train RMS 缩放的真实邻接变换。TGO-v1 固定比较：
+
+| Path | 改变什么 | 回答什么 |
+|---|---|---|
+| `LEVEL_IID` | 原 residual 坐标、IID noise、普通 MSE | 共同基线 |
+| `TRANSITION_TRUE` | 网络直接看到真实 anchor+transition 坐标 | 完整候选 package 是否有效 |
+| `LEVEL_MATCHED_METRIC` | 不换坐标，只用 `B_M` 诱导的误差度量 | 收益是否只是更重视相邻差分 |
+| `LEVEL_MATCHED_NOISE` | 不换坐标，只用 `B_M^{-1}` 诱导的相关噪声 | 收益是否只是 noise geometry |
+| `LEVEL_MATCHED_BOTH` | 原坐标同时匹配误差度量和相关噪声 | 二者合起来是否已经解释收益 |
+| `ORTHOGONAL_DCT` | active segment 内固定正交 DCT-II | 是否只是一般换基 |
+| `TRANSITION_WRONG` | 相同维数和 anchor 数，但使用冻结的错误邻接 | 真实物理邻接是否有额外价值 |
+
+同一 IID schedule 在 transition 坐标中加噪，映回 level 后并不是 IID noise；其协方差由累积逆算子决定。因此这里不把 `TRANSITION_TRUE` 预先描述成“只改变生成对象”。只有它超过 `LEVEL_MATCHED_BOTH`，才支持网络直接看到 transition 坐标具有额外价值。
+
+### 9.4 小规模但完整的实验规模
+
+协议复用 267 个 train days 和既有六个 chronological outer folds，不访问 validation、calibration、selection、R-SEEN 或 final：
 
 ```text
-标准对象：24 小时 level trajectory
-候选对象：可逆的 anchor + transition/innovation trajectory
-硬约束：通过累积算子精确还原 level，level 与 increment 不允许互相矛盾
+P0：7 paths × 50 updates，全部权重随后丢弃
+
+retained：
+6 outer folds × 2 model seeds × 7 paths
+= 84 final-EMA runs
 ```
 
-候选 Probe 必须把“生成对象改变”与普通坐标缩放分开：至少包含原 level-space、train-only 标准化的可逆 transition-space、同预算正交变换控制，以及破坏真实相邻关系的负对照；共享网络容量、IID diffusion、训练预算和随机库。第一阶段仍只回答有限容量下的 held-out level/increment/joint reconstruction，不直接训练完整场景模型。
+P0 已在 outer fold 0、seed 3 上用 RTX 2060 完成。七条路径各执行 50 次更新，共 350 次；全部路径共享同一初始化和随机库，update 25 后的内存 checkpoint 均能逐位重放 update 26。算子 FP64/FP32 逆变换、inactive isolation、matched-noise 恒等式、31-step oracle DDIM pullback、错误邻接破坏率、有限值、共同 atom 语义和显存门全部通过。峰值分配显存约 21.0 MiB，输出目录只有 JSON 与 SHA256，没有权重或 checkpoint。
 
-只有 transition-space 同时满足以下条件，才进入完整 mixed-measure generative protocol：
+正式 P0 artifact 为 [`TGO_V1_P0_RESULT.json`](../outputs/architecture_v1_transition_object_probe/TGO_V1_P0_RESULT.json)，SHA256 为 `893bd8813d0de6c6fd91eef3b6f5a45fa6ed6d90ff22db1a7bd3fe30485980c3`。P0 的 50-step loss 仅用于确认运行有限，不能用于排序七条路径，也不能说明 transition 已有效。
 
-- increment/ramp 指标达到预注册实质改善；
-- level 与 joint 指标非劣；
-- 优势超过正交变换和时间破坏对照，而不是来自尺度重标定；
-- 三种子和 outer folds 稳定；
-- 新颖性复审确认贡献不是已有 differencing、wavelet diffusion 或普通状态空间重参数化的直接重复。
+P0 Go 后，正式 retained stage 已全部完成并冻结：6 个 outer-fold shared atom nuisance 各训练 4,080 updates，共 24,480；`6 folds × 2 seeds × 7 paths = 84` 个 denoiser 各训练 1,024 updates，共 86,016。合计 110,496 次 optimizer update，0 failure、0 resume 遗留、90 个目录均只保留一个 final EMA。12 个 `fold × seed` 组的初始化、随机库、训练数组、operator scale 和 shared atom checkpoint 跨七路径完全一致。
 
-这是下一阶段的建议，尚未冻结协议、没有训练新模型。若该表示 Probe 也失败，再转向真正改变概率分解的 stochastic state-space/innovation model，而不是回到 adapter、额外 loss 权重或 schedule 雕花。
+训练 freeze 位于 [`training.freeze.json`](../outputs/architecture_v1_transition_object_probe/formal_training/training.freeze.json)，SHA256 为 `428d0aa81d600a04d55d13537ba7c00639f0e31be8e6344d21426d2a33721f51`，正式状态为 `TGO_V1_84_OF_84_TRAINING_FROZEN`。该状态只授权共同物理尺度场景生成；训练 loss 仍不作为路径优劣证据。
+
+所有路径复用 56,058 参数 direct-x0 tiny joint denoiser、相同 1,024 updates、相同 minibatch/timestep/native-noise 随机库，不 early-stop。重构指标只是机制诊断；84/84 冻结后必须继续执行 31-step DDIM、100 members 和四个共同 sampling seeds，不能等重构结果“好看”才首次检查完整采样。
+
+### 9.5 正式判断回到物理功率尺度
+
+主要动态指标为已有的物理功率 signed `ramp_CRPS` 和 `lagged_increment_variogram_score`。同时保留：
+
+- level CRPS、joint ES、coverage 和 width；
+- 日均功率与后六小时 level，检查累计漂移；
+- 三小时局部 window ES、最大上升/下降 ramp 与 train-only 阈值事件；
+- atom Brier 及跨路径 atom probability/allocation 完全一致性。
+
+promotion 的必要条件包括：相对 `LEVEL_IID`，ramp CRPS 至少绝对改善 `0.001`、lagged variogram 至少相对改善 `5%`，两者 simultaneous 95% 下界均大于零；真实邻接还必须胜过 wrong adjacency，并至少在一个主要指标上胜过 orthogonal 与 `LEVEL_MATCHED_BOTH`，另一个非劣。level、joint、calibration、日均能量和后半天漂移的冻结安全门也必须全部通过，并要求至少 5/6 folds 和两个种子方向一致。
+
+若 matched metric、matched noise、orthogonal 或 wrong adjacency 能解释收益，只能按对应机制分类，不能宣称 transition object 的特殊优势。本轮未实现独立重构诊断，因此不能把最终 No-Go 进一步命名为“重构好、采样差”的 sampling No-Go。
+
+机器可读初始协议为 [`architecture_v1_transition_object_probe.json`](../repro_configs/architecture_v1_transition_object_probe.json)，SHA256 为 `b9f263359999b62e66f7b89ff9372d505dee320a7adfc992905a4d89e44442e4`。训练和采样代码已完成；当前 TGO 相关回归测试为 41 项，通过率 41/41。
+
+### 9.6 正式物理尺度结果
+
+评估过程保留了技术失败的版本记录：v1 的 FP32 归档会把少量内部值舍入到边界；v1.1 的 FP64 sigmoid 仍有极少数机器精度饱和；v1.2 运行至 280/336 份时发现 2013-12-31 后六小时没有任何观测值，末段 CRPS 在该日数学上无定义。这些版本均在正式推断前停止，没有按结果选路径。v1.3 仅把有限 logit 的 FP64 饱和值编码为相邻可表示内部值，并基于目标掩码将该日末段 CRPS 记为不可计算；267 个日期的场景全部保留，28 项配对推断统一使用其余 266 日。权重、31-step DDIM、四个共同采样种子、100 members、指标有效日上的公式与 Go/No-Go 门槛均未更改，336 份场景全部重新生成。
+
+v1.3 的 336/336 份归档、对应 17 项逐日指标、24 个共同随机组的 atom 分配/概率/初始噪声哈希均通过核验。3 个内部值进行了至多一个 FP64 ULP 的边界修正，共检查 335,850,368 个内部值。正式推断以日为单位，按 24 个日历月聚类做 10,000 次 bootstrap，并对全部 28 个端点给出共同控制的 95% simultaneous 区间；区间已从保存的逐日贡献数组独立精确重放。
+
+| 指标（越低越好，coverage 除外） | `LEVEL_IID` | `TRANSITION_TRUE` | 预注册比较及 simultaneous 95% 区间 |
+|---|---:|---:|---|
+| 物理 ramp CRPS | 0.063519 | 0.066380 | 改善量 **-0.002862**，[-0.004119, -0.001604] |
+| lagged increment variogram | 0.013622 | 0.016459 | 相对改善 **-20.82%**，[-31.30%, -10.34%] |
+| level CRPS | 0.098047 | 0.109501 | 损伤 +0.011454，[+0.007620, +0.015287] |
+| normalized joint ES | 0.134017 | 0.148346 | 相对损伤 +10.69%，[+7.17%, +14.22%] |
+| 90% coverage | 0.597042 | 0.548056 | 差值 -0.048987，[-0.062215, -0.035759] |
+
+两个主指标在 6/6 folds 和 2/2 model seeds 上都没有同时呈正向；真实邻接相对错误邻接也没有通过归因门，六项分布安全门整体失败。atom-state Brier 在七路径完全一致，不能把差异归因于 atom 采样库不公平。需要特别注意：基线的所谓 90% coverage 也仅为 0.597，故本实验没有证明任何路径已达到良好绝对校准。
+
+**正式状态为 `TGO_V1_NO_GO`。** 它否定的是本次有限容量、固定训练与采样预算下“可逆真实邻接 transition 坐标能够实质改善最终物理场景”的候选；不能推断所有差分/创新模型无效，也不能由此宣布 Flow 或 Diffusion 为最终赢家。日均功率 CRPS 相对损伤 +42.55%、后六小时 CRPS 损伤 +0.019475 与累积漂移相容，但这只是事后机制线索，尚非因果证明。
+
+冻结评估配置为 [`architecture_v1_transition_object_evaluation_v1_3.json`](../repro_configs/architecture_v1_transition_object_evaluation_v1_3.json)，SHA256 `742311c780af6f79d2430df303c20795b906eb3b68c8171ff5fcd36a77e97b72`；[正式结果](../outputs/architecture_v1_transition_object_probe/formal_evaluation_v1_3/TGO_V1_RESULT.json) SHA256 `0bf0beba2f9deedce318907b7b400b76a32b58c842944a94723011160d187476`；[采样冻结](../outputs/architecture_v1_transition_object_probe/formal_evaluation_v1_3/sampling.freeze.json) SHA256 `8d9cb0e501a3011741990f5b85ca069a6fcb04cca0424259c87545bd2f6f3f01`。大型归档仍仅保存在本地。
+
+### 9.7 下一决策
+
+不在这 266 个已经看过的日期上继续为 TGO-v1 调参或挑选种子。下一步先对冻结场景做只读、明确标为探索性的失败机制诊断（按预测时距、连续 active segment 长度和天气状态拆分漂移与动态误差），再决定是否值得另立具有显式状态/innovation 概率分解的新协议。任何新模型优效主张必须先冻结对照与独立确认数据；不能把本次事后分层当作确认结果。
+
+### 9.8 新颖性边界
+
+DiffDiff 已引入随 diffusion step 变化的差分结构，WaveletDiff 已在可逆多尺度表示中生成时间序列，FIDE 已针对高频与极端事件调整时序 diffusion。因此不能把“difference + diffusion + cumsum”表述为首创。
+
+本次 TGO-v1 已正式 No-Go，不能以其宣称新的有效方法。若未来另立并独立确认状态/innovation 模型，潜在贡献须是新的、可归因且能同时改善物理动态与分布安全的机制；不能把已有的差分、可逆坐标或多尺度生成技术表述为首创。
 
 ## 10. 当前不会做什么
 
@@ -425,7 +534,10 @@ G0-B 给出了很明确的机制线索。PA-RWF 相对 IID 的六组 reconstruct
 - 不把 tiny-denoiser reconstruction 结果直接解释成完整场景生成收益；
 - 不因 PA 相对 IID 有统计显著的 0.64% 小改善而越过冻结的 2% 实质门；
 - 不实现完整 predictability-aligned diffusion，不继续调 `eta` 或扩大 learned schedule；
-- 不同时恢复 transition-aware loss、Flow proper-score adapter 等备用工程线；
+- 不把 `LEVEL_MATCHED_METRIC` 机制对照扩展成独立调权重主线，也不同时恢复 Flow proper-score adapter；
+- 不把 TGO-v1 写成已经确认的根因、最终模型或新颖方法；
+- 不通过在已看过的 266 日上调参或选种子来挽救 TGO-v1 No-Go；
+- 不用 residual reconstruction 指标替代物理尺度场景评分；
 - 不访问仍封存的 selection、calibration 或最终外部测试；
 - 不同时启动两个重型方向。
 
@@ -442,13 +554,18 @@ G0-B 给出了很明确的机制线索。PA-RWF 相对 IID 的六组 reconstruct
 从现在开始：
 
 1. 每完成一个正式阶段，只更新本文档中的状态表、最新结果和下一决策；
-2. 新实验仍各自保留一份 frozen protocol 和一份 formal result，以保证预注册与结果不可被滚动叙事覆盖；
+2. 新实验保留机器可读 frozen protocol 和 formal result；解释性状态统一写回本文，避免重复路线文档；
 3. 不再为每次路线讨论新增新的 roadmap、HTML 或 DOCX；
 4. 需要组会材料时，从本文档生成一次性演示版本，并标明生成日期；
 5. README 只提供项目简介、当前一句话状态和本文档入口。
 
 ## 13. 关键证据入口
 
+- [`architecture_v1_transition_object_probe.json`](../repro_configs/architecture_v1_transition_object_probe.json)
+- [`TGO_V1_P0_RESULT.json`](../outputs/architecture_v1_transition_object_probe/TGO_V1_P0_RESULT.json)
+- [`training.freeze.json`](../outputs/architecture_v1_transition_object_probe/formal_training/training.freeze.json)
+- [`architecture_v1_transition_object_evaluation_v1_3.json`](../repro_configs/architecture_v1_transition_object_evaluation_v1_3.json)
+- [`TGO_V1_RESULT.json`](../outputs/architecture_v1_transition_object_probe/formal_evaluation_v1_3/TGO_V1_RESULT.json)
 - [`ARCHITECTURE_V1_G0_B_TINY_DENOISER_PROTOCOL.md`](ARCHITECTURE_V1_G0_B_TINY_DENOISER_PROTOCOL.md)
 - [`G0_B_TINY_DENOISER_RESULT.json`](../outputs/architecture_v1_g0_b_tiny_denoiser/formal_evaluation/G0_B_TINY_DENOISER_RESULT.json)
 - [`ARCHITECTURE_V1_G0_B0_SCHEDULE_RESULT.md`](ARCHITECTURE_V1_G0_B0_SCHEDULE_RESULT.md)

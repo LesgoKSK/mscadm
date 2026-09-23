@@ -1,0 +1,289 @@
+{
+  "schema": "architecture_v1_transition_object_evaluation_v1_3",
+  "status": "frozen_before_physical_sampling",
+  "created_date": "2026-09-23",
+  "objective": "Generate paired physical-power scenarios from all 84 frozen final-EMA denoisers and adjudicate whether true-adjacency transition coordinates provide attributable dynamic utility without distribution damage.",
+  "output_root": "outputs/architecture_v1_transition_object_probe/formal_evaluation_v1_3",
+  "lineage": {
+    "probe_config": "repro_configs/architecture_v1_transition_object_probe.json",
+    "probe_config_sha256": "b9f263359999b62e66f7b89ff9372d505dee320a7adfc992905a4d89e44442e4",
+    "training_freeze": "outputs/architecture_v1_transition_object_probe/formal_training/training.freeze.json",
+    "training_freeze_sha256": "428d0aa81d600a04d55d13537ba7c00639f0e31be8e6344d21426d2a33721f51",
+    "required_training_status": "TGO_V1_84_OF_84_TRAINING_FROZEN",
+    "required_final_EMA_atom_models": 6,
+    "required_final_EMA_denoisers": 84,
+    "prior_evaluation_config": "repro_configs/architecture_v1_transition_object_evaluation.json",
+    "prior_evaluation_config_sha256": "107f708c99f9186080d7591c7d42e40671d29f45899ff6b0191b06e2b1cf82a8",
+    "prior_technical_no_go": "outputs/architecture_v1_transition_object_probe/formal_evaluation/EVALUATION_V1_TECHNICAL_NO_GO.json",
+    "prior_technical_no_go_sha256": "f273cce0f4a2d059c4f12b72bd256a00f45e806e46f25045b63ad4a88bc9938d",
+    "prior_v1_1_evaluation_config": "repro_configs/architecture_v1_transition_object_evaluation_v1_1.json",
+    "prior_v1_1_evaluation_config_sha256": "f75f037982989988ce348e1e5c6150e681973b0b502a8e91e31ec3d661838306",
+    "prior_v1_1_technical_no_go": "outputs/architecture_v1_transition_object_probe/formal_evaluation_v1_1/EVALUATION_V1_1_TECHNICAL_NO_GO.json",
+    "prior_v1_1_technical_no_go_sha256": "dea96dfb455b08de96f6cd12c9f9a68f04e7e21a6cbc5f67a971fca9b1d1d61c",
+    "prior_v1_2_evaluation_config": "repro_configs/architecture_v1_transition_object_evaluation_v1_2.json",
+    "prior_v1_2_evaluation_config_sha256": "c134a3036a86072bb6715369bf56ecfd2509a8789656c776e0842d828760f8a5",
+    "prior_v1_2_technical_no_go": "outputs/architecture_v1_transition_object_probe/formal_evaluation_v1_2/EVALUATION_V1_2_TECHNICAL_NO_GO.json",
+    "prior_v1_2_technical_no_go_sha256": "78c49fb0d88f56fa142c6d8873dc8ded78821aee228b091a1482cd2b721bd243"
+  },
+  "code_sha256": {
+    "transition_object": "beb17aaa725d544da3a7cd8c5a9107e344bf2d7d9a4fc336da7d59a860fb3e68",
+    "transition_probe": "bd7d0c11cb876bd470de7e6d854e45b5e3820cf098d71703946a57639a4b6004",
+    "transition_atom": "c5cd2b9b1bb929ac90c947cc5364c15e1c157fc96bbe0c162a9027b4f73e3dec",
+    "transition_evaluation": "11faa6830f1de82c1a70dae2fd9e6b8cde9e6c710ebf0005c63ece5a8ebbec37",
+    "training_runner": "8fb59fac1eb133ce3a98b9c6bf3206340b30e9cc69864a9697503b747ce77042",
+    "evaluation_runner": "69c1a594af8ebb9ea094b64f82141c7607cadd979f18951540deb1b9283db7a3"
+  },
+  "role_access": {
+    "materialized_target_roles": [
+      "train"
+    ],
+    "evaluated_subset": "the six cross-fitted chronological outer-test blocks within the 267 train days",
+    "outer_train_use": "fit fold-specific mean replay, level/operator scales, atom nuisance, and pooled signed-ramp thresholds",
+    "outer_test_use": "physical scenario metrics only after the complete 84-run training freeze",
+    "validation": "sealed",
+    "selection": "sealed",
+    "calibration": "sealed",
+    "r_seen": "sealed",
+    "external_final": "sealed",
+    "true_target_atom_state_used_for_sampling": false,
+    "checkpoint_selection": "none; every retained run has one fixed final EMA"
+  },
+  "sampling": {
+    "outer_folds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "model_seeds": [
+      3,
+      4
+    ],
+    "paths": [
+      "LEVEL_IID",
+      "TRANSITION_TRUE",
+      "LEVEL_MATCHED_METRIC",
+      "LEVEL_MATCHED_NOISE",
+      "LEVEL_MATCHED_BOTH",
+      "ORTHOGONAL_DCT",
+      "TRANSITION_WRONG"
+    ],
+    "sampling_seeds": [
+      61000,
+      61001,
+      61002,
+      61003
+    ],
+    "expected_archives": 336,
+    "members": 100,
+    "member_chunk": 25,
+    "DDIM_steps": 31,
+    "eta": 0,
+    "sampler": "deterministic_direct_x0_DDIM",
+    "shared_atom_allocation_seed_formula": "sampling_seed+1",
+    "shared_native_epsilon_seed_formula": "sampling_seed+2",
+    "common_random_group": "one allocation/probability/epsilon identity per outer_fold and sampling_seed shared across seven paths and both model seeds",
+    "matched_noise_paths": [
+      "LEVEL_MATCHED_NOISE",
+      "LEVEL_MATCHED_BOTH"
+    ],
+    "decode": "outer-train fitted mean plus generated normalized latent residual, sigmoid, then exact sampled zero/interior/one states",
+    "post_hoc_clipping": "machine_nextafter_only",
+    "archive_dtype": "float64",
+    "sampling_freeze_precedes_inference": true,
+    "decode_dtype": "float64",
+    "reuse_prior_v1_archive": false,
+    "interior_encoding": "nextafter_only_if_finite_fp64_sigmoid_rounds_to_boundary",
+    "reuse_prior_v1_1_archive": false,
+    "reuse_prior_v1_2_archive": false
+  },
+  "metrics": {
+    "registry": [
+      "level_CRPS",
+      "ramp_CRPS",
+      "normalized_joint_ES",
+      "lagged_increment_variogram_score",
+      "coverage90",
+      "width90",
+      "daily_mean_power_CRPS",
+      "late_horizon_level_CRPS",
+      "three_hour_window_energy_score",
+      "max_up_ramp_CRPS",
+      "max_down_ramp_CRPS",
+      "up_ramp_threshold_Brier",
+      "down_ramp_threshold_Brier",
+      "ramp_threshold_Brier",
+      "zero_Brier",
+      "one_Brier",
+      "atom_state_Brier"
+    ],
+    "primary_dynamic": [
+      "ramp_CRPS",
+      "lagged_increment_variogram_score"
+    ],
+    "distribution_safety": [
+      "level_CRPS",
+      "normalized_joint_ES",
+      "coverage90",
+      "width90",
+      "daily_mean_power_CRPS",
+      "late_horizon_level_CRPS"
+    ],
+    "secondary_descriptive": [
+      "three_hour_window_energy_score",
+      "max_up_ramp_CRPS",
+      "max_down_ramp_CRPS",
+      "up_ramp_threshold_Brier",
+      "down_ramp_threshold_Brier",
+      "ramp_threshold_Brier",
+      "zero_Brier",
+      "one_Brier",
+      "atom_state_Brier"
+    ],
+    "ramp_thresholds": {
+      "fit_scope": "pooled signed physical-power ramps on each outer-train block only",
+      "lower_quantile": 0.05,
+      "upper_quantile": 0.95,
+      "minimum_observation_rule": "both adjacent target cells must be raw-observed"
+    },
+    "inference_unit": "calendar_day",
+    "ensemble_members_are_inference_replicates": false,
+    "aggregation_order": "average four sampling-seed metrics within model seed and day, then average the two model-seed metrics within day",
+    "late_horizon_missingness": {
+      "source": "target observed_mask only, before any model comparisons",
+      "rule": "record NaN only when a calendar day has zero raw-observed target cells in the last six hours; store late_horizon_valid alongside all 17 metrics",
+      "excluded_calendar_day": "2013-12-31",
+      "observed_archive_days": 267,
+      "common_complete_case_inference_days": 266
+    }
+  },
+  "inference": {
+    "endpoint_registry": [
+      "TRANSITION_TRUE_vs_LEVEL_IID__ramp_CRPS__absolute_benefit",
+      "TRANSITION_TRUE_vs_LEVEL_IID__lagged_increment_variogram_score__relative_benefit",
+      "LEVEL_MATCHED_METRIC_vs_LEVEL_IID__ramp_CRPS__absolute_benefit",
+      "LEVEL_MATCHED_METRIC_vs_LEVEL_IID__lagged_increment_variogram_score__relative_benefit",
+      "LEVEL_MATCHED_NOISE_vs_LEVEL_IID__ramp_CRPS__absolute_benefit",
+      "LEVEL_MATCHED_NOISE_vs_LEVEL_IID__lagged_increment_variogram_score__relative_benefit",
+      "LEVEL_MATCHED_BOTH_vs_LEVEL_IID__ramp_CRPS__absolute_benefit",
+      "LEVEL_MATCHED_BOTH_vs_LEVEL_IID__lagged_increment_variogram_score__relative_benefit",
+      "ORTHOGONAL_DCT_vs_LEVEL_IID__ramp_CRPS__absolute_benefit",
+      "ORTHOGONAL_DCT_vs_LEVEL_IID__lagged_increment_variogram_score__relative_benefit",
+      "TRANSITION_WRONG_vs_LEVEL_IID__ramp_CRPS__absolute_benefit",
+      "TRANSITION_WRONG_vs_LEVEL_IID__lagged_increment_variogram_score__relative_benefit",
+      "TRANSITION_TRUE_vs_LEVEL_MATCHED_METRIC__ramp_CRPS__absolute_benefit",
+      "TRANSITION_TRUE_vs_LEVEL_MATCHED_METRIC__lagged_increment_variogram_score__relative_benefit",
+      "TRANSITION_TRUE_vs_LEVEL_MATCHED_NOISE__ramp_CRPS__absolute_benefit",
+      "TRANSITION_TRUE_vs_LEVEL_MATCHED_NOISE__lagged_increment_variogram_score__relative_benefit",
+      "TRANSITION_TRUE_vs_LEVEL_MATCHED_BOTH__ramp_CRPS__absolute_benefit",
+      "TRANSITION_TRUE_vs_LEVEL_MATCHED_BOTH__lagged_increment_variogram_score__relative_benefit",
+      "TRANSITION_TRUE_vs_ORTHOGONAL_DCT__ramp_CRPS__absolute_benefit",
+      "TRANSITION_TRUE_vs_ORTHOGONAL_DCT__lagged_increment_variogram_score__relative_benefit",
+      "TRANSITION_TRUE_vs_TRANSITION_WRONG__ramp_CRPS__absolute_benefit",
+      "TRANSITION_TRUE_vs_TRANSITION_WRONG__lagged_increment_variogram_score__relative_benefit",
+      "TRANSITION_TRUE_vs_LEVEL_IID__level_CRPS__absolute_harm",
+      "TRANSITION_TRUE_vs_LEVEL_IID__normalized_joint_ES__relative_harm",
+      "TRANSITION_TRUE_vs_LEVEL_IID__coverage90__absolute_difference",
+      "TRANSITION_TRUE_vs_LEVEL_IID__width90__relative_harm",
+      "TRANSITION_TRUE_vs_LEVEL_IID__daily_mean_power_CRPS__relative_harm",
+      "TRANSITION_TRUE_vs_LEVEL_IID__late_horizon_level_CRPS__absolute_harm"
+    ],
+    "relative_contribution_denominator": "the paired reference path full-sample mean fixed before resampling",
+    "bootstrap": {
+      "cluster": "calendar_month",
+      "confidence": 0.95,
+      "repetitions": 10000,
+      "seed": 62000,
+      "simultaneous_method": "two_sided_joint_max_abs_studentized_T"
+    },
+    "multiplicity_scope": "all 28 primary, attribution, and safety endpoints in one joint family",
+    "conservative_refinement": "the two-sided joint band is at least as conservative as the directional one-sided language in the parent probe and permits a symmetric coverage gate",
+    "complete_case": {
+      "excluded_calendar_days": [
+        "2013-12-31"
+      ],
+      "expected_archive_calendar_days": 267,
+      "expected_inference_calendar_days": 266,
+      "rule": "exclude the same target-mask-defined day from every one of the 28 paired inference endpoints"
+    }
+  },
+  "decision": {
+    "margins": {
+      "ramp_CRPS_absolute_improvement_min": 0.001,
+      "lagged_variogram_relative_improvement_min": 0.05,
+      "attribution_ramp_CRPS_absolute_noninferiority_margin": 0.001,
+      "attribution_lagged_variogram_relative_noninferiority_margin": 0.05,
+      "level_CRPS_absolute_noninferiority_margin": 0.0015,
+      "normalized_joint_ES_relative_noninferiority_margin": 0.02,
+      "coverage90_absolute_difference_max": 0.02,
+      "width90_relative_increase_max": 0.1,
+      "daily_mean_power_CRPS_relative_noninferiority_margin": 0.02,
+      "late_horizon_level_CRPS_absolute_noninferiority_margin": 0.0015,
+      "minimum_positive_outer_folds": 5,
+      "minimum_positive_model_seeds": 2
+    },
+    "candidate_primary_gate": "TRANSITION_TRUE versus LEVEL_IID must meet both practical minima and both simultaneous lower bounds must exceed zero",
+    "wrong_adjacency_gate": "TRANSITION_TRUE versus TRANSITION_WRONG must have simultaneous lower bounds above zero on both primary metrics",
+    "general_basis_gate": "TRANSITION_TRUE versus ORTHOGONAL_DCT must be superior on at least one primary metric and noninferior on the other",
+    "matched_both_gate": "TRANSITION_TRUE versus LEVEL_MATCHED_BOTH must be superior on at least one primary metric and noninferior on the other",
+    "safety_gate": "all six jointly controlled safety limits must pass",
+    "stability_gate": "both primary point directions positive in at least five of six folds and in both model seeds",
+    "GO_status": "TGO_V1_ATTRIBUTED_GO",
+    "other_statuses": [
+      "TGO_V1_TECHNICAL_NO_GO",
+      "DYNAMIC_METRIC_ONLY",
+      "NOISE_GEOMETRY_ONLY",
+      "GENERAL_BASIS_ONLY",
+      "ADJACENCY_NOT_IDENTIFIED",
+      "DISTRIBUTION_DAMAGE_NO_GO",
+      "TGO_V1_NO_GO"
+    ],
+    "SAMPLING_NO_GO_not_eligible": "no reconstruction diagnostic is implemented in this evaluation, so that parent-protocol label cannot be assigned",
+    "unexpected_sampling_only_signal": "can authorize only a separately frozen confirmation and cannot support a reconstruction-mechanism claim"
+  },
+  "technical_hard_gates": [
+    "all 336 archives and per-day metric artifacts exist with verified hashes",
+    "atom allocation, atom probabilities, and native epsilon hashes match exactly across every fold-sampling-seed common-random group",
+    "all decoded physical scenarios are finite and within [0,1]",
+    "sampled boundary atoms are exactly zero or one and every sampled interior remains strictly interior",
+    "any finite-logit FP64 sigmoid that rounds to 0 or 1 is encoded as the adjacent representable interior number; zero/one adjustments are counted in every archive; no larger post-hoc clipping is allowed",
+    "no held-out target atom state is passed to the sampler",
+    "calendar days and held-out arrays agree exactly across all paired archives",
+    "all archive scenario arrays retain FP64 dtype through write and read without implicit downcast",
+    "all 336 archives use fresh v1.3 sampling; no prior evaluation archive is reused",
+    "all 336 per-day metric artifacts have a late_horizon_valid bit; it is false only on 2013-12-31 and matches the target mask",
+    "the same 266 complete-case calendar days enter every one of the 28 jointly controlled endpoints"
+  ],
+  "operational_contract": {
+    "default_mode": "target-free dry run that writes no file",
+    "execution_flag": "--execute-sampling",
+    "resume_flag": "--resume",
+    "partial_stop_flag": "--max-archives",
+    "first_operational_check": "resample previously failing LEVEL_IID fold5 seed3 sampling61000 on CUDA; verify all 17 per-day metrics, late_horizon_valid false only for 2013-12-31, strict FP64 interior and sidecars; then execute the remaining 335 archives",
+    "code_or_config_change_after_first_archive": "forbidden; use a new versioned protocol and fresh output root",
+    "formal_inference_before_336_of_336": false
+  },
+  "claim_boundary": {
+    "authorized": "an internally cross-fitted, mechanistically controlled statement about transition-object utility and attribution if every gate passes",
+    "not_authorized": [
+      "paper-level novelty",
+      "external-final performance",
+      "automatic selection of Diffusion over Flow",
+      "a claim that differencing or invertible-coordinate diffusion was invented here"
+    ]
+  },
+  "precision_revision": {
+    "version": "v1.3",
+    "reason": "v1.2 reached 280 complete archives; the next outer-held-out day (2013-12-31) has zero observed cells in the last six hours, making late-horizon level CRPS undefined although the day has 180 other observed cells and 170 valid adjacent ramps",
+    "scope": "retain all 267 calendar days and all 336 scenario archives; mark that one late-horizon metric as unavailable; exclude that same day from all 28 paired inference endpoints, leaving 266 calendar days",
+    "target_mask_only_missingness": true,
+    "model_or_checkpoint_change": false,
+    "sampler_change": false,
+    "metric_formula_change_on_valid_days": false,
+    "endpoint_registry_or_margin_change": false,
+    "prior_v1_2_archives_reused": false,
+    "prior_v1_2_path_ranking_performed": false
+  }
+}

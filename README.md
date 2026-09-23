@@ -55,14 +55,24 @@ The repository records both positive and negative results.
 9. **G0-B tiny-denoiser utility:** all 324 retained runs and the common
    267-day outer-fold evaluation are complete. PA-RWF improves balanced
    reconstruction risk over IID by only 0.64% (below the frozen 2% gate), is
-   slightly worse than Fixed-band and wrong-day Shuffle, worsens increment MSE
-   and oracle efficiency, and is formally recorded as
+   slightly worse than Fixed-band and wrong-day Shuffle, worsens residual-
+   increment reconstruction MSE and oracle efficiency, and is formally recorded as
    **`G0_B_STRUCTURED_SCHEDULE_NO_GO`**. A full predictability-aligned
    diffusion model is therefore not authorized.
+10. **TGO-v1 transition-object attribution:** CUDA P0 passed, six shared atom
+    models and 84 final-EMA denoisers were frozen, and 336 paired physical
+    scenario archives were evaluated on 266 common outer-held-out train days.
+    The true-adjacency transition path worsened both ramp CRPS and lagged
+    variogram score versus the level-space IID baseline and failed the frozen
+    distribution-safety and attribution gates. Formal status:
+    **`TGO_V1_NO_GO`**. This does not rule out other innovation/state-space
+    models or select Diffusion over Flow.
 
-The current recommended next question is whether an exactly consistent
-anchor-plus-transition generative representation can address ramp dynamics;
-that new Probe has not yet been frozen or trained.
+The next step is a read-only, explicitly exploratory failure analysis of the
+frozen TGO-v1 scenarios. No TGO tuning on the already inspected days is treated
+as independent confirmation. The [frozen v1.3 evaluation protocol](repro_configs/architecture_v1_transition_object_evaluation_v1_3.json)
+and local-only [formal result](outputs/architecture_v1_transition_object_probe/formal_evaluation_v1_3/TGO_V1_RESULT.json)
+record the exact evidence.
 The single maintained source for current status and interpretation is
 [Current research progress](reports/CURRENT_RESEARCH_PROGRESS.md).
 
@@ -164,6 +174,7 @@ python repro_scripts/run_architecture_v1_g0_b_tiny_denoiser_evaluation.py
 ## Main reports
 
 - [Current research progress — maintained canonical record](reports/CURRENT_RESEARCH_PROGRESS.md)
+- [TGO-v1 frozen evaluation protocol](repro_configs/architecture_v1_transition_object_evaluation_v1_3.json)
 - [G0-B frozen tiny-denoiser utility protocol](reports/ARCHITECTURE_V1_G0_B_TINY_DENOISER_PROTOCOL.md)
 - [G0-B0 schedule feasibility result](reports/ARCHITECTURE_V1_G0_B0_SCHEDULE_RESULT.md)
 - [G0-B0 frozen schedule protocol](reports/ARCHITECTURE_V1_G0_B0_SCHEDULE_PROTOCOL.md)

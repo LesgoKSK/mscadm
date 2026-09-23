@@ -1,0 +1,411 @@
+{
+  "schema": "architecture_v1_transition_object_probe_v1",
+  "status": "frozen_before_transition_transform_implementation_P0_or_target_aware_execution",
+  "created_date": "2026-09-17",
+  "probe_id": "TGO_V1",
+  "objective": "test whether a reversible true-adjacency transition representation improves finite-budget joint wind-scenario dynamics beyond matched loss, matched noise geometry, a general orthogonal basis, and a wrong-adjacency control",
+  "evidence_class": "train_only_outer_cross_fitted_development_probe_not_external_confirmation",
+  "output_root": "outputs/architecture_v1_transition_object_probe",
+  "lineage": {
+    "repository_base_commit": "b76c54c2d2efacacbb2965bf9ec9e58c5ecbb4fa",
+    "data_protocol_config": "repro_configs/architecture_v1_formal_v2_2_1.json",
+    "data_protocol_config_sha256": "1813f4f4aebeafee7b7c41d7688d149a09d07b78d7b244f0efc26c957f34b716",
+    "g0_a_config": "repro_configs/architecture_v1_g0_a_predictability.json",
+    "g0_a_config_sha256": "5d1d5b7942cbb42f1b5a1af70f09e0bfdc99f2d29d9935b9b9c68968e20c5ead",
+    "g0_a_result": "outputs/architecture_v1_g0_a_predictability/G0_A_RESULT.json",
+    "g0_a_result_sha256": "37a55921016bd701ffb2f5a66f56b6abbaa28d027cfdb9b46e0b3f01f8d9b7e7",
+    "g0_b_config": "repro_configs/architecture_v1_g0_b_tiny_denoiser.json",
+    "g0_b_config_sha256": "58949f9c1729148146d428f3f237d997046e29e4b1e2990adf5574808693e2c9",
+    "g0_b_result": "outputs/architecture_v1_g0_b_tiny_denoiser/formal_evaluation/G0_B_TINY_DENOISER_RESULT.json",
+    "g0_b_result_sha256": "2cff3adae29d572a50a2480453a834d873ac3286516eafa77db2ee8e9136a217",
+    "required_g0_b_status": "G0_B_STRUCTURED_SCHEDULE_NO_GO",
+    "tiny_denoiser_module_sha256": "a7c5231bdde31328a511969c7392e51ed16512b718e71504f6b3944987cc6b03",
+    "formal_evaluation_module_sha256": "04941ed068835301735d5ff1266e46af5a0c6b163e7234da8f5ff3aef6456a0d",
+    "expected_train_days": 267,
+    "outer_fold_registry": "reuse the exact six chronological G0-A outer folds and hashes frozen in the G0-B config"
+  },
+  "prior_information_disclosure": {
+    "already_observed": [
+      "MS-CADM reproduction and cross-model ramp and lagged diagnostics",
+      "family-v1.1 Flow versus D0-v validation comparison",
+      "family-v1.2 ordered-recurrence No-Go",
+      "G0-A NWP mode-uncertainty Go",
+      "G0-B0 schedule-feasibility Go",
+      "G0-B structured-schedule No-Go including residual increment reconstruction results",
+      "the train split and validation split have already informed multiple research decisions"
+    ],
+    "not_observed": [
+      "any TGO-v1 transformed-target training loss",
+      "any TGO-v1 outer-held-out reconstruction metric",
+      "any TGO-v1 reverse-sampled scenario metric",
+      "any comparison among the seven registered TGO-v1 paths"
+    ],
+    "consequence": "the probe is prospective for the new representation comparison but remains development evidence on previously studied train dates"
+  },
+  "scientific_claim_boundary": {
+    "primary_question": "under fixed data, NWP information, active-state law, denoiser capacity, update budget, scalar diffusion schedule, and random library, does true temporal adjacency provide useful finite-model inductive bias for physical-scale scenario dynamics?",
+    "supported_if_go": "a true-adjacency transition package improves the registered physical dynamic scores under the frozen finite-budget system and survives the registered attribution controls",
+    "not_supported_even_if_go": [
+      "level-space generation was the proven root cause of earlier failures",
+      "an invertible transition transform expands the ideal model distribution class",
+      "a simple anchor-plus-difference diffusion is methodologically novel by itself",
+      "Diffusion has defeated Flow",
+      "train-only outer-fold evidence is external confirmation"
+    ],
+    "g0_b_interpretation": "G0-B is negative evidence about residual reconstruction under the tested schedule; its increment_MSE is not physical-power ramp scenario quality"
+  },
+  "role_access": {
+    "allowed_target_role": "train",
+    "outer_test_semantics": "held-out portions of train only",
+    "forbidden_target_roles": [
+      "validation",
+      "calibration",
+      "selection",
+      "r_seen",
+      "final"
+    ],
+    "required_loader": "architecture_v1.data.build_architecture_v1_train_data",
+    "checkpoint_selection": "none_final_EMA_only",
+    "early_stopping": false,
+    "selection_state": "sealed",
+    "calibration_state": "sealed"
+  },
+  "common_target": {
+    "continuous_domain": "observed interior cells for fitting and sampled interior cells for generation",
+    "power_to_latent": "x=logit(clip(y,1e-4,1-1e-4))",
+    "conditional_mean": "reuse the exact G0-A outer-fold train-only NWP ridge contract",
+    "residual": "r=active_mask*(x-mu_hat_outer_fold)",
+    "level_normalization": "u=r/s_r where s_r=sqrt(mean_outer_train_active(r^2)); no held-out statistic and no mean recentering",
+    "decode": "r=s_r*u; x=mu_hat_outer_fold+r; active power=sigmoid(x); exact sampled zero and one atoms are then reconstructed",
+    "predicted_x0_clipping": false,
+    "final_power_clipping": false,
+    "missing_target_cells": "excluded from fitting and scoring and never treated as physical zeros",
+    "joint_scope": "all ten zones and all 24 hours are generated jointly"
+  },
+  "mask_conditioned_transform": {
+    "active_training_mask": "raw_observed AND interior_state",
+    "active_sampling_mask": "sampled_interior_state from the shared train-only atom law",
+    "true_mask_at_sampling": false,
+    "segment_definition": "maximal physically contiguous active-hour run within each zone and member",
+    "true_transition_operator": "within every segment, retain its first residual as an anchor and store first differences for all later physical hours",
+    "inverse": "segmentwise cumulative sum from the generated anchor",
+    "coefficient_layout": "same [zone,hour] slots as the source nodes; inactive slots are exactly zero",
+    "train_only_scale": "multiply each non-identity operator by one positive outer-train scalar so its active coefficient RMS equals the level-coordinate RMS",
+    "wrong_adjacency_order": "within each segment use the frozen outside-in order [0,L-1,1,L-2,...], retaining exactly one anchor and the same active dimension",
+    "short_segment_rule": "length-one segments are anchors; length-two segments are non-informative for the wrong-adjacency mechanism audit but remain invertible",
+    "orthogonal_control": "orthonormal DCT-II independently within each active segment with its exact inverse",
+    "forbidden": [
+      "differencing mask-zeroed full sequences",
+      "connecting through a missing or atom coordinate in the true-adjacency path",
+      "conditioning a generated scenario on held-out true atom states",
+      "independent zone-wise or hour-wise sampling",
+      "post-hoc clipping after cumulative reconstruction"
+    ]
+  },
+  "path_registry": [
+    {
+      "path_id": "LEVEL_IID",
+      "network_coordinate": "u",
+      "forward_noise_in_network_coordinate": "iid_standard_Gaussian",
+      "loss": "mean_active((u_hat-u)^2)",
+      "question": "common level-coordinate baseline"
+    },
+    {
+      "path_id": "TRANSITION_TRUE",
+      "network_coordinate": "z=B_M*u using the scaled true-adjacency operator",
+      "forward_noise_in_network_coordinate": "iid_standard_Gaussian",
+      "loss": "mean_active((z_hat-z)^2)",
+      "question": "candidate transition package"
+    },
+    {
+      "path_id": "LEVEL_MATCHED_METRIC",
+      "network_coordinate": "u",
+      "forward_noise_in_network_coordinate": "iid_standard_Gaussian",
+      "loss": "mean_active((B_M*(u_hat-u))^2)",
+      "question": "does transition-like error weighting explain the gain?"
+    },
+    {
+      "path_id": "LEVEL_MATCHED_NOISE",
+      "network_coordinate": "u",
+      "forward_noise_in_network_coordinate": "B_M_inverse*epsilon for epsilon iid standard Gaussian",
+      "loss": "mean_active((u_hat-u)^2)",
+      "question": "does the transition-induced correlated noise geometry explain the gain?"
+    },
+    {
+      "path_id": "LEVEL_MATCHED_BOTH",
+      "network_coordinate": "u",
+      "forward_noise_in_network_coordinate": "B_M_inverse*epsilon for epsilon iid standard Gaussian",
+      "loss": "mean_active((B_M*(u_hat-u))^2)",
+      "question": "does matched loss plus matched noise explain the gain without exposing transition coordinates to the network?"
+    },
+    {
+      "path_id": "ORTHOGONAL_DCT",
+      "network_coordinate": "z=O_M*u using the segmentwise orthonormal DCT-II",
+      "forward_noise_in_network_coordinate": "iid_standard_Gaussian",
+      "loss": "mean_active((z_hat-z)^2)",
+      "question": "is any invertible change of basis sufficient?"
+    },
+    {
+      "path_id": "TRANSITION_WRONG",
+      "network_coordinate": "z=B_wrong_M*u using the scaled frozen wrong-adjacency operator",
+      "forward_noise_in_network_coordinate": "iid_standard_Gaussian",
+      "loss": "mean_active((z_hat-z)^2)",
+      "question": "does true physical adjacency add value beyond a difference-shaped transform?"
+    }
+  ],
+  "equivalence_and_attribution_contract": {
+    "exact_identity": "B_M_inverse*(alpha*B_M*u+sigma*epsilon)=alpha*u+sigma*B_M_inverse*epsilon",
+    "required_unit_test": "the transformed forward process, oracle-x0 deterministic DDIM step, loss pullback, and inverse reconstruction must match their level-coordinate forms within registered numerical tolerance",
+    "interpretation": "TRANSITION_TRUE is a coordinate-plus-metric-plus-noise-geometry package; a pure representation claim requires it to exceed LEVEL_MATCHED_BOTH as well as the other controls",
+    "native_iid_random_numbers": "all paths use the same registered epsilon tensor in their declared native coordinate; this is a common-random-number control, not equal physical-space covariance"
+  },
+  "shared_atom_contract": {
+    "fit_scope": "one NWP-only E/A nuisance model per outer fold on outer-train targets only",
+    "architecture": "reuse the architecture-v1 condition encoder and exact three-state atom head topology from family-v1",
+    "encoder": "JointNWPEncoder(condition_dim=20,model_dim=64,depth=2,heads=4,ff_multiplier=4,dropout=0,zones=10,hours=24)",
+    "atom_head": "ExactAtomModule(feature_dim=64,hidden_dim=64,shared_priority_weight=0.5)",
+    "upper_atom_support_rule": "if outer-train exact-one count is below 20, fix p_one=(n_one+0.5)/(n_observed+1); otherwise learn the bounded contextual upper-atom head",
+    "loss": "observed-only three-state categorical NLL plus the existing 0.25-weight interior-location SmoothL1 auxiliary; discard the auxiliary head after fitting",
+    "continuous_transport_parameters": "absent from E/A nuisance fitting",
+    "fit_updates": 4080,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0.0001,
+    "gradient_clip": 1.0,
+    "batch_calendar_days": 16,
+    "EMA_decay": 0.999,
+    "initialization_seed_formula": "51000+outer_fold",
+    "selection": "none_final_EMA_only",
+    "sharing": "the same frozen probabilities, allocation seed, sampled states, and active masks are used for every path and both denoiser seeds within an outer fold",
+    "hard_invariance": "atom probabilities and allocated states must be bitwise identical across paths",
+    "purpose": "prevent target-state leakage while keeping the Probe focused on the continuous representation"
+  },
+  "common_denoiser": {
+    "topology": "reuse architecture_v1.g0b_tiny_denoiser.TinyDenoiser",
+    "prediction_parameterization": "direct_x0_in_each_path_native_coordinate",
+    "parameters_each_path": 56058,
+    "condition": "the same correct 47-dimensional G0-A condition summary for every path",
+    "active_mask_input": true,
+    "schedule_descriptor": "repeat the same scalar log-SNR in all six existing descriptor slots",
+    "timesteps": 250,
+    "schedule": "cosine offset 0.008 with beta clipped to [1e-8,0.999]",
+    "timestep_sampling": "uniform_discrete_0_to_249_per_calendar_day",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0.0,
+    "gradient_clip": 5.0,
+    "batch_calendar_days": 16,
+    "updates": 1024,
+    "EMA_decay": 0.995,
+    "precision": "FP32",
+    "AMP": false,
+    "deterministic_algorithms": true,
+    "workers": 0,
+    "checkpoint_interval_updates": 128,
+    "checkpoint_selection": "none_final_EMA_only"
+  },
+  "paired_training_matrix": {
+    "outer_folds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "model_seeds": [
+      3,
+      4
+    ],
+    "paths": [
+      "LEVEL_IID",
+      "TRANSITION_TRUE",
+      "LEVEL_MATCHED_METRIC",
+      "LEVEL_MATCHED_NOISE",
+      "LEVEL_MATCHED_BOTH",
+      "ORTHOGONAL_DCT",
+      "TRANSITION_WRONG"
+    ],
+    "retained_runs": 84,
+    "same_outer_train_dates_within_fold": true,
+    "same_initial_parameter_tensor_within_fold_and_seed": true,
+    "same_minibatches_timesteps_and_native_epsilon_within_fold_and_seed": true,
+    "no_data_fraction_axis": true,
+    "reason": "retain all chronological folds and two seed checks while removing the G0-B fraction and schedule axes"
+  },
+  "randomness_contract": {
+    "generator": "torch.Generator(device=cpu)",
+    "training_bank_seed_formula": "63000+100*outer_fold+model_seed",
+    "training_day_draw": "iid integer draw with replacement from the complete chronological outer-train index",
+    "training_timestep_draw": "iid uniform integer in [0,249]",
+    "training_native_epsilon": "iid FP32 standard Gaussian with shape [updates,batch,10,24]",
+    "bank_sharing": "one bank per outer_fold and model_seed shared bitwise by all seven paths",
+    "P0_bank_seed": 63003,
+    "atom_epoch_shuffle_seed_formula": "52000+100*outer_fold+epoch_zero_based",
+    "sampling_atom_allocation_seed": "sampling_seed+1",
+    "sampling_native_epsilon_seed": "sampling_seed+2",
+    "member_pairing": "the same day member and native-epsilon index is used across all seven paths"
+  },
+  "P0": {
+    "outer_fold": 0,
+    "model_seed": 3,
+    "discarded_updates_per_path": 50,
+    "total_discarded_updates": 350,
+    "retained_weights": false,
+    "allowed_target_role": "train",
+    "training_update_target_scope": "outer_fold_0_outer_train_only",
+    "outer_test_use": "G0-A frozen nuisance replay identity audit only; no TGO-v1 fit, loss, reconstruction, sampling, or metric",
+    "maximum_peak_GPU_memory_GiB": 4.5,
+    "hard_checks": [
+      "all seven paths have exactly 56058 trainable denoiser parameters",
+      "operator and inverse maximum FP64 error <=1e-10 and FP32 error <=1e-5",
+      "inactive values cannot affect any true-transition coefficient",
+      "true-transition edges never cross a missing or atom coordinate",
+      "wrong-adjacency retained true-edge fraction among eligible length>=3 segments is reported and <=0.30 in aggregate",
+      "segmentwise DCT orthogonality and inverse error pass",
+      "matched-noise forward equivalence and matched-metric loss pullback pass",
+      "oracle-x0 DDIM one-step and full-grid coordinate equivalence pass",
+      "all paths share initialization minibatch timestep and epsilon hashes",
+      "loss gradients optimizer EMA and sampler remain finite",
+      "checkpoint resume reproduces the next update exactly",
+      "sampled atom allocation is common and does not access held-out target states",
+      "no checkpoint or weight remains after P0",
+      "peak GPU memory is below the registered limit"
+    ],
+    "go_status": "TGO_V1_P0_GO",
+    "failure_status": "TGO_V1_P0_NO_GO"
+  },
+  "reconstruction_diagnostics": {
+    "evaluation_scope": "outer-held-out train days after the complete 84-run training freeze",
+    "purpose": "mechanism diagnosis only; not the promotion gate by itself",
+    "metrics": [
+      "physical_level_latent_residual_MSE",
+      "adjacent_active_residual_increment_MSE",
+      "whole_day_active_normalized_SSE",
+      "anchor_MSE",
+      "transition_MSE_by_lead",
+      "late_horizon_accumulation_error"
+    ],
+    "explicit_non_equivalence": "residual increment reconstruction MSE is not physical-power ramp scenario quality"
+  },
+  "scenario_sampling": {
+    "authorized_only_after": "P0_GO and exact 84_of_84 final-EMA training freeze",
+    "sampler": "deterministic_DDIM_direct_x0",
+    "steps": 31,
+    "eta": 0.0,
+    "members": 100,
+    "member_chunk": 25,
+    "sampling_seeds": [
+      61000,
+      61001,
+      61002,
+      61003
+    ],
+    "common_random_numbers": "same atom allocation and same native-coordinate initial epsilon by member across paths",
+    "matched_noise_sampler": "initialize and update LEVEL_MATCHED_NOISE and LEVEL_MATCHED_BOTH under the exact B_M_inverse colored-noise law",
+    "true_target_atom_states_used": false,
+    "output_scale": "physical normalized power in [0,1] from sigmoid plus exact atoms",
+    "archive": "all paths use the existing auditable scenario archive metadata and SHA256 sidecars"
+  },
+  "formal_metrics": {
+    "primary_dynamic": [
+      "ramp_CRPS",
+      "lagged_increment_variogram_score"
+    ],
+    "distribution_safety": [
+      "level_CRPS",
+      "normalized_joint_ES",
+      "coverage90",
+      "width90",
+      "daily_mean_power_CRPS",
+      "late_horizon_level_CRPS"
+    ],
+    "secondary_dynamic": [
+      "three_hour_window_energy_score",
+      "max_up_ramp_CRPS",
+      "max_down_ramp_CRPS",
+      "ramp_threshold_Brier_train_only_thresholds"
+    ],
+    "atom_checks": [
+      "zero_Brier",
+      "one_Brier",
+      "atom_state_Brier",
+      "cross_path_atom_probability_exact_identity",
+      "cross_path_atom_allocation_exact_identity"
+    ],
+    "score_scale": "all formal scenario metrics are computed after decoding to physical normalized power",
+    "ramp_definition": "signed y[t]-y[t-1] with a score included only when both truth endpoints were raw-observed",
+    "joint_warning": "ramp CRPS targets transformed marginal distributions and must be interpreted jointly with lagged variogram and joint ES"
+  },
+  "statistical_contract": {
+    "inference_unit": "calendar_day",
+    "member_semantics": "finite predictive ensemble members are not independent replicates",
+    "aggregation_order": "average sampling seeds and the two model seeds within each outer-held-out calendar day before inference",
+    "bootstrap": "10000 calendar-month cluster resamples with fixed seed 62000",
+    "simultaneous_control": "one-sided max-T 95% bands across all registered primary path contrasts and safety comparisons",
+    "primary_direction": "lower score is better",
+    "fold_stability": "TRANSITION_TRUE must improve both primary metrics versus LEVEL_IID in at least 5_of_6 outer folds",
+    "seed_stability": "both model seeds must improve both primary metrics versus LEVEL_IID after pooling outer folds"
+  },
+  "practical_margins": {
+    "source": "reuse task-scale margins frozen before family-v1.2 rather than the unrelated G0-B 2-percent reconstruction threshold",
+    "ramp_CRPS_absolute_improvement_min": 0.001,
+    "lagged_variogram_relative_improvement_min": 0.05,
+    "level_CRPS_absolute_noninferiority_margin": 0.0015,
+    "normalized_joint_ES_relative_noninferiority_margin": 0.02,
+    "coverage90_absolute_difference_max": 0.02,
+    "width90_relative_increase_max": 0.1,
+    "daily_mean_power_CRPS_relative_noninferiority_margin": 0.02,
+    "late_horizon_level_CRPS_absolute_noninferiority_margin": 0.0015
+  },
+  "decision_tree": {
+    "TGO_V1_ATTRIBUTED_GO": [
+      "TRANSITION_TRUE versus LEVEL_IID meets both primary practical margins and both simultaneous lower bounds exceed zero",
+      "TRANSITION_TRUE is statistically better than TRANSITION_WRONG on both primary metrics",
+      "TRANSITION_TRUE is statistically better than ORTHOGONAL_DCT on at least one primary metric and noninferior on the other",
+      "TRANSITION_TRUE is statistically better than LEVEL_MATCHED_BOTH on at least one primary metric and noninferior on the other",
+      "all distribution-safety noninferiority limits pass",
+      "fold and seed stability pass",
+      "atom and numerical hard checks pass"
+    ],
+    "DYNAMIC_METRIC_ONLY": "LEVEL_MATCHED_METRIC explains the candidate primary gain within simultaneous uncertainty; do not claim a special transition object",
+    "NOISE_GEOMETRY_ONLY": "LEVEL_MATCHED_NOISE or LEVEL_MATCHED_BOTH explains the candidate primary gain; do not claim a pure representation effect",
+    "GENERAL_BASIS_ONLY": "ORTHOGONAL_DCT explains the gain; do not claim physical adjacency",
+    "ADJACENCY_NOT_IDENTIFIED": "TRANSITION_TRUE does not beat TRANSITION_WRONG on both primary metrics",
+    "SAMPLING_NO_GO": "reconstruction improves but physical scenario primary gates fail",
+    "DISTRIBUTION_DAMAGE_NO_GO": "dynamic gates pass but any registered level joint calibration energy or late-horizon safety gate fails",
+    "TGO_V1_NO_GO": "the candidate fails the primary practical or stability gates",
+    "unexpected_sampling_only_signal": "may authorize a separately frozen confirmation if physical scenario gates pass despite null reconstruction diagnostics; no reconstruction-mechanism claim is allowed",
+    "go_authorizes": "a separately frozen confirmation or full mixed-measure model comparison",
+    "go_does_not_authorize": "paper-level novelty claim external-test claim or automatic selection of Diffusion over Flow"
+  },
+  "novelty_boundary": {
+    "known_neighbors": [
+      "DiffDiff arXiv:2607.22599",
+      "WaveletDiff arXiv:2510.11839",
+      "FIDE NeurIPS 2024",
+      "general differencing wavelet and innovation-state parameterizations"
+    ],
+    "forbidden_claim": "we invented differencing or invertible-coordinate diffusion",
+    "potential_contribution_if_confirmed": "mechanistically attributed physical dynamic improvement for NWP-conditioned multi-zone wind scenarios with exact boundary atoms and no degradation of level calibration or joint quality"
+  },
+  "implementation_order": [
+    "mask-conditioned operator and inverse with algebraic tests",
+    "seven-path tiny denoising loss and colored-noise DDIM tests",
+    "shared outer-fold atom nuisance fitter",
+    "seven-path 50-update discard-after P0",
+    "84 retained final-EMA runs",
+    "common physical-scale scenario generation",
+    "frozen paired evaluation and decision"
+  ]
+}
